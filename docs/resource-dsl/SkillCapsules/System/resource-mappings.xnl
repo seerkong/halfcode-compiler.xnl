@@ -1,0 +1,10 @@
+<ResourceMappings #Halfcode.ResourceDsl.ResourceMappings.System apiVersion="halfcode.resources/v1" version="1.0.0" (
+  <ReferenceTargets [
+    <ReferenceTarget { kind = "WikiPage" target = "references/resource-dsl/" }>
+  ]>
+  <SourceRoots [
+    <SourceRoot #CanonicalExamples { sourceRoot = "vfs://module/ResourceDsl/" } [
+      <CopyDirectory { from = "examples" to = "references/resource-dsl/examples" }>
+    ]>
+  ]>
+)>

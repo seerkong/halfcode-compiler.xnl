@@ -1,0 +1,22 @@
+{
+  "name": "demo-resource-workflow-authoring",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "packageKind": "application",
+  "applicationFamily": "demo-resource-workflow",
+  "applicationScope": "domain",
+  "applicationRole": "authoring",
+  "exports": {
+    ".": "./src/index.ts",
+    "./src/Functions/PrepareProcedure": "./src/Functions/PrepareProcedure.ts",
+    "./src/ComposedFunctions/PrepareWorkflow": "./src/ComposedFunctions/PrepareWorkflow.ts",
+    "./src/BusinessActions/ReservationApprove": "./src/BusinessActions/ReservationApprove.ts",
+    "./src/BusinessMutations/ReservationMarkApproved": "./src/BusinessMutations/ReservationMarkApproved.ts",
+    "./src/PageObjects/ReservationDetail": "./src/PageObjects/ReservationDetail.ts"
+  },
+  "dependencies": {
+    "halfcode-compiler-application-assembly": "workspace:*",
+    "demo-resource-workflow-contracts": "workspace:*"
+  }
+}

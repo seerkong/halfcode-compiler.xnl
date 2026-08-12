@@ -1,0 +1,8 @@
+<SkillCapsule #example.resource_lifecycle.skill.run apiVersion="halfcode.resources/v1" version="1.0.0" {
+  name = "example-resource-lifecycle-run"
+  lifecycle = "Active"
+  description = "Generic operations for running an authored resource."
+} (
+  <SkillMetadata { href = "vfs://./SKILL.metadata.yaml" format = "yaml" }>
+  <Template { href = "vfs://./SKILL.template.ejs" format = "ejs" }>
+)>

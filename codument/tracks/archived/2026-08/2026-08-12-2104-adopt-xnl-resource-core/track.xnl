@@ -1,0 +1,97 @@
+<Track #adopt-xnl-resource-core version="1" apiVersion="codument.tech/v1alpha1" { status = "completed" goal = "以 xnl-core 建立 XNL-native resource loader、validation、identity、provenance 与 normalized descriptor boundary" description = "保留可删除的内部 XML 兼容层，BusinessObject/PageObject 只按通用 opaque resource 处理" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-12T17:38:00Z" updated_at = "2026-08-12T18:04:00Z" modeling_base_commit = "67896c2db79ba136c960ef2d60711304a333e323" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "input" name = "resource-dsl" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "workspace-lock" domain = "code" path = "vfs://@/bun.lock" }>
+    <MaterialBundle { role = "output" name = "behavior" domain = "codument" path = "vfs://@/codument/behaviors/" }>
+    <MaterialBundle { role = "output" name = "modeling" domain = "codument" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_adopt-xnl-resource-core { name = "adopt-xnl-resource-core" } (
+    <Description ?01M02KBYJ1T6MAYKNXD306XS1K>
+    用 XNL fixtures 先锁 normalized boundary，再实现 catalog/registry 与迁移兼容。
+    </?01M02KBYJ1T6MAYKNXD306XS1K>
+    <SubNodes [
+      <TaskGroup #P1 { name = "XNL parser and normalized boundary" status = "DONE" order = 0 } (
+        <Gate [
+          <Criterion ?01M02KBYJ1T6MAYKNXD306XS1M>
+          P1 所有任务 DONE
+          </?01M02KBYJ1T6MAYKNXD306XS1M>
+          <Criterion ?01M02KBYJ1T6MAYKNXD306XS1N>
+          XNL parser/normalization tests 通过
+          </?01M02KBYJ1T6MAYKNXD306XS1N>
+        ]>
+        <SubNodes [
+          <Task { id = "T1.1" name = "建立 XNL contract fixtures 与失败测试" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJ1T6MAYKNXD306XS1P>
+            覆盖语义通道、provenance、syntax、duplicate 与 containment。
+            </?01M02KBYJ1T6MAYKNXD306XS1P>
+            <Acceptance [
+              <Criterion { id = "T1.1-AC1" checked = true } ?01M02KBYJ1T6MAYKNXD306XS1Q>
+              fixtures 只使用 XNL authority
+              </?01M02KBYJ1T6MAYKNXD306XS1Q>
+              <Criterion { id = "T1.1-AC2" checked = true } ?01M02KBYJ1T6MAYKNXD306XS1R>
+              测试在实现前能暴露缺失 XNL loader
+              </?01M02KBYJ1T6MAYKNXD306XS1R>
+            ]>
+          )>
+          <Task { id = "T1.2" name = "实现 xnl-core adapter 与 ResourceNode" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYJ1T6MAYKNXD306XS1S>
+            引入依赖并建立 immutable normalized boundary。
+            </?01M02KBYJ1T6MAYKNXD306XS1S>
+            <Acceptance [
+              <Criterion { id = "T1.2-AC1" checked = true } ?01M02KBYJ1T6MAYKNXD306XS1T>
+              ResourceRecord 具有 #id identity、semantic channels 与 provenance
+              </?01M02KBYJ1T6MAYKNXD306XS1T>
+              <Criterion { id = "T1.2-AC2" checked = true } ?01M02KBYJ1T6MAYKNXD306XS1V>
+              public types 不暴露 XmlObject 或 xnl-core node
+              </?01M02KBYJ1T6MAYKNXD306XS1V>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Catalog registry and compatibility" status = "DONE" order = 1 } (
+        <Gate [
+          <Criterion ?01M02KBYJ1T6MAYKNXD306XS1W>
+          P2 所有任务 DONE
+          </?01M02KBYJ1T6MAYKNXD306XS1W>
+          <Criterion ?01M02KBYJ1T6MAYKNXD306XS1X>
+          resource-core、typecheck 与 repository regression 通过
+          </?01M02KBYJ1T6MAYKNXD306XS1X>
+        ]>
+        <SubNodes [
+          <Task { id = "T2.1" name = "实现 XNL catalog、KindDefinition 与 registry validation" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJ1T6MAYKNXD306XS1Y>
+            按 source shape 扫描并提供稳定 diagnostics。
+            </?01M02KBYJ1T6MAYKNXD306XS1Y>
+            <Acceptance [
+              <Criterion { id = "T2.1-AC1" checked = true } ?01M02KBYJ1T6MAYKNXD306XS1Z>
+              三种 source shape、nested manifest 与 kind contract 可验证
+              </?01M02KBYJ1T6MAYKNXD306XS1Z>
+              <Criterion { id = "T2.1-AC2" checked = true } ?01M02KBYJ1T6MAYKNXD306XS20>
+              unsafe/duplicate/unknown kind 均拒绝 registry
+              </?01M02KBYJ1T6MAYKNXD306XS20>
+            ]>
+          )>
+          <Task { id = "T2.2" name = "隔离 XML legacy adapter 并执行回归" status = "DONE" order = 1 priority = "P1" } (
+            <Description ?01M02KBYJ1T6MAYKNXD306XS21>
+            保持未迁移 consumer 行为并标记可删除边界。
+            </?01M02KBYJ1T6MAYKNXD306XS21>
+            <Acceptance [
+              <Criterion { id = "T2.2-AC1" checked = true } ?01M02KBYJ1T6MAYKNXD306XS22>
+              既有 XML characterization tests 继续通过
+              </?01M02KBYJ1T6MAYKNXD306XS22>
+              <Criterion { id = "T2.2-AC2" checked = true } ?01M02KBYJ1T6MAYKNXD306XS23>
+              BO/PO 无专用 core parser 或类型
+              </?01M02KBYJ1T6MAYKNXD306XS23>
+              <Criterion { id = "T2.2-AC3" checked = true } ?01M02KBYJ1T6MAYKNXD306XS24>
+              strict/modeling/decisions/typecheck/test 全通过
+              </?01M02KBYJ1T6MAYKNXD306XS24>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+)>

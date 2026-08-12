@@ -1,0 +1,76 @@
+<Track #publish-halfcode-compiler-xnl version="1" apiVersion="codument.tech/v1alpha1" { status = "completed" goal = "将唯一公开 package identity 与生成 import 迁移为 halfcode-compiler.xnl" description = "保持子路径拓扑，验证 build、tarball runtime/type consumer，避免冻结 BO/PO API" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-12T18:16:00Z" updated_at = "2026-08-12T18:24:00Z" modeling_base_commit = "67896c2db79ba136c960ef2d60711304a333e323" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "output" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "generated-import" domain = "code" path = "vfs://@/packages/compiler-skill/" }>
+    <MaterialBundle { role = "output" name = "docs" domain = "docs" path = "vfs://@/README.md" }>
+  ]>
+  <TaskSpace #space_publish-halfcode-compiler-xnl { name = "publish-halfcode-compiler-xnl" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Identity migration" status = "DONE" order = 0 } (
+        <Gate [
+          <Criterion ?01M02KBYJ59AFN0A0N990X1SVE>
+          P1 tasks DONE
+          </?01M02KBYJ59AFN0A0N990X1SVE>
+          <Criterion ?01M02KBYJ59AFN0A0N990X1SVF>
+          product scan has zero old identity
+          </?01M02KBYJ59AFN0A0N990X1SVF>
+        ]>
+        <SubNodes [
+          <Task { id = "T1.1" name = "Freeze package identity tests" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJ59AFN0A0N990X1SVG>
+            Update expectations and consumer smoke away from deferred BO/PO types.
+            </?01M02KBYJ59AFN0A0N990X1SVG>
+            <Acceptance [
+              <Criterion { id = "T1.1-AC1" checked = true } ?01M02KBYJ59AFN0A0N990X1SVH>
+              tests require halfcode-compiler.xnl
+              </?01M02KBYJ59AFN0A0N990X1SVH>
+              <Criterion { id = "T1.1-AC2" checked = true } ?01M02KBYJ59AFN0A0N990X1SVJ>
+              tarball type smoke uses generic stable API
+              </?01M02KBYJ59AFN0A0N990X1SVJ>
+            ]>
+          )>
+          <Task { id = "T1.2" name = "Migrate package/import/docs identity" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYJ59AFN0A0N990X1SVK>
+            Rename all product-facing specifiers and generated imports.
+            </?01M02KBYJ59AFN0A0N990X1SVK>
+            <Acceptance [
+              <Criterion { id = "T1.2-AC1" checked = true } ?01M02KBYJ59AFN0A0N990X1SVM>
+              package, paths, docs and generated code agree
+              </?01M02KBYJ59AFN0A0N990X1SVM>
+              <Criterion { id = "T1.2-AC2" checked = true } ?01M02KBYJ59AFN0A0N990X1SVN>
+              historical Codument provenance unchanged
+              </?01M02KBYJ59AFN0A0N990X1SVN>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Distribution verification" status = "DONE" order = 1 } (
+        <Gate [
+          <Criterion ?01M02KBYJ59AFN0A0N990X1SVP>
+          P2 tasks DONE
+          </?01M02KBYJ59AFN0A0N990X1SVP>
+          <Criterion ?01M02KBYJ59AFN0A0N990X1SVQ>
+          build/package/typecheck/test pass
+          </?01M02KBYJ59AFN0A0N990X1SVQ>
+        ]>
+        <SubNodes [
+          <Task { id = "T2.1" name = "Run build and tarball consumer smoke" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJ59AFN0A0N990X1SVR>
+            Validate runtime/type imports from packed artifact.
+            </?01M02KBYJ59AFN0A0N990X1SVR>
+            <Acceptance [
+              <Criterion { id = "T2.1-AC1" checked = true } ?01M02KBYJ59AFN0A0N990X1SVS>
+              package check passes with all public subpaths
+              </?01M02KBYJ59AFN0A0N990X1SVS>
+              <Criterion { id = "T2.1-AC2" checked = true } ?01M02KBYJ59AFN0A0N990X1SVT>
+              full regression passes
+              </?01M02KBYJ59AFN0A0N990X1SVT>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+)>

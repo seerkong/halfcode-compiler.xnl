@@ -1,0 +1,14 @@
+<BusinessObject #Demo.ResourceWorkflow.BO.MakerSpace.Tool apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Tool business-object resource."
+  parentRef = "MakerSpace.Resource"
+  purpose = "Represents a reservable physical workshop tool."
+} (
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+  <Identity [ <Property #toolCode { typeRef = "MakerSpace.Type.ToolCode" required = true }> ]>
+  <Properties [
+    <Property #displayName { typeRef = "builtin:String" required = true role = "display-name" }>
+    <Property #toolState { typeRef = "MakerSpace.Type.ToolState" required = true role = "state" }>
+  ]>
+  <Evidences [ <Evidence { ref = "manual:makerspace-policy" }> ]>
+)>

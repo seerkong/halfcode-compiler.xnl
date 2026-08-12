@@ -1,0 +1,9 @@
+<Function #Demo.ResourceWorkflow.Function.PrepareProcedure apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Prepare a procedure draft from structured input."
+} (
+  <InputContract { ref = "resource://Demo.ResourceWorkflow.Contract.PrepareProcedure.Input" }>
+  <OutputContract { ref = "resource://Demo.ResourceWorkflow.Contract.PrepareProcedure.Output" }>
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+  <CodeBinding { package = "demo-resource-workflow-authoring" module = "./src/Functions/PrepareProcedure" export = "prepareProcedure" }>
+)>

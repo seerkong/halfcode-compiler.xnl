@@ -1,0 +1,15 @@
+{
+  "name": "halfcode-compiler-application-assembly",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "packageKind": "framework",
+  "exports": {
+    ".": "./src/index.ts",
+    "./compiler-internal": "./src/compiler-internal.ts"
+  },
+  "dependencies": {
+    "halfcode-compiler-resource-core": "workspace:*",
+    "yaml": "^2.8.0"
+  }
+}

@@ -1,0 +1,10 @@
+<BusinessMutation #Demo.ResourceWorkflow.BO.MakerSpace.Reservation.Mutation.MarkApproved apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Move the reservation state to approved."
+  ownerRef = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Reservation"
+  portability = "portable"
+  internalLogic = "Set the active reservation workflow state to approved."
+} (
+  <CodeBinding { package = "demo-resource-workflow-authoring" module = "./src/BusinessMutations/ReservationMarkApproved" export = "markApprovedReservationMutation" }>
+  <Evidences [ <Evidence { ref = "manual:makerspace-policy" }> ]>
+)>

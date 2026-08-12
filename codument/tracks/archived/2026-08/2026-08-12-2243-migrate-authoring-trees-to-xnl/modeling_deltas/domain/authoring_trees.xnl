@@ -1,0 +1,20 @@
+<component #authoring_trees.xnl_generic_packages apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://authoring-trees/requirements/xnl-generic-authority"] } [
+  <desc ?01M02KBYJCHRV8Q5FPSW3NWC3E>
+  维护 domain/shared 的 XNL-native generic authoring authority；BO/PO aggregate boundary 延后。
+  </?01M02KBYJCHRV8Q5FPSW3NWC3E>
+  <runtime ?r>
+  type Runtime = { resourceLoader: XnlResourceLoader; assembly: ApplicationAssembly }
+  </?r>
+  <input ?i>
+  type Input = XnlAuthoringDocuments
+  </?i>
+  <config ?c>
+  type Config = { resourceRootDir: string; manifestPath?: string }
+  </?c>
+  <output ?o>
+  type Output = GenericAuthoringAssembly
+  </?o>
+  <pseudo { kind = "ctrl" } ?p>
+  加载 manifest.xnl → 注册 KindDefinitions → 遍历 semantic catalogs → 校验 materials/mappings → 投影 generic assembly
+  </?p>
+]>

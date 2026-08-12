@@ -1,0 +1,8 @@
+<KindDefinition #halfcode.resource_kind.Note apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  resourceKind = "Note"
+  sourceShapes = ["single-file"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+  description = "Note resource contract"
+}>

@@ -1,0 +1,11 @@
+<SkillCapsule #example.resource_lifecycle.skill.authoring apiVersion="halfcode.resources/v1" version="1.0.0" {
+  name = "example-resource-lifecycle-authoring"
+  lifecycle = "Active"
+  description = "Generic operations for resource creation and revision."
+} (
+  <SkillMetadata { href = "vfs://./SKILL.metadata.yaml" format = "yaml" }>
+  <Template { href = "vfs://./SKILL.template.ejs" format = "ejs" }>
+  <SkillDependencies [
+    <SkillDependency { ref = "resource://example.resource_lifecycle.skill.resource_dsl" version = "1.0.0" }>
+  ]>
+)>

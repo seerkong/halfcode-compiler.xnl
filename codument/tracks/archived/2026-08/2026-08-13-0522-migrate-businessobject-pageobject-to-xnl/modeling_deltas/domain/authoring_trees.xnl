@@ -1,0 +1,20 @@
+<component #authoring_trees.xnl_generic_packages apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://authoring-trees/requirements/xnl-generic-authority" "behavior://resource-authoring/requirements/xnl-resource-language"] } [
+  <desc ?01M02KBYJM4J854PQQ974ET04X>
+  维护 domain/shared 的完整 XNL-native authoring authority，包含 generic resources、BusinessObject/PageObject owners 与 operation bindings。
+  </?01M02KBYJM4J854PQQ974ET04X>
+  <runtime ?r>
+  type Runtime = { resourceLoader: XnlResourceLoader; assembly: ApplicationAssembly }
+  </?r>
+  <input ?i>
+  type Input = XnlAuthoringDocuments
+  </?i>
+  <config ?c>
+  type Config = { resourceRootDir: string; manifestPath?: string }
+  </?c>
+  <output ?o>
+  type Output = ApplicationAssembly
+  </?o>
+  <pseudo { kind = "ctrl" } ?p>
+  加载 manifest.xnl → 注册 KindDefinitions → 遍历 semantic catalogs → 校验 materials/mappings/object bindings → 投影完整 assembly
+  </?p>
+]>

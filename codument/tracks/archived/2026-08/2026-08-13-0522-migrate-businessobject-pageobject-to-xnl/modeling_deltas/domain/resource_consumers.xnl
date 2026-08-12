@@ -1,0 +1,41 @@
+<component #resource_consumers.application_assembly apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://application-assembly/requirements/xnl-generic-consumers" "behavior://object-operation-contract/requirements/shared-definition"] } [
+  <desc ?01M02KBYJND23FJGQXFYDQBYF0>
+  把 normalized ResourceNode 投影为通用 assembly 资源与统一对象 operation catalog，不暴露 parser-private 或 XML object shape。
+  </?01M02KBYJND23FJGQXFYDQBYF0>
+  <runtime ?r>
+  type Runtime = { readFile: ReadFile }
+  </?r>
+  <input ?i>
+  type Input = readonly ResourceRecord[]
+  </?i>
+  <config ?c>
+  type Config = readonly AuthoringModuleDescriptor[]
+  </?c>
+  <output ?o>
+  type Output = ApplicationAssembly & ObjectOperationCatalog
+  </?o>
+  <pseudo { kind = "ctrl" } ?p>
+  按 kind 选择 ResourceNode reader → 解析 contracts/materials/bindings/operations → 校验唯一 FQN 与 object binding closure → 组合 provenance
+  </?p>
+]>
+
+<component #resource_consumers.resource_mapping apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-mapping/requirements/xnl-mappings"] } [
+  <desc ?01M02KBYJND23FJGQXFYDQBYF1>
+  解析 XNL mapping authority 并在任何写入前生成 collision-safe copy plan。
+  </?01M02KBYJND23FJGQXFYDQBYF1>
+  <runtime ?r>
+  type Runtime = { fs: FileSystem; xnlParser: XnlParser }
+  </?r>
+  <input ?i>
+  type Input = string
+  </?i>
+  <config ?c>
+  type Config = PlanResourceMappingsOptions
+  </?c>
+  <output ?o>
+  type Output = ResourceMappings | ResourceMappingPlan
+  </?o>
+  <pseudo { kind = "ctrl" } ?p>
+  解析 XNL → normalize mappings → 校验 roots/operations → preflight collisions → apply plan
+  </?p>
+]>

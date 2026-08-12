@@ -1,0 +1,19 @@
+{
+  "name": "halfcode-compiler-skill-capsule",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "packageKind": "framework",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "halfcode-compiler-application-assembly": "workspace:*",
+    "halfcode-compiler-resource-projection": "workspace:*",
+    "halfcode-compiler-resource-mapping": "workspace:*",
+    "halfcode-compiler-authoring-runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "halfcode-compiler-runtime-testing": "workspace:*"
+  }
+}

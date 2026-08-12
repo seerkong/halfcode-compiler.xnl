@@ -1,0 +1,21 @@
+<ResourceMappings #demo.resource_workflow.mappings apiVersion="halfcode.resources/v1" version="1.0.0" (
+  <ReferenceTargets [
+    <ReferenceTarget #function_dependency {
+      fromKind = "Function"
+      field = "dependsOn"
+      targetKind = "Function"
+    }>
+  ]>
+  <CallableArtifacts [
+    <CallableArtifact #function_callable {
+      kind = "Function"
+      binding = "CodeBinding.src"
+    }>
+  ]>
+  <SourceRoots [
+    <SourceRoot #authoring {
+      uri = "vfs://@/apps/demo-resource-workflow-authoring/resources/"
+    }>
+  ]>
+)>
+

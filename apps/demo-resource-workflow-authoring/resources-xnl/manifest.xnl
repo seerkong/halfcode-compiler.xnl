@@ -1,0 +1,16 @@
+<ResourcePackage #Demo.ResourceWorkflow.Authoring apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "XNL-native authoring resources for the complete demo workflow."
+} (
+  <Catalogs [
+    <Catalog #KindDefinitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>
+    <Catalog #Functions { kind = "Function" shape = "directory" root = "vfs://./Functions/" entry = "manifest.xnl" }>
+    <Catalog #ComposedFunctions { kind = "ComposedFunction" shape = "directory" root = "vfs://./ComposedFunctions/" entry = "manifest.xnl" }>
+    <Catalog #ApplicationSOPs { kind = "ApplicationSOP" shape = "directory" root = "vfs://./ApplicationSOPs/" entry = "manifest.xnl" }>
+    <Catalog #PromptFragments { kind = "PromptFragment" shape = "directory" root = "vfs://./PromptFragments/" entry = "manifest.xnl" }>
+    <Catalog #WikiPages { kind = "WikiPage" shape = "directory" root = "vfs://./Wiki/" entry = "manifest.xnl" }>
+    <Catalog #BusinessObjects { kind = "BusinessObject" shape = "manifest" root = "vfs://./BusinessObjects/" entry = "manifest.xnl" }>
+    <Catalog #PageObjects { kind = "PageObject" shape = "directory" root = "vfs://./PageObjects/" entry = "manifest.xnl" }>
+    <Catalog #SkillCapsules { kind = "SkillCapsule" shape = "directory" root = "vfs://./SkillCapsules/" entry = "manifest.xnl" }>
+  ]>
+)>

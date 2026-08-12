@@ -1,0 +1,20 @@
+<component #application-assembly.page_object apiVersion="codument.tech/v1alpha1" { kind = "component" } [
+  <desc ?d>
+  Target-neutral interactive-surface resource normalized by application assembly.
+  </?d>
+  <runtime ?r>
+  ApplicationAssembly normalization runtime.
+  </?r>
+  <input ?i>
+  interface PageObjectDescriptor { fqn: string; codeBinding: CodeBinding; operations: PageObjectOperations }
+  </?i>
+  <config ?c>
+  interface PageObjectKindConfig { sourceShape: "directory"; entry: "PageObject.xml" }
+  </?c>
+  <output ?o>
+  interface PageObjectResource { kind: "PageObject"; primitives: readonly PageObjectPrimitiveOperation[] }
+  </?o>
+  <invariant ?v>
+  Primitive ids unique; Open and Verify exports required; no browser target policy.
+  </?v>
+]>

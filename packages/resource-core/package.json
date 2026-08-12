@@ -1,0 +1,13 @@
+{
+  "name": "halfcode-compiler-resource-core",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "packageKind": "framework",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "xnl-core": "^0.1.12"
+  }
+}

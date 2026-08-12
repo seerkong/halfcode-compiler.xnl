@@ -1,0 +1,16 @@
+{
+  "name": "halfcode-resource-dsl-system-skill",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "packageKind": "application",
+  "applicationFamily": "halfcode-resource-dsl",
+  "applicationScope": "shared",
+  "applicationRole": "skill-capsule",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "halfcode-compiler-application-assembly": "workspace:*"
+  }
+}

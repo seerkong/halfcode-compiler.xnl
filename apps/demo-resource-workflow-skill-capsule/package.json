@@ -1,0 +1,21 @@
+{
+  "name": "demo-resource-workflow-skill-capsule",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "packageKind": "application",
+  "applicationFamily": "demo-resource-workflow",
+  "applicationScope": "domain",
+  "applicationRole": "skill-capsule",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "halfcode-compiler-application-assembly": "workspace:*",
+    "halfcode-compiler-skill-capsule": "workspace:*",
+    "halfcode-compiler-authoring-runtime": "workspace:*",
+    "demo-resource-workflow-contracts": "workspace:*",
+    "demo-resource-workflow-authoring": "workspace:*",
+    "demo-resource-workflow-shared-authoring": "workspace:*"
+  }
+}

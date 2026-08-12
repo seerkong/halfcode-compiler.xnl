@@ -1,0 +1,20 @@
+<component #resource_core.loader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/xnl-resource-tree" "behavior://xnl-product-closure/requirements/no-product-xml"] } [
+  <desc ?01M02KBYKB4T18EWFCE4H6HVCC>
+  仅加载 XNL resource authority、校验目录与引用边界，并生成规范化 registry；不存在 XML fallback。
+  </?01M02KBYKB4T18EWFCE4H6HVCC>
+  <runtime ?runtime>
+  interface ResourceCoreRuntime { readFile: ReadFile; readDirectory: ReadDirectory; realpath: Realpath; xnlParser: XnlParser }
+  </?runtime>
+  <input ?input>
+  interface LoadResourceTreeInput { rootDir: string; manifestPath?: "manifest.xnl" }
+  </?input>
+  <config ?config>
+  interface ResourceCoreConfig { canonicalManifest: "manifest.xnl" }
+  </?config>
+  <output ?output>
+  type LoadResourceTreeOutput = ResourceTree | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  解析 XNL authority → 规范化 ResourceNode → 注册 KindDefinition → 扫描 catalog → 校验 identity/containment → 输出只读 registry
+  </?ctrl>
+]>

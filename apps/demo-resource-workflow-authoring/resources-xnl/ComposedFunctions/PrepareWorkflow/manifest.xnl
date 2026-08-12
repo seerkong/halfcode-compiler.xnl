@@ -1,0 +1,9 @@
+<ComposedFunction #Demo.ResourceWorkflow.ComposedFunction.PrepareWorkflow apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Prepare a workflow by composing lower-level procedure preparation logic."
+} (
+  <InputContract { ref = "resource://Demo.ResourceWorkflow.Contract.PrepareWorkflow.Input" }>
+  <OutputContract { ref = "resource://Demo.ResourceWorkflow.Contract.PrepareWorkflow.Output" }>
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+  <CodeBinding { package = "demo-resource-workflow-authoring" module = "./src/ComposedFunctions/PrepareWorkflow" export = "prepareWorkflow" }>
+)>

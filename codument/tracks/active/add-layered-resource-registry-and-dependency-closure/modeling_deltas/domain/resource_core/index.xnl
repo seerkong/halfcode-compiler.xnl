@@ -1,0 +1,114 @@
+<component #resource_core.layered_registry apiVersion="codument.tech/v1alpha1" {
+  kind = "component"
+  behaviors = ["behavior://resource-loading/requirements/layered-effective-registry"]
+} [
+  <desc ?desc>
+  将多个已验证 ResourceTree 按调用方给定的 named layer 顺序组合成 effective registry；只处理显式 shadow/tombstone 与 Kind contract 冲突，不扫描文件、不绑定 host 路径。
+  </?desc>
+  <runtime ?runtime>
+  type LayeredRegistryRuntime = Readonly<Record<never, never>>
+  </?runtime>
+  <input ?input>
+  interface ComposeLayeredRegistryInput {
+    layers: readonly ResourceLayerInput[]
+  }
+  </?input>
+  <config ?config>
+  interface ComposeLayeredRegistryConfig {
+    precedence: "input-low-to-high"
+    kindDefinitionConflict: "reject"
+  }
+  </?config>
+  <output ?output>
+  type ComposeLayeredRegistryOutput = EffectiveResourceRegistry | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  校验 layer ids → 低到高合并资源 → 应用显式 tombstones → 拒绝 identity/kind/KindDefinition 冲突 → UTF-16 code-unit 稳定排序 → 计算 composition revision → deep-clone/freeze 输出
+  </?ctrl>
+]>
+
+<object #resource_core.effective_resource_registry apiVersion="codument.tech/v1alpha1" {
+  kind = "entity"
+  fact_grade = "derived_projection_cache"
+  single_writer = "modeling://domain/resource_core/layered_registry"
+} [
+  <desc ?desc>
+  从 ordered named layers 可重建的只读有效资源视图；effective 资源与 shadow/tombstone provenance 同时保留，既不是新的 authoring authority，也不反写任一 layer。
+  </?desc>
+  <types ?types>
+  interface EffectiveResourceRegistry {
+    layers: readonly ResourceLayerDescriptor[]
+    byId: ReadonlyMap<string, EffectiveResourceEntry>
+    byKind: ReadonlyMap<string, readonly ResourceRecord[]>
+    kindDefinitions: ReadonlyMap<string, EffectiveKindDefinition>
+    compositionRevision: string
+    revision: string
+  }
+  </?types>
+  <invariants ?invariants>
+  layer 顺序由输入显式给定；absence 不是删除；跨 kind identity 冲突和不兼容 KindDefinition 必须拒绝；机器绝对路径不得进入 revision；revision 是 compositionRevision 的精确兼容别名；compositionRevision 只绑定 identity/presence/layer/shadow/tombstone、选定 KindDefinition resourceId/contract 与 canonical documentUri/logicalPath provenance，不绑定 descriptor/node/metadata bytes；兼容 Kind contract 合并不以 definition resourceId 判冲突；投影不得保留指向调用方可变 record/node/KindDefinition 的引用。
+  </?invariants>
+  <fact-source ?source>
+  事实源是各 layer 的 XNL ResourcePackage 和显式 tombstone 输入；本节点只是 #resource_core.layered_registry 的确定性投影。
+  </?source>
+]>
+
+<component #resource_core.dependency_snapshot apiVersion="codument.tech/v1alpha1" {
+  kind = "component"
+  behaviors = ["behavior://resource-loading/requirements/resource-dependency-snapshot"]
+} [
+  <desc ?desc>
+  从 effective registry、显式 roots、typed dependency edges 与 digest contributions 构建可复现依赖闭包；不解析任意 ResourceNode 字符串，不拥有 Kind-specific 引用语义。
+  </?desc>
+  <runtime ?runtime>
+  interface DependencySnapshotRuntime {
+    canonicalDigest: CanonicalDigest
+  }
+  </?runtime>
+  <input ?input>
+  interface BuildDependencySnapshotInput {
+    registry: EffectiveResourceRegistry
+    roots: readonly string[]
+    edges: readonly ResourceDependencyEdge[]
+    contentIdentities: ReadonlyMap<string, ResourceContentIdentity>
+  }
+  </?input>
+  <config ?config>
+  interface BuildDependencySnapshotConfig {
+    algorithm: "sha256"
+    missingTarget: "reject"
+    cycle: "reject"
+  }
+  </?config>
+  <output ?output>
+  type BuildDependencySnapshotOutput = ResourceDependencySnapshot | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "dataflow" } ?dataflow>
+  重新校验全部 effective content identities 并重算 digest → 校验显式 roots/typed edges → 从 roots 求闭包 → 拒绝缺失端点/环/矛盾或伪造 digest → UTF-16 code-unit canonical 排序与摘要 → 输出 immutable snapshot
+  </?dataflow>
+]>
+
+<object #resource_core.resource_dependency_snapshot apiVersion="codument.tech/v1alpha1" {
+  kind = "entity"
+  fact_grade = "checkpoint_snapshot"
+  single_writer = "modeling://domain/resource_core/dependency_snapshot"
+} [
+  <desc ?desc>
+  某组 roots 在一个 effective registry revision 上的不可变资源闭包证据，携带参与资源、typed edges、content revisions 与 snapshot revision。
+  </?desc>
+  <types ?types>
+  interface ResourceDependencySnapshot {
+    roots: readonly string[]
+    closure: readonly SnapshotResource[]
+    edges: readonly ResourceDependencyEdge[]
+    registryRevision: string
+    snapshotRevision: string
+  }
+  </?types>
+  <invariants ?invariants>
+  snapshot 只接受 canonical composer 登记的 immutable registry，只包含 typed edges 可达资源；普通字符串永不产生隐式边；registryRevision 绑定 compositionRevision 与全部 effective content digests；snapshotRevision 再绑定 roots、可达闭包与参与边；snapshot origin 必须独立复制冻结；相同语义输入必须产生相同 revision。
+  </?invariants>
+  <fact-source ?source>
+  事实源是 #resource_core.effective_resource_registry、Kind owner 提供的 typed edges 和显式 authority/material digest contributions。
+  </?source>
+]>

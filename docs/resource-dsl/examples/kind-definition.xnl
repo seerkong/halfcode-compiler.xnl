@@ -1,0 +1,12 @@
+<KindDefinition #halfcode.resource_kind.Function apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  sourceShapes = ["single-file" "directory"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+} (
+  <DescriptorContract (
+    <Identity { required = true form = "fqn" }>
+    <CodeBinding { property = "src" scheme = "vfs" exportFragmentRequired = true }>
+    <Instruction { required = false source = "inline-or-vfs" }>
+  )>
+)>

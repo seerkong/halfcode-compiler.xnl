@@ -1,0 +1,3 @@
+<Note #demo.resource_workflow.note.minimal apiVersion="halfcode.resources/v1" version="1.0.0" {
+  labels = ["minimal"]
+}>

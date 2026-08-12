@@ -1,0 +1,6 @@
+<WikiPage #Halfcode.ResourceDsl.Wiki.files apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Resource source shapes, VFS containment and file provenance."
+} (
+  <Instruction { href = "vfs://@/files.md" format = "markdown" }>
+)>

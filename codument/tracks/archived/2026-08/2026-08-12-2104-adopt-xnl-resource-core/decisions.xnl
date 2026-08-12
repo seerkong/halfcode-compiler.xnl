@@ -1,0 +1,59 @@
+<decision #track.adopt_xnl_resource_core.normalized_boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" blocks = ["implementation"] } (
+  <question ?01M02KBYHZC0K7EVQVJNGRRX18>
+  consumer 是否直接读取 xnl-core node？
+  </?01M02KBYHZC0K7EVQVJNGRRX18>
+  <answer {  } (
+    <raw-answer ?01M02KBYHZC0K7EVQVJNGRRX19>
+    XNL parser tree 应当在 resource-core 边界内收敛。
+    </?01M02KBYHZC0K7EVQVJNGRRX19>
+    <decision-text ?01M02KBYHZC0K7EVQVJNGRRX1A>
+    resource-core 把 xnl-core node 投影为稳定 ResourceNode；consumer 不依赖 parser 私有类型。
+    </?01M02KBYHZC0K7EVQVJNGRRX1A>
+    <rationale ?01M02KBYHZC0K7EVQVJNGRRX1B>
+    隔离 parser 演进并消除 XML attribute-prefix 泄漏。
+    </?01M02KBYHZC0K7EVQVJNGRRX1B>
+    <evidence ?01M02KBYHZC0K7EVQVJNGRRX1C>
+    resource-authoring behavior 与 mission G3 目标。
+    </?01M02KBYHZC0K7EVQVJNGRRX1C>
+  )>
+)>
+
+<decision #track.adopt_xnl_resource_core.temporary_legacy_adapter apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = false confidence = 0.97 reversibility = "high" blocks = ["implementation"] } (
+  <question ?01M02KBYHZC0K7EVQVJNGRRX1D>
+  G3 是否立即删除 XML loader？
+  </?01M02KBYHZC0K7EVQVJNGRRX1D>
+  <answer {  } (
+    <raw-answer ?01M02KBYHZC0K7EVQVJNGRRX1E>
+    按 mission 分 track 迁移，consumer 与 authoring 尚未切换。
+    </?01M02KBYHZC0K7EVQVJNGRRX1E>
+    <decision-text ?01M02KBYHZC0K7EVQVJNGRRX1F>
+    保留内部且显式标记的 XML legacy adapter；XNL 是新 authority，G7 必须删除 adapter 与 fast-xml-parser。
+    </?01M02KBYHZC0K7EVQVJNGRRX1F>
+    <rationale ?01M02KBYHZC0K7EVQVJNGRRX1G>
+    保持各 DAG 节点可独立验证，同时避免把兼容面变成 public contract。
+    </?01M02KBYHZC0K7EVQVJNGRRX1G>
+    <evidence ?01M02KBYHZC0K7EVQVJNGRRX1H>
+    G4/G5/G7 的 mission 依赖顺序。
+    </?01M02KBYHZC0K7EVQVJNGRRX1H>
+  )>
+)>
+
+<decision #track.adopt_xnl_resource_core.defer_bo_po_interpretation apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "high" blocks = ["implementation"] } (
+  <question ?01M02KBYHZC0K7EVQVJNGRRX1J>
+  resource-core 是否解释 BusinessObject/PageObject 专用结构？
+  </?01M02KBYHZC0K7EVQVJNGRRX1J>
+  <answer {  } (
+    <raw-answer ?01M02KBYHZC0K7EVQVJNGRRX1K>
+    二者要最后做，参考 API 正在重构。
+    </?01M02KBYHZC0K7EVQVJNGRRX1K>
+    <decision-text ?01M02KBYHZC0K7EVQVJNGRRX1M>
+    resource-core 只把二者视为通用 ResourceNode，不定义或验证专用字段与操作。
+    </?01M02KBYHZC0K7EVQVJNGRRX1M>
+    <rationale ?01M02KBYHZC0K7EVQVJNGRRX1N>
+    core 应保持 kind-neutral，且不能提前固化漂移 API。
+    </?01M02KBYHZC0K7EVQVJNGRRX1N>
+    <evidence ?01M02KBYHZC0K7EVQVJNGRRX1P>
+    用户约束与 mission LATE-BO-PO group。
+    </?01M02KBYHZC0K7EVQVJNGRRX1P>
+  )>
+)>

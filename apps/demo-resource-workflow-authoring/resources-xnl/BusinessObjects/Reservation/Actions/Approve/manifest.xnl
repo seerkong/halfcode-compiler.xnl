@@ -1,0 +1,13 @@
+<BusinessAction #Demo.ResourceWorkflow.BO.MakerSpace.Reservation.Action.Approve apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Approve a requested reservation after its domain rules pass."
+  ownerRef = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Reservation"
+  portability = "portable"
+  internalLogic = "Evaluate reservation approval constraints, then apply the declared mutation."
+} (
+  <InputContract { ref = "resource://Demo.ResourceWorkflow.Contract.ReservationApproveAction.Input" }>
+  <OutputContract { ref = "resource://Demo.ResourceWorkflow.Contract.ReservationApproveAction.Output" }>
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+  <CodeBinding { package = "demo-resource-workflow-authoring" module = "./src/BusinessActions/ReservationApprove" export = "approveReservationAction" }>
+  <Evidences [ <Evidence { ref = "manual:makerspace-policy" }> ]>
+)>

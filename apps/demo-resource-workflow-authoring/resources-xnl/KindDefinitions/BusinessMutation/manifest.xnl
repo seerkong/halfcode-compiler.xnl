@@ -1,0 +1,8 @@
+<KindDefinition #Demo.ResourceWorkflow.KindDefinition.BusinessMutation apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Kind definition for executable desired-state BusinessMutation resources owned by a BusinessObject."
+  resourceKind = "BusinessMutation"
+  sourceShapes = ["manifest"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+}>

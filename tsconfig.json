@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "halfcode-compiler.xnl": ["./packages/distribution/src/index.ts"],
+      "halfcode-compiler.xnl/*": ["./packages/distribution/src/*"],
+      "halfcode-compiler-application-assembly": ["./packages/application-assembly/src/index.ts"],
+      "halfcode-compiler-skill-capsule": ["./packages/compiler-skill/src/index.ts"],
+      "halfcode-compiler-contract-schema": ["./packages/contract-schema-compiler/src/index.ts"],
+      "halfcode-compiler-kind-definition": ["./packages/kind-definition/src/index.ts"],
+      "halfcode-compiler-resource-core": ["./packages/resource-core/src/index.ts"],
+      "halfcode-compiler-resource-mapping": ["./packages/resource-mapping/src/index.ts"],
+      "halfcode-compiler-resource-projection": ["./packages/resource-projection/src/index.ts"],
+      "halfcode-compiler-authoring-runtime": ["./packages/runtime-authoring/src/index.ts"],
+      "halfcode-compiler-runtime-testing": ["./packages/runtime-mock/src/index.ts"],
+      "halfcode-compiler-workspace-tools": ["./packages/workspace-tools/src/index.ts"]
+    },
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "bun-types"
+    ]
+  },
+  "include": [
+    "packages/**/*.ts",
+    "apps/**/*.ts"
+  ]
+}

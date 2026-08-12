@@ -1,0 +1,23 @@
+<ResourceMappings #Demo.ResourceWorkflow.ResourceMappings.Main apiVersion="halfcode.resources/v1" version="1.0.0" (
+  <ReferenceTargets [
+    <ReferenceTarget { kind = "ComposedFunction" target = "references/ComposedFunctions/" }>
+    <ReferenceTarget { kind = "Function" target = "references/Functions/" }>
+    <ReferenceTarget { kind = "BusinessObject" target = "references/BusinessObjects/" }>
+    <ReferenceTarget { kind = "BusinessAction" target = "references/BusinessActions/" }>
+    <ReferenceTarget { kind = "BusinessMutation" target = "references/BusinessMutations/" }>
+    <ReferenceTarget { kind = "BusinessObjectSOP" target = "references/BusinessObjectSOPs/" }>
+    <ReferenceTarget { kind = "PageObject" target = "references/PageObjects/" }>
+    <ReferenceTarget { kind = "ApplicationSOP" target = "references/ApplicationSOPs/" }>
+    <ReferenceTarget { kind = "PromptFragment" target = "references/PromptFragments/" }>
+    <ReferenceTarget { kind = "WikiPage" target = "references/Wiki/" }>
+  ]>
+  <CallableArtifacts { target = "functions/" }>
+  <SourceRoots [
+    <SourceRoot #SharedMaterials { sourceRoot = "vfs://module/SharedAuthoring/" } [
+      <CopyFile { from = "Static/SharedNotes.md" to = "references/Shared/SharedNotes.md" }>
+    ]>
+    <SourceRoot #DomainProtocols { sourceRoot = "vfs://module/DomainAuthoring/SkillCapsules/Main/resources/" } [
+      <CopyDirectory { from = "Protocol" to = "references/Protocol" }>
+    ]>
+  ]>
+)>

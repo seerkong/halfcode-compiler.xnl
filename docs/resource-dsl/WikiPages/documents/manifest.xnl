@@ -1,0 +1,6 @@
+<WikiPage #Halfcode.ResourceDsl.Wiki.documents apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Resource documents, package catalogs and KindDefinition contracts."
+} (
+  <Instruction { href = "vfs://@/documents.md" format = "markdown" }>
+)>

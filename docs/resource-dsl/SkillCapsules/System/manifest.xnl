@@ -1,0 +1,18 @@
+<SkillCapsule #Halfcode.ResourceDsl.Skill.System apiVersion="halfcode.resources/v1" version="1.0.0" {
+  name = "sys-halfcode-resource-dsl"
+  lifecycle = "Stable"
+  description = "Author and review XNL ResourcePackages, catalogs, KindDefinitions, VFS materials, projections and SkillCapsules using the canonical Halfcode Resource DSL."
+} (
+  <SkillMetadata { href = "vfs://./SKILL.metadata.yaml" format = "yaml" }>
+  <Template { href = "vfs://./SKILL.template.ejs" format = "ejs" }>
+  <ResourceMappings { href = "vfs://./resource-mappings.xnl" format = "xnl" }>
+  <Includes [
+    <Include { kind = "WikiPage" ref = "resource://Halfcode.ResourceDsl.Wiki.index" }>
+    <Include { kind = "WikiPage" ref = "resource://Halfcode.ResourceDsl.Wiki.language" }>
+    <Include { kind = "WikiPage" ref = "resource://Halfcode.ResourceDsl.Wiki.documents" }>
+    <Include { kind = "WikiPage" ref = "resource://Halfcode.ResourceDsl.Wiki.files" }>
+    <Include { kind = "WikiPage" ref = "resource://Halfcode.ResourceDsl.Wiki.projections" }>
+    <Include { kind = "WikiPage" ref = "resource://Halfcode.ResourceDsl.Wiki.skill-capsules" }>
+    <Include { kind = "WikiPage" ref = "resource://Halfcode.ResourceDsl.Wiki.migration" }>
+  ]>
+)>

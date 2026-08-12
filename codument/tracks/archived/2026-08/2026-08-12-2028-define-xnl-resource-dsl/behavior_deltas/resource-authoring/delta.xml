@@ -1,0 +1,35 @@
+<behavior-patch capability="resource-authoring" version="1">
+  <Metadata>
+    <ApiVersion>codument.tech/v1alpha1</ApiVersion>
+  </Metadata>
+  <upsert selector="behavior://resource-authoring/requirements/xnl-resource-language">
+    <requirement id="xnl-resource-language">
+      <statement>系统 SHALL 以 XNL-native DSL 表达资源 package、catalog、KindDefinition、descriptor 与 mapping，并按 tag、#id、properties、body、extension 的固定语义解释文档。</statement>
+      <suite id="language-channels" name="XNL 通道语义">
+        <case id="parse-representative-documents">
+          <given>作者提供符合规范的 package、KindDefinition、descriptor 与 ResourceMappings XNL 文档</given>
+          <when>使用当前 xnl-core parser 解析文档</when>
+          <then>所有文档 SHALL 可解析，且身份、属性、重复成员和唯一子域保持可区分</then>
+        </case>
+        <case id="canonical-references">
+          <given>descriptor 引用相对物料、workspace 物料或 TypeScript 导出</given>
+          <when>作者写入引用</when>
+          <then>引用 SHALL 使用 vfs://./、vfs://@/ 与 #ExportName fragment，不得发明 XML 路径前缀</then>
+        </case>
+      </suite>
+      <suite id="migration-boundary" name="迁移边界">
+        <case id="no-xml-private-shape">
+          <given>下游 loader 将 XNL 文档规范化</given>
+          <when>consumer 读取 normalized descriptor</when>
+          <then>consumer SHALL 不依赖 XML attribute-prefix 或 parser-private XmlObject 形状</then>
+        </case>
+        <case id="defer-businessobject-pageobject-specialization">
+          <given>BusinessObject 与 PageObject 参考 API 仍在重构</given>
+          <when>通用 XNL 资源 DSL 被冻结</when>
+          <then>DSL SHALL 只定义通用资源外壳，不冻结二者的专用字段、操作或 public API</then>
+        </case>
+      </suite>
+    </requirement>
+  </upsert>
+</behavior-patch>
+

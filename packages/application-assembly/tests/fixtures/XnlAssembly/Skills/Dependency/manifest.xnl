@@ -1,0 +1,4 @@
+<SkillCapsule #demo.xnl_assembly.skill.dependency apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Active" description = "Dependency skill" } (
+  <SkillMetadata { href = "vfs://./skill.yaml" format = "yaml" }>
+  <Template { href = "vfs://./SKILL.md" format = "markdown" }>
+)>

@@ -1,0 +1,6 @@
+<WikiPage #Halfcode.ResourceDsl.Wiki.skill-capsules apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "SkillCapsule dependencies, deterministic plans and atomic distribution."
+} (
+  <Instruction { href = "vfs://@/skill-capsules.md" format = "markdown" }>
+)>

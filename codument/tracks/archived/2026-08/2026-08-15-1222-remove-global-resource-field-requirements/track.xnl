@@ -1,0 +1,97 @@
+<Track #remove-global-resource-field-requirements version="1" apiVersion="codument.tech/v1alpha1" { status = "completed" goal = "取消 lifecycle 与 description 对所有资源 Kind 的全局必填约束。" description = "将字段归还具体 Kind/consumer contract，同时保留通用 XNL identity、apiVersion 与 provenance 边界。" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-15T09:14:00Z" updated_at = "2026-08-15T09:22:00Z" modeling_base_commit = "67896c2db79ba136c960ef2d60711304a333e323" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "application-assembly" domain = "code" path = "vfs://@/packages/application-assembly/" }>
+    <MaterialBundle { role = "output" name = "guidance" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle { role = "output" name = "behavior" domain = "codument" path = "vfs://@/codument/behaviors/" }>
+    <MaterialBundle { role = "output" name = "modeling" domain = "codument" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_remove-global-resource-field-requirements { name = "remove-global-resource-field-requirements" } (
+    <Description ?01M02KBYKYSGZZJAN7VNGK0NA4>
+    以测试锁定 Kind-owned optional fields，再修改 core/type consumer 与 guidance。
+    </?01M02KBYKYSGZZJAN7VNGK0NA4>
+    <SubNodes [
+      <TaskGroup #P1 { name = "通用资源边界" status = "DONE" order = 0 } (
+        <Description ?01M02KBYKYSGZZJAN7VNGK0NA5>
+        用 TDD 取消 loader/type 的全局字段要求，并保持具体 consumer 契约。
+        </?01M02KBYKYSGZZJAN7VNGK0NA5>
+        <Gate [
+          <Criterion ?01M02KBYKYSGZZJAN7VNGK0NA6>
+          P1 tasks DONE
+          </?01M02KBYKYSGZZJAN7VNGK0NA6>
+          <Criterion ?01M02KBYKYSGZZJAN7VNGK0NA7>
+          无 lifecycle/description 的已注册 Kind 可由 resource-core 加载
+          </?01M02KBYKYSGZZJAN7VNGK0NA7>
+          <Criterion ?01M02KBYKYSGZZJAN7VNGK0NA8>
+          application assembly 原有输出与失败语义保持
+          </?01M02KBYKYSGZZJAN7VNGK0NA8>
+        ]>
+        <SubNodes [
+          <Task { id = "T1.1" name = "增加可选字段失败测试" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYKYSGZZJAN7VNGK0NA9>
+            建立无 lifecycle/description 的 registered Kind fixture，并先证明当前 loader 拒绝。
+            </?01M02KBYKYSGZZJAN7VNGK0NA9>
+            <Acceptance [
+              <Criterion { id = "T1.1-AC1" checked = true } ?01M02KBYKYSGZZJAN7VNGK0NAA>
+              测试覆盖缺失两个字段仍成功加载且 normalized record 保持 undefined
+              </?01M02KBYKYSGZZJAN7VNGK0NAA>
+            ]>
+          )>
+          <Task { id = "T1.2" name = "实现通用可选字段和 consumer 收窄" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYKYSGZZJAN7VNGK0NAB>
+            修改 resource-core 公共类型/loader，并在 description-bearing assembly projection 边界显式要求 description。
+            </?01M02KBYKYSGZZJAN7VNGK0NAB>
+            <Acceptance [
+              <Criterion { id = "T1.2-AC1" checked = true } ?01M02KBYKYSGZZJAN7VNGK0NAC>
+              resource-core 不再产生 lifecycle/description 全局缺失诊断
+              </?01M02KBYKYSGZZJAN7VNGK0NAC>
+              <Criterion { id = "T1.2-AC2" checked = true } ?01M02KBYKYSGZZJAN7VNGK0NAD>
+              TypeScript 类型如实表达 optional fields 且全仓 typecheck 通过
+              </?01M02KBYKYSGZZJAN7VNGK0NAD>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "规范与回归收口" status = "DONE" order = 1 } (
+        <Description ?01M02KBYKYSGZZJAN7VNGK0NAE>
+        更新长期 guidance 并执行完整验证。
+        </?01M02KBYKYSGZZJAN7VNGK0NAE>
+        <Gate [
+          <Criterion ?01M02KBYKYSGZZJAN7VNGK0NAF>
+          P2 tasks DONE
+          </?01M02KBYKYSGZZJAN7VNGK0NAF>
+          <Criterion ?01M02KBYKYSGZZJAN7VNGK0NAG>
+          targeted tests、全仓 tests、typecheck、verify、generate 与 package checks 通过
+          </?01M02KBYKYSGZZJAN7VNGK0NAG>
+          <Criterion ?01M02KBYKYSGZZJAN7VNGK0NAH>
+          Codument strict、decision 与 modeling delta validation 通过
+          </?01M02KBYKYSGZZJAN7VNGK0NAH>
+        ]>
+        <SubNodes [
+          <Task { id = "T2.1" name = "更新 Resource DSL guidance" status = "DONE" order = 0 priority = "P1" } (
+            <Description ?01M02KBYKYSGZZJAN7VNGK0NAJ>
+            明确 XNL channel 与 requiredness 分离，字段只由具体 Kind/consumer contract 要求。
+            </?01M02KBYKYSGZZJAN7VNGK0NAJ>
+            <Acceptance [
+              <Criterion { id = "T2.1-AC1" checked = true } ?01M02KBYKYSGZZJAN7VNGK0NAK>
+              docs 与 framework resource DSL skill 不再声称 description/lifecycle 全局必填
+              </?01M02KBYKYSGZZJAN7VNGK0NAK>
+            ]>
+          )>
+          <Task { id = "T2.2" name = "执行完整验证" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYKYSGZZJAN7VNGK0NAM>
+            运行代码、生成、打包与 Codument 验证，审查最终 diff。
+            </?01M02KBYKYSGZZJAN7VNGK0NAM>
+            <Acceptance [
+              <Criterion { id = "T2.2-AC1" checked = true } ?01M02KBYKYSGZZJAN7VNGK0NAN>
+              所有约定验证命令通过且无无关行为变化
+              </?01M02KBYKYSGZZJAN7VNGK0NAN>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+)>

@@ -1,0 +1,9 @@
+<ResourceModule #demo.resource_workflow.module.core apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Nested manifest with a local catalog"
+} (
+  <Catalogs [
+    <Catalog #module_notes { kind = "Note" shape = "single-file" root = "vfs://./Notes/" }>
+  ]>
+)>
+

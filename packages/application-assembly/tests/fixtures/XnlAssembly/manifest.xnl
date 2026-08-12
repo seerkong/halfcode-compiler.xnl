@@ -1,0 +1,9 @@
+<ResourcePackage #demo.xnl_assembly.package apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Active" description = "XNL assembly fixture" } (
+  <Catalogs [
+    <Catalog #kind_definitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>
+    <Catalog #functions { kind = "Function" shape = "directory" root = "vfs://./Functions/" entry = "manifest.xnl" }>
+    <Catalog #prompts { kind = "PromptFragment" shape = "directory" root = "vfs://./PromptFragments/" entry = "manifest.xnl" }>
+    <Catalog #skills { kind = "SkillCapsule" shape = "directory" root = "vfs://./Skills/" entry = "manifest.xnl" }>
+  ]>
+)>
+

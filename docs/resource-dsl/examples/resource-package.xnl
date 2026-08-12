@@ -1,0 +1,19 @@
+<ResourcePackage #demo.resource_workflow.authoring apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Demo authoring resource package"
+} (
+  <Catalogs [
+    <Catalog #kind_definitions {
+      kind = "KindDefinition"
+      shape = "directory"
+      root = "vfs://./KindDefinitions/"
+      entry = "manifest.xnl"
+    }>
+    <Catalog #functions {
+      kind = "Function"
+      shape = "directory"
+      root = "vfs://./Functions/"
+      entry = "manifest.xnl"
+    }>
+  ]>
+)>

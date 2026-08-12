@@ -1,0 +1,393 @@
+<decision #track.define_xnl_resource_dsl.channel_allocation apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" blocks = ["design.md" "implementation"] durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+  <question ?01KZVFB3WEEMQ1HHRJHZ2XPN69>
+  XNL 的 tag、id、properties、body 与 extension 分别承载什么？
+  </?01KZVFB3WEEMQ1HHRJHZ2XPN69>
+  <answer {  } (
+    <raw-answer ?01KZVFB3WEEMQ1HHRJHZ2XPN6A>
+    沿用 depa-flows 的 XNL DSL 习惯，按语义分配不同通道。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6A>
+    <decision-text ?01KZVFB3WEEMQ1HHRJHZ2XPN6B>
+    tag 表示资源 kind，#id 表示规范身份，{} 表示无序元数据，[] 表示有序或可重复成员，() 表示唯一命名子域。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6B>
+    <rationale ?01KZVFB3WEEMQ1HHRJHZ2XPN6C>
+    固定通道语义可避免 XML 属性前缀泄漏，也使 parser、validator 与 authoring 文档共享同一模型。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6C>
+    <evidence ?01KZVFB3WEEMQ1HHRJHZ2XPN6D>
+    xnl-core 数据模型与 depa-flows flow DSL 规范。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6D>
+  )>
+)>
+
+<decision #track.define_xnl_resource_dsl.reference_identity apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" blocks = ["design.md" "implementation"] durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+  <question ?01KZVFB3WEEMQ1HHRJHZ2XPN6E>
+  资源、物料与代码导出如何寻址？
+  </?01KZVFB3WEEMQ1HHRJHZ2XPN6E>
+  <answer {  } (
+    <raw-answer ?01KZVFB3WEEMQ1HHRJHZ2XPN6F>
+    使用 XNL/VFS 已有 URI 语义，不发明第二套路径语法。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6F>
+    <decision-text ?01KZVFB3WEEMQ1HHRJHZ2XPN6G>
+    资源身份使用 #id；相对物料用 vfs://./，workspace 物料用 vfs://@/，代码导出通过 URI fragment #ExportName 寻址。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6G>
+    <rationale ?01KZVFB3WEEMQ1HHRJHZ2XPN6H>
+    URI 自描述且能跨磁盘布局保持逻辑引用稳定。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6H>
+    <evidence ?01KZVFB3WEEMQ1HHRJHZ2XPN6J>
+    xnl-vfs 约定与现有资源 source/code binding 需求。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6J>
+  )>
+)>
+
+<decision #track.define_xnl_resource_dsl.defer_businessobject_pageobject apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" blocks = ["design.md" "implementation"] durable_candidate = true confidence = 0.99 reversibility = "high" } (
+  <question ?01KZVFB3WEEMQ1HHRJHZ2XPN6K>
+  本 track 是否冻结 BusinessObject/PageObject 的专用 XNL schema？
+  </?01KZVFB3WEEMQ1HHRJHZ2XPN6K>
+  <answer {  } (
+    <raw-answer ?01KZVFB3WEEMQ1HHRJHZ2XPN6M>
+    BusinessObject、PageObject 要放到最后做，参考实现正在进行 API 重构。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6M>
+    <decision-text ?01KZVFB3WEEMQ1HHRJHZ2XPN6N>
+    本 track 仅定义二者可复用的通用资源外壳；专用字段、操作模型、assembly 与 public API 全部延后到 mission 的 LATE-BO-PO group。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6N>
+    <rationale ?01KZVFB3WEEMQ1HHRJHZ2XPN6P>
+    提前固化会把正在变化的 XML-era API 复制进新的长期 DSL。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6P>
+    <evidence ?01KZVFB3WEEMQ1HHRJHZ2XPN6Q>
+    用户约束及参考仓库 PageObject assembly 的未提交 API diff。
+    </?01KZVFB3WEEMQ1HHRJHZ2XPN6Q>
+  )>
+)>
+
+<decision #track.adopt_xnl_resource_core.normalized_boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" blocks = ["implementation"] } (
+  <question ?01KZVFZZDRFPYJZ3V5D6QRV92H>
+  consumer 是否直接读取 xnl-core node？
+  </?01KZVFZZDRFPYJZ3V5D6QRV92H>
+  <answer {  } (
+    <raw-answer ?01KZVFZZDRFPYJZ3V5D6QRV92J>
+    XNL parser tree 应当在 resource-core 边界内收敛。
+    </?01KZVFZZDRFPYJZ3V5D6QRV92J>
+    <decision-text ?01KZVFZZDRFPYJZ3V5D6QRV92K>
+    resource-core 把 xnl-core node 投影为稳定 ResourceNode；consumer 不依赖 parser 私有类型。
+    </?01KZVFZZDRFPYJZ3V5D6QRV92K>
+    <rationale ?01KZVFZZDRFPYJZ3V5D6QRV92M>
+    隔离 parser 演进并消除 XML attribute-prefix 泄漏。
+    </?01KZVFZZDRFPYJZ3V5D6QRV92M>
+    <evidence ?01KZVFZZDRFPYJZ3V5D6QRV92N>
+    resource-authoring behavior 与 mission G3 目标。
+    </?01KZVFZZDRFPYJZ3V5D6QRV92N>
+  )>
+)>
+
+<decision #track.adopt_xnl_resource_core.defer_bo_po_interpretation apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "high" blocks = ["implementation"] } (
+  <question ?01KZVFZZDRFPYJZ3V5D6QRV92P>
+  resource-core 是否解释 BusinessObject/PageObject 专用结构？
+  </?01KZVFZZDRFPYJZ3V5D6QRV92P>
+  <answer {  } (
+    <raw-answer ?01KZVFZZDRFPYJZ3V5D6QRV92Q>
+    二者要最后做，参考 API 正在重构。
+    </?01KZVFZZDRFPYJZ3V5D6QRV92Q>
+    <decision-text ?01KZVFZZDRFPYJZ3V5D6QRV92R>
+    resource-core 只把二者视为通用 ResourceNode，不定义或验证专用字段与操作。
+    </?01KZVFZZDRFPYJZ3V5D6QRV92R>
+    <rationale ?01KZVFZZDRFPYJZ3V5D6QRV92S>
+    core 应保持 kind-neutral，且不能提前固化漂移 API。
+    </?01KZVFZZDRFPYJZ3V5D6QRV92S>
+    <evidence ?01KZVFZZDRFPYJZ3V5D6QRV92T>
+    用户约束与 mission LATE-BO-PO group。
+    </?01KZVFZZDRFPYJZ3V5D6QRV92T>
+  )>
+)>
+
+<decision #track.publish_halfcode_compiler_xnl.public_identity apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" blocks = ["implementation"] } (
+  <question ?01KZVGC9QAFDTG7G86AG1WCBYS>
+  XNL 产品的唯一公开 npm identity 是什么？
+  </?01KZVGC9QAFDTG7G86AG1WCBYS>
+  <answer {  } (
+    <raw-answer ?01KZVGC9QB11VWJ9DA6NCSQZRR>
+    halfcode-compiler.xnl
+    </?01KZVGC9QB11VWJ9DA6NCSQZRR>
+    <decision-text ?01KZVGC9QB11VWJ9DA6NCSQZRS>
+    唯一公开包更名为 halfcode-compiler.xnl，子路径保持原能力分区。
+    </?01KZVGC9QB11VWJ9DA6NCSQZRS>
+    <rationale ?01KZVGC9QB11VWJ9DA6NCSQZRT>
+    包名应与唯一 authoring authority 对齐，同时避免扩大 API 变更面。
+    </?01KZVGC9QB11VWJ9DA6NCSQZRT>
+    <evidence ?01KZVGC9QB11VWJ9DA6NCSQZRV>
+    mission goal 与用户迁移请求。
+    </?01KZVGC9QB11VWJ9DA6NCSQZRV>
+  )>
+)>
+
+<decision #track.migrate_xnl_resource_consumers.generic_node_boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" blocks = ["implementation"] } (
+  <question ?01KZVGRY28D9S1QP14VHBS99PK>
+  generic consumer 应读取什么形状？
+  </?01KZVGRY28D9S1QP14VHBS99PK>
+  <answer {  } (
+    <raw-answer ?01KZVGRY28D9S1QP14VHBS99PM>
+    ResourceNode semantic channels
+    </?01KZVGRY28D9S1QP14VHBS99PM>
+    <decision-text ?01KZVGRY28D9S1QP14VHBS99PN>
+    generic application assembly 与 mapping 只把 normalized ResourceNode/XNL 文档作为新边界；XML shape 仅留临时 internal adapter。
+    </?01KZVGRY28D9S1QP14VHBS99PN>
+    <rationale ?01KZVGRY28D9S1QP14VHBS99PP>
+    隔离 parser 并避免 @attribute 泄漏。
+    </?01KZVGRY28D9S1QP14VHBS99PP>
+    <evidence ?01KZVGRY28D9S1QP14VHBS99PQ>
+    G3 normalized resource record。
+    </?01KZVGRY28D9S1QP14VHBS99PQ>
+  )>
+)>
+
+<decision #track.migrate_xnl_resource_consumers.defer_bo_po apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "high" blocks = ["implementation"] } (
+  <question ?01KZVGRY28D9S1QP14VHBS99PR>
+  本 track 是否迁移 BO/PO reader？
+  </?01KZVGRY28D9S1QP14VHBS99PR>
+  <answer {  } (
+    <raw-answer ?01KZVGRY28D9S1QP14VHBS99PS>
+    最后做
+    </?01KZVGRY28D9S1QP14VHBS99PS>
+    <decision-text ?01KZVGRY28D9S1QP14VHBS99PT>
+    BusinessObject/PageObject 专用 reader、operation model 与 public types 保持不变，不接受本阶段 XNL specialization。
+    </?01KZVGRY28D9S1QP14VHBS99PT>
+    <rationale ?01KZVGRY28D9S1QP14VHBS99PV>
+    参考 API 正在重构。
+    </?01KZVGRY28D9S1QP14VHBS99PV>
+    <evidence ?01KZVGRY28D9S1QP14VHBS99PW>
+    用户约束与 mission LATE-BO-PO。
+    </?01KZVGRY28D9S1QP14VHBS99PW>
+  )>
+)>
+
+<decisions apiVersion="codument.tech/v1alpha1" [
+  <decision #track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+    <question ?01KZWEXM92MG06RXAXXF6Q7BJ6>
+    谁拥有 object-operation definition 与 target kinds？
+    </?01KZWEXM92MG06RXAXXF6Q7BJ6>
+    <answer {  } (
+      <raw-answer ?01KZWEXM92MG06RXAXXF6Q7BJ7>
+      XNL owner resource。
+      </?01KZWEXM92MG06RXAXXF6Q7BJ7>
+      <decision-text ?01KZWEXM92MG06RXAXXF6Q7BJ8>
+      PageObject / BusinessObject XNL owner document SHALL 是 operation definition 与 target-kind 的唯一 authority；binding 只拥有实现和 contract facts。
+      </?01KZWEXM92MG06RXAXXF6Q7BJ8>
+      <rationale ?01KZWEXM92MG06RXAXXF6Q7BJ9>
+      避免 registry、handler 与 authoring 形成多重 authority。
+      </?01KZWEXM92MG06RXAXXF6Q7BJ9>
+      <evidence ?01KZWEXM92MG06RXAXXF6Q7BJA>
+      用户确认的稳定 API 与 XNL channel allocation decision。
+      </?01KZWEXM92MG06RXAXXF6Q7BJA>
+    )>
+  )>
+  <decision #track.migrate_businessobject_pageobject_to_xnl.four_dimensions { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
+    <question ?01KZWEXM92MG06RXAXXF6Q7BJB>
+    对象 operation handler 的稳定调用形状是什么？
+    </?01KZWEXM92MG06RXAXXF6Q7BJB>
+    <answer {  } (
+      <raw-answer ?01KZWEXM92MG06RXAXXF6Q7BJC>
+      fn(runtime, targets, invocation, config)
+      </?01KZWEXM92MG06RXAXXF6Q7BJC>
+      <decision-text ?01KZWEXM92MG06RXAXXF6Q7BJD>
+      所有 PageObject / BusinessObject operation handler SHALL 接收 runtime、targets、invocation、config 四个独立参数；action 读取 invocation.input，mutation 读取 invocation.desired。
+      </?01KZWEXM92MG06RXAXXF6Q7BJD>
+      <rationale ?01KZWEXM92MG06RXAXXF6Q7BJE>
+      target identity、semantic payload、host effect runtime 与调用配置不得混写。
+      </?01KZWEXM92MG06RXAXXF6Q7BJE>
+      <evidence ?01KZWEXM92MG06RXAXXF6Q7BJF>
+      用户明确给出的核心结果。
+      </?01KZWEXM92MG06RXAXXF6Q7BJF>
+    )>
+  )>
+  <decision #track.migrate_businessobject_pageobject_to_xnl.private_binding { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority"] } (
+    <question ?01KZWEXM92MG06RXAXXF6Q7BJG>
+    PageObject export 与 BusinessObject resource binding 是否进入 public catalog？
+    </?01KZWEXM92MG06RXAXXF6Q7BJG>
+    <answer {  } (
+      <raw-answer ?01KZWEXM92MG06RXAXXF6Q7BJH>
+      不进入。
+      </?01KZWEXM92MG06RXAXXF6Q7BJH>
+      <decision-text ?01KZWEXM92MG06RXAXXF6Q7BJJ>
+      Public catalog SHALL 只发布共同 definition；不同 binding 通过 discriminated capsule-private map 表达。
+      </?01KZWEXM92MG06RXAXXF6Q7BJJ>
+      <rationale ?01KZWEXM92MG06RXAXXF6Q7BJK>
+      binding 是实现 Effect，不是调用 Data。
+      </?01KZWEXM92MG06RXAXXF6Q7BJK>
+      <evidence ?01KZWEXM92MG06RXAXXF6Q7BJM>
+      参考 assembly closure design。
+      </?01KZWEXM92MG06RXAXXF6Q7BJM>
+    )>
+  )>
+  <decision #track.migrate_businessobject_pageobject_to_xnl.separate_object_entry { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+    <question ?01KZWEXM92MG06RXAXXF6Q7BJN>
+    对象操作是否复用 generic callable entry？
+    </?01KZWEXM92MG06RXAXXF6Q7BJN>
+    <answer {  } (
+      <raw-answer ?01KZWEXM92MG06RXAXXF6Q7BJP>
+      不复用。
+      </?01KZWEXM92MG06RXAXXF6Q7BJP>
+      <decision-text ?01KZWEXM92MG06RXAXXF6Q7BJQ>
+      Compiler SHALL 生成独立 run_object_operation(call)；BusinessAction/BusinessMutation MUST NOT 作为 generic callable 或独立 AI reference 暴露。
+      </?01KZWEXM92MG06RXAXXF6Q7BJQ>
+      <rationale ?01KZWEXM92MG06RXAXXF6Q7BJR>
+      对象操作拥有 targets/invocation/config 语义，flat callable 会破坏边界。
+      </?01KZWEXM92MG06RXAXXF6Q7BJR>
+      <evidence ?01KZWEXM92MG06RXAXXF6Q7BJS>
+      参考 compiler migration track。
+      </?01KZWEXM92MG06RXAXXF6Q7BJS>
+    )>
+  )>
+]>
+
+<decisions apiVersion="codument.tech/v1alpha1" [
+  <decision #mission.halfcode-compiler-xnl-migration.scope-boundary { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+    <question ?01M02KBYGP757KAFFEE4ENTVFZ>
+    哪些 XML 属于本次 XNL 迁移边界？
+    </?01M02KBYGP757KAFFEE4ENTVFZ>
+    <answer {  } (
+      <raw-answer ?01M02KBYGP757KAFFEE4ENTVG0>
+      将复制到 workspace 的 halfcode compiler 中的 XML 全部换成 XNL 风格。
+      </?01M02KBYGP757KAFFEE4ENTVG0>
+      <decision-text ?01M02KBYGP757KAFFEE4ENTVG1>
+      迁移全部产品 authoring/config XML、测试 fixture 及其代码/文档耦合；Codument 控制面 XML 保留。
+      </?01M02KBYGP757KAFFEE4ENTVG1>
+      <rationale ?01M02KBYGP757KAFFEE4ENTVG2>
+      用户目标指向资源编译产品，而 Codument mission/track/config XML 由独立控制面协议规定；把后者改写会破坏本次 mission 的执行真源。
+      </?01M02KBYGP757KAFFEE4ENTVG2>
+      <evidence ?01M02KBYGP757KAFFEE4ENTVG3>
+      baseline inventory 为 38 个 app XML、9 个 package fixture XML、8 个 Codument XML；depa-flows AI workflow resource 规范也明确区分 XNL app bundle 与可保留的 Codument control artifacts。
+      </?01M02KBYGP757KAFFEE4ENTVG3>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.semantic-migration { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+    <question ?01M02KBYGP757KAFFEE4ENTVG4>
+    迁移应是 XML 语法转写还是重新建立 XNL-native DSL？
+    </?01M02KBYGP757KAFFEE4ENTVG4>
+    <answer {  } (
+      <raw-answer ?01M02KBYGP757KAFFEE4ENTVG5>
+      特别参考过去利用 XNL 特点做 DSL、配置的规范习惯。
+      </?01M02KBYGP757KAFFEE4ENTVG5>
+      <decision-text ?01M02KBYGP757KAFFEE4ENTVG6>
+      迁移 SHALL 以 XNL 的 Tag/#id/metadata/{}/()/[]、URI、单多文件同构和 DEPA code-ref 边界重新建模，不做逐标签机械转写。
+      </?01M02KBYGP757KAFFEE4ENTVG6>
+      <rationale ?01M02KBYGP757KAFFEE4ENTVG7>
+      只有把语法特性映射为领域职责，才能获得稳定 identity、唯一子域、列表、引用和可拆分性；保留 XML 树形习惯只会制造 XNL 外观的 XML。
+      </?01M02KBYGP757KAFFEE4ENTVG7>
+      <evidence ?01M02KBYGP757KAFFEE4ENTVG8>
+      xnl-core parser/tests 与 depa-flows foundation syntax/naming/depa axioms。
+      </?01M02KBYGP757KAFFEE4ENTVG8>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.entry-and-identity { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.97 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+    <question ?01M02KBYGP757KAFFEE4ENTVG9>
+    资源 kind、identity 与目录入口由什么决定？
+    </?01M02KBYGP757KAFFEE4ENTVG9>
+    <answer {  } (
+      <raw-answer ?01M02KBYGP757KAFFEE4ENTVGA>
+      遵循过去的 XNL DSL 规范习惯。
+      </?01M02KBYGP757KAFFEE4ENTVGA>
+      <decision-text ?01M02KBYGP757KAFFEE4ENTVGB>
+      资源 kind/identity SHALL 来自 XNL 根 Tag 与 #id；目录 bundle SHALL 使用 manifest.xnl，文件路径只负责布局。
+      </?01M02KBYGP757KAFFEE4ENTVGB>
+      <rationale ?01M02KBYGP757KAFFEE4ENTVGC>
+      这保持内容真源、路径非权威和单/多文件同构，避免继续使用 KindDefinition.xml/Function.xml 等 kind-named entry。
+      </?01M02KBYGP757KAFFEE4ENTVGC>
+      <evidence ?01M02KBYGP757KAFFEE4ENTVGD>
+      depa-flows naming axioms M-N1、M-N5、M-N6 与 flow-core files。
+      </?01M02KBYGP757KAFFEE4ENTVGD>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.publication-identity { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+    <question ?01M02KBYGP757KAFFEE4ENTVGE>
+    迁移后的唯一公开 npm identity 是什么？
+    </?01M02KBYGP757KAFFEE4ENTVGE>
+    <answer {  } (
+      <raw-answer ?01M02KBYGP757KAFFEE4ENTVGF>
+      目标 workspace 命名为 halfcode-compiler.xnl，并希望 XML 全部换成 XNL 风格。
+      </?01M02KBYGP757KAFFEE4ENTVGF>
+      <decision-text ?01M02KBYGP757KAFFEE4ENTVGG>
+      唯一公开 npm package SHALL 为 halfcode-compiler.xnl；内部 workspace packages 继续保持 private。
+      </?01M02KBYGP757KAFFEE4ENTVGG>
+      <rationale ?01M02KBYGP757KAFFEE4ENTVGH>
+      旧 publication decision 明确把 halfcode-compiler.xml 留作 XML 产品并为未来 halfcode-compiler.xnl 预留独立边界；本 mission 正是在启动该 XNL 产品边界。
+      </?01M02KBYGP757KAFFEE4ENTVGH>
+      <evidence ?01M02KBYGP757KAFFEE4ENTVGJ>
+      workspace identity、用户迁移目标，以及 completed add-unified-xml-package track 的 proposal/decision provenance。
+      </?01M02KBYGP757KAFFEE4ENTVGJ>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.parser-authority { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+    <question ?01M02KBYGP757KAFFEE4ENTVGK>
+    产品使用哪一个 XNL parsing authority？
+    </?01M02KBYGP757KAFFEE4ENTVGK>
+    <answer {  } (
+      <raw-answer ?01M02KBYGP757KAFFEE4ENTVGM>
+      阅读并基于 xnl.ts 数据格式开发。
+      </?01M02KBYGP757KAFFEE4ENTVGM>
+      <decision-text ?01M02KBYGP757KAFFEE4ENTVGN>
+      产品 SHALL 使用 xnl-core 的公开 parser/AST/formatter 能力；具体依赖版本由实现 track 根据 lockfile 与发布可用性固定。
+      </?01M02KBYGP757KAFFEE4ENTVGN>
+      <rationale ?01M02KBYGP757KAFFEE4ENTVGP>
+      复用实际语言实现可避免在 halfcode 内再造不兼容 XNL parser，版本选择则应由可执行证据而非 mission 猜测决定。
+      </?01M02KBYGP757KAFFEE4ENTVGP>
+      <evidence ?01M02KBYGP757KAFFEE4ENTVGQ>
+      xnl-core package exports、parser/types/formatter 与 parser/dotted-tag/round-trip tests。
+      </?01M02KBYGP757KAFFEE4ENTVGQ>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.single-authority { priority = "P1" status = "accepted" durable_candidate = true confidence = 0.96 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.parser-authority"] } (
+    <question ?01M02KBYGP757KAFFEE4ENTVGR>
+    最终是否长期同时支持 XML 与 XNL authoring？
+    </?01M02KBYGP757KAFFEE4ENTVGR>
+    <answer {  } (
+      <raw-answer ?01M02KBYGP757KAFFEE4ENTVGS>
+      最好把其中的 XML 全都换成 XNL 风格。
+      </?01M02KBYGP757KAFFEE4ENTVGS>
+      <decision-text ?01M02KBYGP757KAFFEE4ENTVGT>
+      最终产品 SHALL 只保留 XNL authoring authority；迁移期兼容读取只能是受测试保护且有明确删除 gate 的临时机制。
+      </?01M02KBYGP757KAFFEE4ENTVGT>
+      <rationale ?01M02KBYGP757KAFFEE4ENTVGV>
+      长期双 parser/双文件入口会制造两份定义真源、双倍验证面和语义漂移，与 XNL-only config 习惯相冲突。
+      </?01M02KBYGP757KAFFEE4ENTVGV>
+      <evidence ?01M02KBYGP757KAFFEE4ENTVGW>
+      用户目标、depa-flows M-N9 与 AI workflow XNL-only authoring 规则。
+      </?01M02KBYGP757KAFFEE4ENTVGW>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.defer-businessobject-pageobject { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+    <question ?01M02KBYGP757KAFFEE4ENTVGX>
+    BusinessObject 与 PageObject 应在何时迁移？
+    </?01M02KBYGP757KAFFEE4ENTVGX>
+    <answer {  } (
+      <raw-answer ?01M02KBYGP757KAFFEE4ENTVGY>
+      BusinessObject, PageObject 要放到最后做，因为参考的 halfcode-compiler.xml 正在进行 API 重构。
+      </?01M02KBYGP757KAFFEE4ENTVGY>
+      <decision-text ?01M02KBYGP757KAFFEE4ENTVGZ>
+      BusinessObject 与 PageObject SHALL 在通用 XNL parser、consumer、authoring 和 distribution 基础完成后最后迁移；末段 track 创建前必须重新观察参考 API。
+      </?01M02KBYGP757KAFFEE4ENTVGZ>
+      <rationale ?01M02KBYGP757KAFFEE4ENTVH0>
+      当前 descriptor 与 application-assembly API 正在漂移，提前冻结会把过时形状固化进 XNL DSL，并导致随后重复迁移。
+      </?01M02KBYGP757KAFFEE4ENTVH0>
+      <evidence ?01M02KBYGP757KAFFEE4ENTVH1>
+      用户明确排序约束；mission 启动观察到参考实现的 PageObject descriptor、application-assembly source 和 tests 存在未提交改动。
+      </?01M02KBYGP757KAFFEE4ENTVH1>
+    )>
+  )>
+  <decision #track.remove_global_resource_field_requirements.kind_owned_fields { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
+    <question ?01M02KBYGP757KAFFEE4ENTVH2>
+    lifecycle 与 description 的约束由谁拥有？
+    </?01M02KBYGP757KAFFEE4ENTVH2>
+    <answer (
+      <raw-answer ?01M02KBYGP757KAFFEE4ENTVH3>
+      并不是所有的资源类型都有这两个。
+      </?01M02KBYGP757KAFFEE4ENTVH3>
+      <decision-text ?01M02KBYGP757KAFFEE4ENTVH4>
+      resource-core SHALL 将 lifecycle 与 description 保持为可选的 Kind-owned properties；只有具体 Kind 或 consumer contract 可以要求它们。
+      </?01M02KBYGP757KAFFEE4ENTVH4>
+      <rationale ?01M02KBYGP757KAFFEE4ENTVH5>
+      通用 loader 只应拥有所有资源真正共享的 identity、apiVersion、结构和 provenance 不变量。
+      </?01M02KBYGP757KAFFEE4ENTVH5>
+      <evidence ?01M02KBYGP757KAFFEE4ENTVH6>
+      用户明确约束以及当前 KindDefinition/consumer 分层。
+      </?01M02KBYGP757KAFFEE4ENTVH6>
+    )>
+  )>
+]>

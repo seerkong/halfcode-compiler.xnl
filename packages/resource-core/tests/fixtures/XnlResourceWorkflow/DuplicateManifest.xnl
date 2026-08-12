@@ -1,0 +1,10 @@
+<ResourcePackage #demo.resource_workflow.duplicate apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Duplicate identity fixture"
+} (
+  <Catalogs [
+    <Catalog #kind_definitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>
+    <Catalog #notes { kind = "Note" shape = "single-file" root = "vfs://./Duplicates/" }>
+  ]>
+)>
+

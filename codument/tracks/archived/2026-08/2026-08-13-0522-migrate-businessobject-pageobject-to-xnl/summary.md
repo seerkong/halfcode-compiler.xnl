@@ -1,0 +1,6 @@
+# Archive Summary: migrate-businessobject-pageobject-to-xnl
+
+- track.migrate_businessobject_pageobject_to_xnl.four_dimensions
+- track.migrate_businessobject_pageobject_to_xnl.private_binding
+- track.migrate_businessobject_pageobject_to_xnl.separate_object_entry
+- track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority

@@ -1,0 +1,30 @@
+<Track #expose-kind-definition-registry apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "公开 resource-core 已验证的 KindDefinition registry，供 compiler consumer 生成可靠 projection。" description = "消除消费方重复解析 Kind XNL 的需要，并保留 contract provenance。" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-15T10:33:14.066Z" updated_at = "2026-08-15T10:41:30Z" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "public-contract" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+  ]>
+  <TaskSpace #space_expose-kind-definition-registry { name = "expose-kind-definition-registry" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "public Kind registry" status = "DONE" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "添加 public registry contract 回归测试" status = "DONE" order = 0 }>
+          <Task #P1-T2 { name = "公开规范化 KindDefinition records" status = "DONE" order = 1 }>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "package verification" status = "DONE" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "复用 shared Kind contract 类型" status = "DONE" order = 0 }>
+          <Task #P2-T2 { name = "运行全仓与 distribution 检查" status = "DONE" order = 1 }>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_expose-kind-definition-registry" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+    ]>
+  ]>
+)>

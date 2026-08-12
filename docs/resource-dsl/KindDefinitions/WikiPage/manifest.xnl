@@ -1,0 +1,10 @@
+<KindDefinition #Halfcode.ResourceDsl.KindDefinition.WikiPage apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Kind definition for canonical documentation pages referenced from the Resource DSL package root."
+  resourceKind = "WikiPage"
+  sourceShapes = ["directory"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+} (
+  <DescriptorContract>
+)>

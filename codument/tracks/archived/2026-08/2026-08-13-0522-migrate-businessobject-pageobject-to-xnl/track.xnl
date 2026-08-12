@@ -1,0 +1,146 @@
+<Track #migrate-businessobject-pageobject-to-xnl version="1" apiVersion="codument.tech/v1alpha1" { status = "completed" goal = "同步稳定的 BO/PO object-operation API 并迁移为完整 XNL authority 与 compiler projection。" description = "统一四维 handler、targets/invocation、XNL owner catalog、private binding closure 与 generated object bundle。" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-13T01:44:42Z" updated_at = "2026-08-13T02:22:53Z" modeling_base_commit = "67896c2db79ba136c960ef2d60711304a333e323" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "input" name = "reference-api" domain = "code" path = "vfs://@/codument/tracks/active/migrate-businessobject-pageobject-to-xnl/analysis/" }>
+    <MaterialBundle { role = "output" name = "assembly" domain = "code" path = "vfs://@/packages/application-assembly/" }>
+    <MaterialBundle { role = "output" name = "compiler" domain = "code" path = "vfs://@/packages/compiler-skill/" }>
+    <MaterialBundle { role = "output" name = "authoring" domain = "resource" path = "vfs://@/apps/demo-resource-workflow-authoring/" }>
+    <MaterialBundle { role = "output" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+  ]>
+  <TaskSpace #space_migrate-businessobject-pageobject-to-xnl { name = "migrate-businessobject-pageobject-to-xnl" } (
+    <Description ?01M02KBYJPVQ8BAQNX2QB6Q8XD>
+    先同步稳定 API 与测试，再建立 XNL authority/reader，最后编译并真实执行对象 operations。
+    </?01M02KBYJPVQ8BAQNX2QB6Q8XD>
+    <SubNodes [
+      <TaskGroup #P1 { name = "稳定 object-operation API 同步" status = "DONE" order = 0 } (
+        <Description ?01M02KBYJPVQ8BAQNX2QB6Q8XE>
+        复制参考契约、validator、compiler 与 demo handler 事实，同时保留已完成的 generic XNL boundary。
+        </?01M02KBYJPVQ8BAQNX2QB6Q8XE>
+        <Gate [
+          <Criterion ?01M02KBYJPVQ8BAQNX2QB6Q8XF>
+          P1 tasks DONE
+          </?01M02KBYJPVQ8BAQNX2QB6Q8XF>
+          <Criterion ?01M02KBYJPVQ8BAQNX2QB6Q8XG>
+          contract/object-operation focused tests 与 typecheck 通过
+          </?01M02KBYJPVQ8BAQNX2QB6Q8XG>
+        ]>
+        <SubNodes [
+          <Task { id = "T1.1" name = "同步 reference tests、contracts 与 handlers" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJPVQ8BAQNX2QB6Q8XH>
+            复制稳定测试和 demo 实现，冻结四参 handler 与 target/invocation 语义。
+            </?01M02KBYJPVQ8BAQNX2QB6Q8XH>
+            <Acceptance [
+              <Criterion { id = "T1.1-AC1" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8XJ>
+              public types 覆盖 none/single/selection、action/mutation、config 与 batch
+              </?01M02KBYJPVQ8BAQNX2QB6Q8XJ>
+              <Criterion { id = "T1.1-AC2" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8XK>
+              PageObject 与 BusinessObject 四类 demo handler 均为四参调用
+              </?01M02KBYJPVQ8BAQNX2QB6Q8XK>
+            ]>
+          )>
+          <Task { id = "T1.2" name = "合并 assembly、compiler 与 distribution 实现" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYJPVQ8BAQNX2QB6Q8XM>
+            将 reference object-operation implementation 合入当前 XNL compiler 产品。
+            </?01M02KBYJPVQ8BAQNX2QB6Q8XM>
+            <Acceptance [
+              <Criterion { id = "T1.2-AC1" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8XN>
+              assembly catalog/validator/private resolver focused tests 通过
+              </?01M02KBYJPVQ8BAQNX2QB6Q8XN>
+              <Criterion { id = "T1.2-AC2" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8XP>
+              compiler object registry/bundle 与 package public types 通过
+              </?01M02KBYJPVQ8BAQNX2QB6Q8XP>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "BO/PO XNL authority 与 reader" status = "DONE" order = 1 } (
+        <Description ?01M02KBYJPVQ8BAQNX2QB6Q8XQ>
+        将 owner、handler resource、KindDefinition、Skill include/mapping 转换为 semantic XNL。
+        </?01M02KBYJPVQ8BAQNX2QB6Q8XQ>
+        <Gate [
+          <Criterion ?01M02KBYJPVQ8BAQNX2QB6Q8XR>
+          P2 tasks DONE
+          </?01M02KBYJPVQ8BAQNX2QB6Q8XR>
+          <Criterion ?01M02KBYJPVQ8BAQNX2QB6Q8XS>
+          完整 resources-xnl tree 与 generated object artifacts 通过
+          </?01M02KBYJPVQ8BAQNX2QB6Q8XS>
+        ]>
+        <SubNodes [
+          <Task { id = "T2.1" name = "编写 XNL owner reader 与 closure 测试" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJPVQ8BAQNX2QB6Q8XT>
+            覆盖两类 owner 的 XNL normalization、binding discrimination 与 fail-closed cases。
+            </?01M02KBYJPVQ8BAQNX2QB6Q8XT>
+            <Acceptance [
+              <Criterion { id = "T2.1-AC1" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8XV>
+              XNL PageObject/BusinessObject 投影同构 definitions 与不同 private bindings
+              </?01M02KBYJPVQ8BAQNX2QB6Q8XV>
+              <Criterion { id = "T2.1-AC2" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8XW>
+              unpublished target、duplicate ref、owner mismatch、missing binding 均拒绝
+              </?01M02KBYJPVQ8BAQNX2QB6Q8XW>
+            ]>
+          )>
+          <Task { id = "T2.2" name = "迁移完整 XNL authoring tree" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYJPVQ8BAQNX2QB6Q8XX>
+            补齐 KindDefinitions、BO/PO owners、actions/mutations、materials、Skill include 与 mapping。
+            </?01M02KBYJPVQ8BAQNX2QB6Q8XX>
+            <Acceptance [
+              <Criterion { id = "T2.2-AC1" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8XY>
+              domain/shared 默认 authoring modules 加载完整 XNL authority
+              </?01M02KBYJPVQ8BAQNX2QB6Q8XY>
+              <Criterion { id = "T2.2-AC2" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8XZ>
+              所有产品 resource records 均为 format=xnl
+              </?01M02KBYJPVQ8BAQNX2QB6Q8XZ>
+            ]>
+          )>
+          <Task { id = "T2.3" name = "编译并执行 object registry/bundle" status = "DONE" order = 2 priority = "P0" } (
+            <Description ?01M02KBYJPVQ8BAQNX2QB6Q8Y0>
+            构建 demo Skill 并真实执行 PageObject/BusinessObject action/mutation。
+            </?01M02KBYJPVQ8BAQNX2QB6Q8Y0>
+            <Acceptance [
+              <Criterion { id = "T2.3-AC1" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8Y1>
+              objects registry/bundle/reference paths 正确且不泄漏 binding
+              </?01M02KBYJPVQ8BAQNX2QB6Q8Y1>
+              <Criterion { id = "T2.3-AC2" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8Y2>
+              四类 object operations 真实执行并分别读取 input/desired
+              </?01M02KBYJPVQ8BAQNX2QB6Q8Y2>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "回归、方向与独立验收" status = "DONE" order = 2 } (
+        <Description ?01M02KBYJPVQ8BAQNX2QB6Q8Y3>
+        验证 XNL round-trip、全仓、生成、发布与 Codument closure。
+        </?01M02KBYJPVQ8BAQNX2QB6Q8Y3>
+        <Gate [
+          <Criterion ?01M02KBYJPVQ8BAQNX2QB6Q8Y4>
+          P3 tasks DONE
+          </?01M02KBYJPVQ8BAQNX2QB6Q8Y4>
+          <Criterion ?01M02KBYJPVQ8BAQNX2QB6Q8Y5>
+          full/package/strict/fresh verification 全通过
+          </?01M02KBYJPVQ8BAQNX2QB6Q8Y5>
+        ]>
+        <SubNodes [
+          <Task { id = "T3.1" name = "运行全量验证与边界扫描" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJPVQ8BAQNX2QB6Q8Y6>
+            运行 tests/typecheck/verify/generate/package、XNL round-trip 与 public/private scans。
+            </?01M02KBYJPVQ8BAQNX2QB6Q8Y6>
+            <Acceptance [
+              <Criterion { id = "T3.1-AC1" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8Y7>
+              全量产品与 Codument commands 通过
+              </?01M02KBYJPVQ8BAQNX2QB6Q8Y7>
+              <Criterion { id = "T3.1-AC2" checked = true } ?01M02KBYJPVQ8BAQNX2QB6Q8Y8>
+              fresh verifier 确认所有 behavior/gates/acceptance
+              </?01M02KBYJPVQ8BAQNX2QB6Q8Y8>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+)>

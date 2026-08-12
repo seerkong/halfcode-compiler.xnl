@@ -1,0 +1,8 @@
+<Note #demo.resource_workflow.note.root apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Root note discovered by a single-file catalog"
+  labels = ["root" "demo"]
+} [
+  <Tag #primary { value = "root" }>
+]>
+

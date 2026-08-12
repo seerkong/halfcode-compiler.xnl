@@ -1,0 +1,25 @@
+<module #publication.halfcode_compiler_xml apiVersion="codument.tech/v1alpha1" { kind = "module" visibility = "public" depends_on = ["modeling://domain/publication/internal-workspace-packages"] behaviors = ["behavior://package-distribution/requirements/unified-public-package"] } [
+  <desc ?01M02KBYHM9QCARYVZ707C7E6K>
+  halfcode-compiler.xml 是 XML 编译器唯一公开发布 capsule，拥有外部包名、版本、exports、类型声明与 tarball 内容；内部 workspace 包只提供构建输入。
+  </?01M02KBYHM9QCARYVZ707C7E6K>
+  <capsule-tree ?01M02KBYHM9QCARYVZ707C7E6M>
+  packages/distribution/
+    package.json                 # 公开包身份、exports、dependencies 与 files 白名单
+    tsdown.config.ts             # 内联私有 workspace 包并生成 ESM 与 bundled declarations
+    src/index.ts                 # 高级 assembly 与 Skill capsule compiler 根入口
+    src/application-assembly.ts  # application assembly 子路径
+    src/skill-capsule.ts         # Skill capsule compiler 子路径
+    src/contract-schema.ts       # contract schema compiler 子路径
+    src/authoring-runtime.ts     # host-owned authoring runtime 子路径
+    src/resource-*.ts            # resource core/mapping/projection 子路径
+    src/kind-definition.ts       # resource kind contract 子路径
+    src/testing.ts               # runtime testing 子路径
+    tools/verify-package.ts      # dist 私有引用扫描与 tarball consumer smoke
+  </?01M02KBYHM9QCARYVZ707C7E6M>
+  <dependency-rule ?01M02KBYHM9QCARYVZ707C7E6N>
+  发布 JS 与 .d.ts 可以导入 Node built-ins 以及 fast-xml-parser、yaml、typescript；不得引用任何 halfcode-compiler-* 私有包。workspace-tools 不属于公开 capsule。
+  </?01M02KBYHM9QCARYVZ707C7E6N>
+  <not-owned-here ?01M02KBYHM9QCARYVZ707C7E6P>
+  内部包的业务逻辑与 source authority 仍归各自 packages/* capsule；distribution 只拥有外部投影和发布契约。
+  </?01M02KBYHM9QCARYVZ707C7E6P>
+]>

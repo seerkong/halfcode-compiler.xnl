@@ -1,0 +1,76 @@
+{
+  "callableResources": [
+    {
+      "fqn": "Demo.ResourceWorkflow.Function.PrepareProcedure",
+      "kind": "Function",
+      "description": "Prepare a procedure draft from structured input.",
+      "inputContractRef": "resource://Demo.ResourceWorkflow.Contract.PrepareProcedure.Input",
+      "outputContractRef": "resource://Demo.ResourceWorkflow.Contract.PrepareProcedure.Output",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "procedureName": {
+            "type": "string"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "accepted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "module": "./Functions/PrepareProcedure.js"
+    },
+    {
+      "fqn": "Demo.ResourceWorkflow.ComposedFunction.PrepareWorkflow",
+      "kind": "ComposedFunction",
+      "description": "Prepare a workflow by composing lower-level procedure preparation logic.",
+      "inputContractRef": "resource://Demo.ResourceWorkflow.Contract.PrepareWorkflow.Input",
+      "outputContractRef": "resource://Demo.ResourceWorkflow.Contract.PrepareWorkflow.Output",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "procedureName": {
+            "type": "string"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ready": {
+            "type": "boolean"
+          }
+        }
+      },
+      "module": "./ComposedFunctions/PrepareWorkflow.js"
+    },
+    {
+      "fqn": "Demo.ResourceWorkflow.BO.MakerSpace.Reservation.Action.Approve",
+      "kind": "BusinessAction",
+      "description": "Approve a requested reservation after its domain rules pass.",
+      "inputContractRef": "resource://Demo.ResourceWorkflow.Contract.ReservationApproveAction.Input",
+      "outputContractRef": "resource://Demo.ResourceWorkflow.Contract.ReservationApproveAction.Output",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "object"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "done": {
+            "type": "boolean"
+          }
+        }
+      },
+      "module": "./BusinessActions/Approve.js"
+    }
+  ]
+}

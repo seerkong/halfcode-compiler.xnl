@@ -1,0 +1,53 @@
+<object #resource_consumers.skill_capsule_provenance apiVersion="codument.tech/v1alpha1" {
+  kind = "entity"
+  fact_grade = "derived_projection_cache"
+  single_writer = "modeling://domain/resource_consumers/skill_distribution_planner"
+} [
+  <desc ?>每个compiled SkillCapsule内固定路径的canonical provenance；绑定XNL source identity、生成协议和全部payload file digests。</?>
+  <types ?provenance_types>
+  interface SkillCapsuleIdentity {
+    fqn: string
+    name: string
+    apiVersion: string
+    version: string
+  }
+  interface SkillCapsuleProvenanceManifest {
+    format: "halfcode.skill-provenance/v1"
+    generatedBy: "halfcode.skill-distribution/v1"
+    source: { fqn: string; apiVersion: string; version: string }
+    payloadFiles: readonly { path: string; contentDigest: `sha256:${string}` }[]
+  }
+  </?provenance_types>
+  <constraint ?canonical_path>每capsule恰有一个references/.halfcode/provenance.json；payloadFiles排除manifest自身并按UTF-16 code-unit path排序。</?canonical_path>
+  <fact-source ?>FQN/name/apiVersion/version identity来自SkillCapsule XNL；YAML只保留呈现字段；payload digest来自planner冻结的canonical bytes；manifest是可重建投影且不反写XNL。</?>
+]>
+
+<component #resource_consumers.resource_dsl_consumer_skill apiVersion="codument.tech/v1alpha1" {
+  kind = "component"
+  behaviors = [
+    "behavior://skill-capsule-distribution/requirements/canonical-resource-dsl-consumer-skill"
+  ]
+} [
+  <desc ?>由canonical Resource DSL ResourcePackage与WikiPage resources编译的sys-halfcode-resource-dsl@1.0.0；SKILL只做渐进加载路由。</?>
+  <input ?authority>docs/resource-dsl/manifest.xnl、WikiPage descriptors、canonical Markdown/XNL examples与SkillCapsule XNL。</?authority>
+  <output ?distribution>SkillCapsuleDistributionPlan中的一个root capsule，含SKILL.md、Resource DSL reference subtree和canonical provenance。</?distribution>
+  <not-owned-here ?>Eidolon global init、安装路径、authoring/run operations、workflow kind semantics与registry publication。</?>
+]>
+
+<policy #resource_consumers.skill_provenance_authority apiVersion="codument.tech/v1alpha1" {
+  kind = "policy"
+  behaviors = [
+    "behavior://skill-capsule-distribution/requirements/canonical-skill-provenance"
+    "behavior://skill-capsule-distribution/requirements/consumer-skill-compatibility"
+  ]
+} [
+  <pseudo { kind = "rule" } ?authority_rule>
+  SkillCapsule XNL -> source FQN/name/apiVersion/version
+  legacy descriptor without XNL name -> compatible YAML/FQN fallback only
+  planner canonical payload bytes -> payload digests
+  protocol constant -> generatedBy
+  planner -> provenance manifest + capsule/closure digest
+  applier -> exact provenance reconstruction before any target mutation
+  host -> installation root and lifecycle policy only
+  </?authority_rule>
+]>

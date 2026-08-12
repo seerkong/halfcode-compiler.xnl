@@ -1,0 +1,37 @@
+<behaviors capability="resource-authoring" version="1">
+  <Metadata>
+    <ApiVersion>codument.tech/v1alpha1</ApiVersion>
+  </Metadata>
+  <requirement id="xnl-resource-language">
+    <statement>系统 SHALL 以 XNL-native DSL 表达资源 package、catalog、KindDefinition、descriptor 与 mapping，并按 tag、#id、properties、body、extension 的固定语义解释文档；通用 loader SHALL 不把 lifecycle 或 description 强制为所有 Kind 的共同字段。</statement>
+    <suite id="language-channels" name="XNL 通道语义">
+      <case id="parse-representative-documents">
+        <given>作者提供符合规范的 package、KindDefinition、generic descriptor、BO/PO owner 与 ResourceMappings XNL 文档</given>
+        <when>使用当前 xnl-core parser 解析文档</when>
+        <then>所有文档 SHALL 可解析，且身份、属性、重复成员和唯一子域保持可区分</then>
+      </case>
+      <case id="canonical-references">
+        <given>descriptor 引用相对物料、workspace 物料、资源或 TypeScript 导出</given>
+        <when>作者写入引用</when>
+        <then>引用 SHALL 使用 vfs://./、vfs://@/、resource:// 与 code binding properties，不得发明 XML 路径前缀</then>
+      </case>
+      <case id="kind-owned-optional-properties">
+        <given>已注册 Kind 的资源只声明 #id、apiVersion 及该 Kind 自己需要的字段</given>
+        <when>资源不含 lifecycle 和 description</when>
+        <then>通用 loader SHALL 接受该资源并在 normalized record 中保持字段缺失，具体 Kind consumer MAY 另行要求它们</then>
+      </case>
+    </suite>
+    <suite id="normalized-boundary" name="规范化边界">
+      <case id="no-xml-private-shape">
+        <given>下游 loader 将 XNL 文档规范化</given>
+        <when>consumer 读取 normalized descriptor</when>
+        <then>consumer SHALL 不依赖 XML attribute-prefix 或 parser-private XmlObject 形状</then>
+      </case>
+      <case id="object-operation-channels">
+        <given>BusinessObject 或 PageObject 声明 targets 与 operations</given>
+        <when>作者分配 XNL channels</when>
+        <then>唯一 owner/binding 使用 properties/subdomains，重复 target kinds/actions/mutations 使用 body members</then>
+      </case>
+    </suite>
+  </requirement>
+</behaviors>

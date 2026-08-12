@@ -1,0 +1,109 @@
+<Track #migrate-authoring-trees-to-xnl version="1" apiVersion="codument.tech/v1alpha1" { status = "completed" goal = "建立 XNL-native generic authoring trees 与作者规范" description = "迁移 demo/shared generic resources、KindDefinitions、SkillCapsule mapping 与 guidance；BO/PO aggregate boundary 延后" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-12T19:15:00Z" updated_at = "2026-08-12T19:43:00Z" modeling_base_commit = "67896c2db79ba136c960ef2d60711304a333e323" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "input" name = "legacy-authoring" domain = "resource" path = "vfs://@/apps/" }>
+    <MaterialBundle { role = "output" name = "xnl-authoring" domain = "resource" path = "vfs://@/apps/" }>
+    <MaterialBundle { role = "output" name = "guidance" domain = "docs" path = "vfs://@/skills/" }>
+  ]>
+  <TaskSpace #space_migrate-authoring-trees-to-xnl { name = "migrate-authoring-trees-to-xnl" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "XNL authoring authority" status = "DONE" order = 0 } (
+        <Gate [
+          <Criterion ?01M02KBYJDBW15YGYF6WATZJ5J>
+          P1 tasks DONE
+          </?01M02KBYJDBW15YGYF6WATZJ5J>
+          <Criterion ?01M02KBYJDBW15YGYF6WATZJ5K>
+          explicit XNL package load passes
+          </?01M02KBYJDBW15YGYF6WATZJ5K>
+        ]>
+        <SubNodes [
+          <Task { id = "T1.1" name = "Create semantic XNL package and KindDefinitions" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJDBW15YGYF6WATZJ5M>
+            Create domain/shared roots and non-aggregate kind contracts.
+            </?01M02KBYJDBW15YGYF6WATZJ5M>
+            <Acceptance [
+              <Criterion { id = "T1.1-AC1" checked = true } ?01M02KBYJDBW15YGYF6WATZJ5N>
+              both manifest.xnl roots validate and load
+              </?01M02KBYJDBW15YGYF6WATZJ5N>
+              <Criterion { id = "T1.1-AC2" checked = true } ?01M02KBYJDBW15YGYF6WATZJ5P>
+              staged trees contain zero XML and zero BO/PO aggregate schema
+              </?01M02KBYJDBW15YGYF6WATZJ5P>
+            ]>
+          )>
+          <Task { id = "T1.2" name = "Migrate generic descriptors and materials" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYJDBW15YGYF6WATZJ5Q>
+            Translate callable, knowledge, shared and SkillCapsule resources with semantic channels.
+            </?01M02KBYJDBW15YGYF6WATZJ5Q>
+            <Acceptance [
+              <Criterion { id = "T1.2-AC1" checked = true } ?01M02KBYJDBW15YGYF6WATZJ5R>
+              generic assembly parity passes
+              </?01M02KBYJDBW15YGYF6WATZJ5R>
+              <Criterion { id = "T1.2-AC2" checked = true } ?01M02KBYJDBW15YGYF6WATZJ5S>
+              all loaded records report format=xnl
+              </?01M02KBYJDBW15YGYF6WATZJ5S>
+            ]>
+          )>
+          <Task { id = "T1.3" name = "Migrate ResourceMappings material" status = "DONE" order = 2 priority = "P0" } (
+            <Description ?01M02KBYJDBW15YGYF6WATZJ5T>
+            Replace the staged SkillCapsule mapping reference and grammar with XNL.
+            </?01M02KBYJDBW15YGYF6WATZJ5T>
+            <Acceptance [
+              <Criterion { id = "T1.3-AC1" checked = true } ?01M02KBYJDBW15YGYF6WATZJ5V>
+              mapping parse and plan pass from staged SkillCapsule
+              </?01M02KBYJDBW15YGYF6WATZJ5V>
+              <Criterion { id = "T1.3-AC2" checked = true } ?01M02KBYJDBW15YGYF6WATZJ5W>
+              legacy XML mapping is not referenced by staged resources
+              </?01M02KBYJDBW15YGYF6WATZJ5W>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Guidance and regression" status = "DONE" order = 1 } (
+        <Gate [
+          <Criterion ?01M02KBYJDBW15YGYF6WATZJ5X>
+          P2 tasks DONE
+          </?01M02KBYJDBW15YGYF6WATZJ5X>
+          <Criterion ?01M02KBYJDBW15YGYF6WATZJ5Y>
+          strict/full/package checks pass
+          </?01M02KBYJDBW15YGYF6WATZJ5Y>
+        ]>
+        <SubNodes [
+          <Task { id = "T2.1" name = "Rewrite author guidance for XNL" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYJDBW15YGYF6WATZJ5Z>
+            Replace XML-first generic instructions while marking BO/PO examples deferred.
+            </?01M02KBYJDBW15YGYF6WATZJ5Z>
+            <Acceptance [
+              <Criterion { id = "T2.1-AC1" checked = true } ?01M02KBYJDBW15YGYF6WATZJ60>
+              generic guidance uses manifest.xnl and semantic channels
+              </?01M02KBYJDBW15YGYF6WATZJ60>
+              <Criterion { id = "T2.1-AC2" checked = true } ?01M02KBYJDBW15YGYF6WATZJ61>
+              no guidance claims speculative BO/PO XNL API
+              </?01M02KBYJDBW15YGYF6WATZJ61>
+            ]>
+          )>
+          <Task { id = "T2.2" name = "Run independent verification" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYJDBW15YGYF6WATZJ62>
+            Run target/full tests, typecheck, governance, package and exclusion scans.
+            </?01M02KBYJDBW15YGYF6WATZJ62>
+            <Acceptance [
+              <Criterion { id = "T2.2-AC1" checked = true } ?01M02KBYJDBW15YGYF6WATZJ63>
+              all required commands pass
+              </?01M02KBYJDBW15YGYF6WATZJ63>
+              <Criterion { id = "T2.2-AC2" checked = true } ?01M02KBYJDBW15YGYF6WATZJ64>
+              fresh verifier confirms behavior suite
+              </?01M02KBYJDBW15YGYF6WATZJ64>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_migrate-authoring-trees-to-xnl" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+    ]>
+  ]>
+)>

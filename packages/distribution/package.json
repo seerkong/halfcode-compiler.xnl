@@ -1,0 +1,74 @@
+{
+  "name": "halfcode-compiler.xnl",
+  "version": "0.2.2",
+  "description": "Compile XNL-described applications into runtime-ready skill capsules.",
+  "type": "module",
+  "private": false,
+  "packageKind": "framework",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./application-assembly": {
+      "types": "./dist/application-assembly.d.ts",
+      "import": "./dist/application-assembly.js"
+    },
+    "./skill-capsule": {
+      "types": "./dist/skill-capsule.d.ts",
+      "import": "./dist/skill-capsule.js"
+    },
+    "./contract-schema": {
+      "types": "./dist/contract-schema.d.ts",
+      "import": "./dist/contract-schema.js"
+    },
+    "./authoring-runtime": {
+      "types": "./dist/authoring-runtime.d.ts",
+      "import": "./dist/authoring-runtime.js"
+    },
+    "./resource-core": {
+      "types": "./dist/resource-core.d.ts",
+      "import": "./dist/resource-core.js"
+    },
+    "./resource-mapping": {
+      "types": "./dist/resource-mapping.d.ts",
+      "import": "./dist/resource-mapping.js"
+    },
+    "./resource-projection": {
+      "types": "./dist/resource-projection.d.ts",
+      "import": "./dist/resource-projection.js"
+    },
+    "./kind-definition": {
+      "types": "./dist/kind-definition.d.ts",
+      "import": "./dist/kind-definition.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown && bun run tools/build-resource-dsl-system-skill.ts",
+    "check": "bun run build && bun run tools/verify-package.ts"
+  },
+  "dependencies": {
+    "typescript": "5.9.3",
+    "yaml": "^2.8.0"
+  },
+  "devDependencies": {
+    "halfcode-compiler-application-assembly": "workspace:*",
+    "halfcode-compiler-authoring-runtime": "workspace:*",
+    "halfcode-compiler-contract-schema": "workspace:*",
+    "halfcode-compiler-kind-definition": "workspace:*",
+    "halfcode-compiler-resource-core": "workspace:*",
+    "halfcode-compiler-resource-mapping": "workspace:*",
+    "halfcode-compiler-resource-projection": "workspace:*",
+    "halfcode-compiler-runtime-testing": "workspace:*",
+    "halfcode-compiler-skill-capsule": "workspace:*",
+    "tsdown": "0.22.14"
+  }
+}

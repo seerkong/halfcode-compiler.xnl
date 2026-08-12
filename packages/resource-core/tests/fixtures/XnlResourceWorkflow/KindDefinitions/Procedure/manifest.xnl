@@ -1,0 +1,12 @@
+<KindDefinition #halfcode.resource_kind.Procedure apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  resourceKind = "Procedure"
+  sourceShapes = ["directory"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+  description = "Procedure resource contract"
+} (
+  <DescriptorContract (
+    <RequiredFiles [ <File { name = "Notes.txt" }> ]>
+  )>
+)>

@@ -1,0 +1,1 @@
+<KindDefinition #halfcode.resource_kind.Function apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Stable" resourceKind = "Function" sourceShapes = ["directory"] currentApiVersion = "halfcode.resources/v1" supportedApiVersions = ["halfcode.resources/v1"] description = "Function" }>

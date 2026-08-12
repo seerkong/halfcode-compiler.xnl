@@ -1,0 +1,12 @@
+<ResourcePackage #demo.resource_workflow.project apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "XNL-native resource workflow fixture"
+} (
+  <Catalogs [
+    <Catalog #kind_definitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>
+    <Catalog #root_notes { kind = "Note" shape = "single-file" root = "vfs://./Notes/" }>
+    <Catalog #root_procedures { kind = "Procedure" shape = "directory" root = "vfs://./Procedures/" entry = "manifest.xnl" }>
+    <Catalog #modules { kind = "ResourceModule" shape = "manifest" root = "vfs://./Modules/" entry = "manifest.xnl" }>
+  ]>
+)>
+

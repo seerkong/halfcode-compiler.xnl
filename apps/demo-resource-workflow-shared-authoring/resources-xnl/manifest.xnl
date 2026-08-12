@@ -1,0 +1,9 @@
+<ResourcePackage #Demo.ResourceWorkflow.Shared.Authoring apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "XNL-native shared authoring resources for the demo workflow."
+} (
+  <Catalogs [
+    <Catalog #KindDefinitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>
+    <Catalog #PromptFragments { kind = "PromptFragment" shape = "directory" root = "vfs://./PromptFragments/" entry = "manifest.xnl" }>
+  ]>
+)>

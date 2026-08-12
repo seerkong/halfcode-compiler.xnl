@@ -1,0 +1,78 @@
+<decisions apiVersion="codument.tech/v1alpha1" [
+  <decision #track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+    <question ?01M02KBYJKPF2BKYASVPBJ98G0>
+    谁拥有 object-operation definition 与 target kinds？
+    </?01M02KBYJKPF2BKYASVPBJ98G0>
+    <answer {  } (
+      <raw-answer ?01M02KBYJKPF2BKYASVPBJ98G1>
+      XNL owner resource。
+      </?01M02KBYJKPF2BKYASVPBJ98G1>
+      <decision-text ?01M02KBYJKPF2BKYASVPBJ98G2>
+      PageObject / BusinessObject XNL owner document SHALL 是 operation definition 与 target-kind 的唯一 authority；binding 只拥有实现和 contract facts。
+      </?01M02KBYJKPF2BKYASVPBJ98G2>
+      <rationale ?01M02KBYJKPF2BKYASVPBJ98G3>
+      避免 registry、handler 与 authoring 形成多重 authority。
+      </?01M02KBYJKPF2BKYASVPBJ98G3>
+      <evidence ?01M02KBYJKPF2BKYASVPBJ98G4>
+      用户确认的稳定 API 与 XNL channel allocation decision。
+      </?01M02KBYJKPF2BKYASVPBJ98G4>
+    )>
+  )>
+  <decision #track.migrate_businessobject_pageobject_to_xnl.four_dimensions { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
+    <question ?01M02KBYJKPF2BKYASVPBJ98G5>
+    对象 operation handler 的稳定调用形状是什么？
+    </?01M02KBYJKPF2BKYASVPBJ98G5>
+    <answer {  } (
+      <raw-answer ?01M02KBYJKPF2BKYASVPBJ98G6>
+      fn(runtime, targets, invocation, config)
+      </?01M02KBYJKPF2BKYASVPBJ98G6>
+      <decision-text ?01M02KBYJKPF2BKYASVPBJ98G7>
+      所有 PageObject / BusinessObject operation handler SHALL 接收 runtime、targets、invocation、config 四个独立参数；action 读取 invocation.input，mutation 读取 invocation.desired。
+      </?01M02KBYJKPF2BKYASVPBJ98G7>
+      <rationale ?01M02KBYJKPF2BKYASVPBJ98G8>
+      target identity、semantic payload、host effect runtime 与调用配置不得混写。
+      </?01M02KBYJKPF2BKYASVPBJ98G8>
+      <evidence ?01M02KBYJKPF2BKYASVPBJ98G9>
+      用户明确给出的核心结果。
+      </?01M02KBYJKPF2BKYASVPBJ98G9>
+    )>
+  )>
+  <decision #track.migrate_businessobject_pageobject_to_xnl.private_binding { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority"] } (
+    <question ?01M02KBYJKPF2BKYASVPBJ98GA>
+    PageObject export 与 BusinessObject resource binding 是否进入 public catalog？
+    </?01M02KBYJKPF2BKYASVPBJ98GA>
+    <answer {  } (
+      <raw-answer ?01M02KBYJKPF2BKYASVPBJ98GB>
+      不进入。
+      </?01M02KBYJKPF2BKYASVPBJ98GB>
+      <decision-text ?01M02KBYJKPF2BKYASVPBJ98GC>
+      Public catalog SHALL 只发布共同 definition；不同 binding 通过 discriminated capsule-private map 表达。
+      </?01M02KBYJKPF2BKYASVPBJ98GC>
+      <rationale ?01M02KBYJKPF2BKYASVPBJ98GD>
+      binding 是实现 Effect，不是调用 Data。
+      </?01M02KBYJKPF2BKYASVPBJ98GD>
+      <evidence ?01M02KBYJKPF2BKYASVPBJ98GE>
+      参考 assembly closure design。
+      </?01M02KBYJKPF2BKYASVPBJ98GE>
+    )>
+  )>
+  <decision #track.migrate_businessobject_pageobject_to_xnl.separate_object_entry { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+    <question ?01M02KBYJKPF2BKYASVPBJ98GF>
+    对象操作是否复用 generic callable entry？
+    </?01M02KBYJKPF2BKYASVPBJ98GF>
+    <answer {  } (
+      <raw-answer ?01M02KBYJKPF2BKYASVPBJ98GG>
+      不复用。
+      </?01M02KBYJKPF2BKYASVPBJ98GG>
+      <decision-text ?01M02KBYJKPF2BKYASVPBJ98GH>
+      Compiler SHALL 生成独立 run_object_operation(call)；BusinessAction/BusinessMutation MUST NOT 作为 generic callable 或独立 AI reference 暴露。
+      </?01M02KBYJKPF2BKYASVPBJ98GH>
+      <rationale ?01M02KBYJKPF2BKYASVPBJ98GJ>
+      对象操作拥有 targets/invocation/config 语义，flat callable 会破坏边界。
+      </?01M02KBYJKPF2BKYASVPBJ98GJ>
+      <evidence ?01M02KBYJKPF2BKYASVPBJ98GK>
+      参考 compiler migration track。
+      </?01M02KBYJKPF2BKYASVPBJ98GK>
+    )>
+  )>
+]>

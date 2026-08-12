@@ -1,0 +1,14 @@
+{
+  "kind": "Contract",
+  "fqn": "Demo.ResourceWorkflow.Contract.Function.PrepareProcedure",
+  "input": {
+    "source": "input.ts",
+    "export": "PrepareProcedureInput",
+    "schemaId": "Demo.ResourceWorkflow.Contract.PrepareProcedure.Input"
+  },
+  "output": {
+    "source": "output.ts",
+    "export": "PrepareProcedureOutput",
+    "schemaId": "Demo.ResourceWorkflow.Contract.PrepareProcedure.Output"
+  }
+}

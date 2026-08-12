@@ -1,0 +1,10 @@
+<Procedure #demo.resource_workflow.procedure.prepare apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Directory-shaped procedure"
+} (
+  <Instruction ?instruction>
+  Prepare normalized workflow data.
+  </?instruction>
+  <CodeBinding { src = "vfs://@/src/procedures.ts#prepareProcedure" }>
+)>
+

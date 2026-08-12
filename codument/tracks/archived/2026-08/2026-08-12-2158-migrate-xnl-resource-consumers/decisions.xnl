@@ -1,0 +1,39 @@
+<decision #track.migrate_xnl_resource_consumers.generic_node_boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" blocks = ["implementation"] } (
+  <question ?01M02KBYJ8NSKA0MKFNEW3GQWD>
+  generic consumer 应读取什么形状？
+  </?01M02KBYJ8NSKA0MKFNEW3GQWD>
+  <answer {  } (
+    <raw-answer ?01M02KBYJ8NSKA0MKFNEW3GQWE>
+    ResourceNode semantic channels
+    </?01M02KBYJ8NSKA0MKFNEW3GQWE>
+    <decision-text ?01M02KBYJ8NSKA0MKFNEW3GQWF>
+    generic application assembly 与 mapping 只把 normalized ResourceNode/XNL 文档作为新边界；XML shape 仅留临时 internal adapter。
+    </?01M02KBYJ8NSKA0MKFNEW3GQWF>
+    <rationale ?01M02KBYJ8NSKA0MKFNEW3GQWG>
+    隔离 parser 并避免 @attribute 泄漏。
+    </?01M02KBYJ8NSKA0MKFNEW3GQWG>
+    <evidence ?01M02KBYJ8NSKA0MKFNEW3GQWH>
+    G3 normalized resource record。
+    </?01M02KBYJ8NSKA0MKFNEW3GQWH>
+  )>
+)>
+
+<decision #track.migrate_xnl_resource_consumers.defer_bo_po apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "high" blocks = ["implementation"] } (
+  <question ?01M02KBYJ8NSKA0MKFNEW3GQWJ>
+  本 track 是否迁移 BO/PO reader？
+  </?01M02KBYJ8NSKA0MKFNEW3GQWJ>
+  <answer {  } (
+    <raw-answer ?01M02KBYJ8NSKA0MKFNEW3GQWK>
+    最后做
+    </?01M02KBYJ8NSKA0MKFNEW3GQWK>
+    <decision-text ?01M02KBYJ8NSKA0MKFNEW3GQWM>
+    BusinessObject/PageObject 专用 reader、operation model 与 public types 保持不变，不接受本阶段 XNL specialization。
+    </?01M02KBYJ8NSKA0MKFNEW3GQWM>
+    <rationale ?01M02KBYJ8NSKA0MKFNEW3GQWN>
+    参考 API 正在重构。
+    </?01M02KBYJ8NSKA0MKFNEW3GQWN>
+    <evidence ?01M02KBYJ8NSKA0MKFNEW3GQWP>
+    用户约束与 mission LATE-BO-PO。
+    </?01M02KBYJ8NSKA0MKFNEW3GQWP>
+  )>
+)>

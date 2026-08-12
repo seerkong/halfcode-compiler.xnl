@@ -1,0 +1,21 @@
+<KindDefinition #Halfcode.ResourceDsl.KindDefinition.SkillCapsule apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Kind definition for the versioned Resource DSL consumer SkillCapsule."
+  resourceKind = "SkillCapsule"
+  sourceShapes = ["directory"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+} (
+  <DescriptorContract (
+    <RequiredFiles [
+      <File { name = "SKILL.metadata.yaml" }>
+      <File { name = "SKILL.template.ejs" }>
+      <File { name = "resource-mappings.xnl" }>
+    ]>
+    <IncludeContract {
+      collection = "Includes"
+      relation = "compiled-resource-selection"
+      dependencySemantics = false
+    }>
+  )>
+)>

@@ -1,0 +1,19 @@
+<decision #track.remove_global_resource_field_requirements.kind_owned_fields apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
+  <question ?01M02KBYKQY1H6J0GTB17VCFPH>
+  lifecycle 与 description 的约束由谁拥有？
+  </?01M02KBYKQY1H6J0GTB17VCFPH>
+  <answer (
+    <raw-answer ?01M02KBYKQY1H6J0GTB17VCFPJ>
+    并不是所有的资源类型都有这两个。
+    </?01M02KBYKQY1H6J0GTB17VCFPJ>
+    <decision-text ?01M02KBYKQY1H6J0GTB17VCFPK>
+    resource-core SHALL 将 lifecycle 与 description 保持为可选的 Kind-owned properties；只有具体 Kind 或 consumer contract 可以要求它们。
+    </?01M02KBYKQY1H6J0GTB17VCFPK>
+    <rationale ?01M02KBYKQY1H6J0GTB17VCFPM>
+    通用 loader 只应拥有所有资源真正共享的 identity、apiVersion、结构和 provenance 不变量。
+    </?01M02KBYKQY1H6J0GTB17VCFPM>
+    <evidence ?01M02KBYKQY1H6J0GTB17VCFPN>
+    用户明确约束以及当前 KindDefinition/consumer 分层。
+    </?01M02KBYKQY1H6J0GTB17VCFPN>
+  )>
+)>

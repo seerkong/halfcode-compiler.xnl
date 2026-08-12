@@ -1,0 +1,6 @@
+<PromptFragment #Demo.ResourceWorkflow.PromptFragment.SkillPrelude apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Opening guidance for the generated demo Skill."
+} (
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+)>

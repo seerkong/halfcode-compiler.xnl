@@ -1,0 +1,39 @@
+<policy #resource_authoring.xnl_channel_allocation apiVersion="codument.tech/v1alpha1" { kind = "policy" behaviors = ["behavior://resource-authoring/requirements/xnl-resource-language"] } [
+  <desc ?01KZVFB3VGNGV733XEN2WEAKQM>
+  资源文档按固定 XNL 通道表达语义，禁止把 XML 属性对象形状当成领域模型。
+  </?01KZVFB3VGNGV733XEN2WEAKQM>
+  <pseudo { kind = "rule" } ?rule>
+  tag -> resource kind
+  #id -> canonical resource identity
+  properties -> unordered metadata
+  body -> ordered or repeatable members
+  extension -> unique named subdomains
+  </?rule>
+]>
+
+<object #resource_authoring.resource_document apiVersion="codument.tech/v1alpha1" { kind = "entity" fact_grade = "authoritative_fact" single_writer = "modeling://domain/resource_authoring/author" } [
+  <desc ?01KZVFB3VGNGV733XEN2WEAKQN>
+  一个以 XNL 表达的资源 authority 文档；规范身份与磁盘位置分离。
+  </?01KZVFB3VGNGV733XEN2WEAKQN>
+  <types ?types>
+  interface ResourceDocument {
+    kind: string
+    resourceId: string
+    metadata: Readonly<Record<string, unknown>>
+    members: readonly unknown[]
+    subdomains: Readonly<Record<string, unknown>>
+  }
+  </?types>
+  <invariants ?01KZVFB3VGNGV733XEN2WEAKQP>
+  resourceId 全局可寻址；package provenance 由文档 URI 与 logical path 派生，不允许 descriptor 反写。
+  </?01KZVFB3VGNGV733XEN2WEAKQP>
+]>
+
+<actor #resource_authoring.author apiVersion="codument.tech/v1alpha1" { kind = "actor" single_writer = "modeling://domain/resource_authoring/resource_document" } [
+  <desc ?01KZVFB3VGNGV733XEN2WEAKQQ>
+  资源作者拥有 XNL authority 的写入权；loader 和 consumer 只能生成规范化投影，不能反向改写 authoring 文档。
+  </?01KZVFB3VGNGV733XEN2WEAKQQ>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  编辑 XNL authority → parser 观测 → validator 收敛 → normalized projection 供 consumer 只读使用
+  </?ctrl>
+]>

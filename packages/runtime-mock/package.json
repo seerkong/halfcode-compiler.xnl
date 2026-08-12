@@ -1,0 +1,13 @@
+{
+  "name": "halfcode-compiler-runtime-testing",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "packageKind": "framework",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "halfcode-compiler-authoring-runtime": "workspace:*"
+  }
+}

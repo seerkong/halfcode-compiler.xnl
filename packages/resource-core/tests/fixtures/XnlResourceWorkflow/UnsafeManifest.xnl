@@ -1,0 +1,10 @@
+<ResourcePackage #demo.resource_workflow.unsafe apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Unsafe containment fixture"
+} (
+  <Catalogs [
+    <Catalog #kind_definitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>
+    <Catalog #unsafe_notes { kind = "Note" shape = "single-file" root = "vfs://./../Notes/" }>
+  ]>
+)>
+

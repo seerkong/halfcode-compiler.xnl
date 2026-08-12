@@ -1,0 +1,7 @@
+<Function #demo.xnl_assembly.function.prepare apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Active" description = "Prepare data" } (
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+  <InputContract { ref = "resource://demo.contract.prepare.input" }>
+  <OutputContract { ref = "resource://demo.contract.prepare.output" }>
+  <CodeBinding { package = "demo-xnl-authoring" module = "./src/functions" export = "prepare" }>
+  <Mutations [ <Mutation { ref = "resource://demo.mutation.audit" }> ]>
+)>

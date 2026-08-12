@@ -1,0 +1,8 @@
+<KindDefinition #halfcode.resource_kind.ResourceModule apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  resourceKind = "ResourceModule"
+  sourceShapes = ["manifest"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+  description = "Nested resource module contract"
+}>

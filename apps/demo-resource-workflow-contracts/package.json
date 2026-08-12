@@ -1,0 +1,25 @@
+{
+  "name": "demo-resource-workflow-contracts",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "packageKind": "application",
+  "applicationFamily": "demo-resource-workflow",
+  "applicationScope": "domain",
+  "applicationRole": "contracts",
+  "capabilitySubpathExports": [
+    "./Function/PrepareProcedure",
+    "./ComposedFunction/PrepareWorkflow",
+    "./BusinessObject/ReservationApproveAction"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./Function/PrepareProcedure": "./src/Function/PrepareProcedure/index.ts",
+    "./ComposedFunction/PrepareWorkflow": "./src/ComposedFunction/PrepareWorkflow/index.ts",
+    "./BusinessObject/ReservationApproveAction": "./src/BusinessObject/ReservationApproveAction/index.ts",
+    "./Shared": "./src/Shared/index.ts"
+  },
+  "devDependencies": {
+    "halfcode-compiler-contract-schema": "workspace:*"
+  }
+}

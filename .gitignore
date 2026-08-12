@@ -1,0 +1,11 @@
+.agents/
+.claude/
+.eidolon/
+.tmp/
+
+codument/**/analysis
+codument/**/reports
+
+node_modules/
+dist/
+*.log

@@ -1,0 +1,38 @@
+<decisions apiVersion="codument.tech/v1alpha1" [
+  <decision #track.publish_resource_dsl.canonical_docs apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true } (
+    <question ?q>consumer Skill 的 Resource DSL 正文由哪里维护？</?q>
+    <answer { } (
+      <raw-answer ?raw>规范不能在 Eidolon 或 Skill 模板中手工复制。</?raw>
+      <decision-text ?text>`docs/resource-dsl/` 保持唯一正文 authority；XNL resources只登记typed identity/material refs，compiler从原文件生成references。</?text>
+      <rationale ?why>同一正文同时服务仓库文档和离线Skill，避免漂移与双authority。</?why>
+      <evidence ?evidence>mission已明确Flow/Resource DSL references必须有来源/version且不得手工维护副本。</?evidence>
+    )>
+  )>
+  <decision #track.publish_resource_dsl.provenance apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true } (
+    <question ?q>provenance应由具体Skill模板还是通用compiler生成？</?q>
+    <answer { } (
+      <raw-answer ?raw>来源/version/digest/generated-by是分发事实，不应在某个产品模板硬编码。</?raw>
+      <decision-text ?text>通用planner为每个capsule生成canonical provenance manifest，applier从plan facts重建并在写入前校验。</?text>
+      <rationale ?why>所有系统Skill获得同一可追溯/可验证contract，具体Skill只拥有内容和加载路由。</?why>
+      <evidence ?evidence>当前plan已有skillFqn/version/fileDigest但缺apiVersion与显式generator。</?evidence>
+    )>
+  )>
+  <decision #track.publish_resource_dsl.skill_shape apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true } (
+    <question ?q>sys-halfcode-resource-dsl 的 SKILL.md 应包含多少规范内容？</?q>
+    <answer { } (
+      <raw-answer ?raw>Skill应支持离线渐进加载，但不能重复整套规范。</?raw>
+      <decision-text ?text>SKILL.md只描述触发边界和按任务加载references的顺序；canonical正文与examples全部由ResourcePackage编译。</?text>
+      <rationale ?why>保持入口小、上下文有界，同时让详细规则可追溯到Halfcode authority。</?why>
+      <evidence ?evidence>skill-creator的渐进加载原则和mission Skill topology。</?evidence>
+    )>
+  )>
+  <decision #track.publish_resource_dsl.external_boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" } (
+    <question ?q>本track是否安装Skill或发布npm package？</?q>
+    <answer { } (
+      <raw-answer ?raw>host安装和外部发布是后续mission节点。</?raw>
+      <decision-text ?text>本track只生成并验证ResourcePackage、SkillCapsule与0.2.2本地candidate；不修改registry或用户global目录。</?text>
+      <rationale ?why>保持Halfcode compiler/content authority与Eidolon host policy分离。</?why>
+      <evidence ?evidence>mission HALFCODE_RELEASE-T3与EIDOLON_SKILLS节点。</?evidence>
+    )>
+  )>
+]>

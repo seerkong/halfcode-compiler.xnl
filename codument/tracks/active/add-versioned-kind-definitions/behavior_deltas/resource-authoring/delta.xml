@@ -1,0 +1,4 @@
+<behavior-patch capability="resource-authoring" version="1">
+  <Metadata><ApiVersion>codument.tech/v1alpha1</ApiVersion></Metadata>
+  <upsert selector="behavior://resource-authoring/requirements/kind-migration-registry"><requirement id="kind-migration-registry"><statement>系统 SHALL 提供代码侧确定性 migration registry，把具体 Kind 的纯转换函数组织成无歧义版本路径。</statement><suite id="migration-path" name="Kind migration path"><case id="unique-path"><given>from 到 current 存在唯一迁移链</given><when>调用方规划迁移</when><then>registry SHALL 按版本顺序返回稳定 migration steps</then></case><case id="ambiguous-or-missing"><given>迁移出边歧义、缺失或成环</given><when>调用方规划迁移</when><then>registry SHALL 明确拒绝而不执行任意转换</then></case></suite></requirement></upsert>
+</behavior-patch>

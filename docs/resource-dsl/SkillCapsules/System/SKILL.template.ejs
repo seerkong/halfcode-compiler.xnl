@@ -1,0 +1,20 @@
+---
+name: <%= metadata.name %>
+description: <%= metadata.description %>
+---
+
+# <%= metadata.title %>
+
+Use this Skill for the generic XNL resource language and its deterministic compiler contracts. Product-specific authoring and runtime operations belong to their owner Skills.
+
+## Progressive loading
+
+1. Start with `references/resource-dsl/index.md`.
+2. For XNL channels and source syntax, read `references/resource-dsl/language.md` and only the needed file under `references/resource-dsl/examples/`.
+3. For ResourcePackage, Catalog or KindDefinition work, read `references/resource-dsl/documents.md` and `references/resource-dsl/files.md`.
+4. For layered registries, content identities or snapshots, read `references/resource-dsl/projections.md`.
+5. For SkillCapsule dependency/distribution work, read `references/resource-dsl/skill-capsules.md`.
+6. Read `references/resource-dsl/migration.md` only for migration work.
+7. Use `references/.halfcode/provenance.json` to verify source identity, version and payload digests.
+
+Do not infer resource relationships from ordinary text. Use explicit catalogs, typed references and Kind-owned contracts, then rely on deterministic validation and compilation.

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<behavior-patch capability="halfcode.application-assembly" version="1">
+  <Metadata>
+    <ApiVersion>codument.tech/v1alpha1</ApiVersion>
+  </Metadata>
+  <upsert selector="behavior://halfcode.application-assembly/requirements/pageobject-resource">
+    <requirement id="pageobject-resource">
+      <statement>Halfcode SHALL validate directory-shaped PageObject resources and normalize their code binding and named operations into ApplicationAssembly without target-specific browser policy.</statement>
+      <suite id="assembly" name="PageObject assembly">
+        <case id="valid"><given>a valid PageObject descriptor</given><when>the application assembly is resolved</when><then>the PageObject SHALL appear in pageObjects and byFqn</then></case>
+        <case id="invalid"><given>duplicate primitive ids or missing required operations</given><when>the assembly is resolved</when><then>resolution SHALL fail before projection</then></case>
+        <case id="root-export"><given>the distribution package is built</given><when>a consumer imports its root</when><then>PageObject assembly APIs SHALL be available without internal or subpath imports</then></case>
+      </suite>
+    </requirement>
+  </upsert>
+</behavior-patch>

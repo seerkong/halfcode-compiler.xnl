@@ -1,0 +1,90 @@
+---
+name: <%= metadata.name %>
+description: <%= metadata.description %>
+---
+
+# <%= metadata.title %>
+
+<%- renderPromptFragment("Demo.ResourceWorkflow.PromptFragment.SkillPrelude") %>
+
+<composed_functions>
+<% for (const item of references.composedFunctions) { -%>
+- <%= item.fqn %>: <%= item.description %> (`<%= item.path %>`)
+<% } -%>
+</composed_functions>
+
+<functions>
+<% for (const item of references.functions) { -%>
+- <%= item.fqn %>: <%= item.description %> (`<%= item.path %>`)
+<% } -%>
+</functions>
+
+<business_objects>
+<% for (const item of references.businessObjects) { -%>
+- <%= item.fqn %>: <%= item.description %> (`<%= item.path %>`)
+<% } -%>
+</business_objects>
+
+<page_objects>
+<% for (const item of references.pageObjects) { -%>
+- <%= item.fqn %>: <%= item.description %> (`<%= item.path %>`)
+<% } -%>
+</page_objects>
+
+<application_sops>
+<% for (const item of references.applicationSops) { -%>
+- <%= item.fqn %>: <%= item.description %> (`<%= item.path %>`)
+<% } -%>
+</application_sops>
+
+<wiki_pages>
+<% for (const item of references.wikiPages) { -%>
+- <%= item.fqn %>: <%= item.description %> (`<%= item.path %>`)
+<% } -%>
+</wiki_pages>
+
+<callable_artifacts>
+Use `<%= references.callableArtifacts.bundlePath %>` for target-neutral callable access:
+
+```js
+import {
+  run_callable_resource,
+} from "./<%= references.callableArtifacts.bundlePath %>"
+```
+
+Invoke a callable with its FQN, schema-conformant input, and optional config:
+
+```js
+const output = await run_callable_resource(fqn, input, config)
+```
+
+The host initializes runtime capabilities before this Skill runs. Do not pass a
+runtime object from AI-authored code.
+</callable_artifacts>
+
+<object_operation_artifacts>
+Use `<%= references.objectArtifacts.bundlePath %>` for PageObject and BusinessObject operations:
+
+```js
+import {
+  run_object_operation,
+} from "./<%= references.objectArtifacts.bundlePath %>"
+
+const output = await run_object_operation({
+  targets: {
+    kind: "single",
+    ref: { kindFqn: "Demo.ResourceWorkflow.BO.MakerSpace.Reservation", key: { reservationNumber: "R-100" } },
+  },
+  invocation: {
+    kind: "action",
+    operationRef: "Demo.ResourceWorkflow.BO.MakerSpace.Reservation.approve",
+    input: { approvedBy: "M-7" },
+  },
+  config: { trace: true },
+})
+```
+
+Use `invocation.input` for action business input and `invocation.desired` for
+mutation desired state. The host initializes runtime; AI-authored code never
+passes runtime.
+</object_operation_artifacts>

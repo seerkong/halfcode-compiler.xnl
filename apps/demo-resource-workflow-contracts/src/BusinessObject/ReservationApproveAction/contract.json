@@ -1,0 +1,14 @@
+{
+  "kind": "Contract",
+  "fqn": "Demo.ResourceWorkflow.Contract.BusinessObject.ReservationApproveAction",
+  "input": {
+    "source": "input.ts",
+    "export": "ReservationApproveActionInput",
+    "schemaId": "Demo.ResourceWorkflow.Contract.ReservationApproveAction.Input"
+  },
+  "output": {
+    "source": "output.ts",
+    "export": "ReservationApproveActionOutput",
+    "schemaId": "Demo.ResourceWorkflow.Contract.ReservationApproveAction.Output"
+  }
+}

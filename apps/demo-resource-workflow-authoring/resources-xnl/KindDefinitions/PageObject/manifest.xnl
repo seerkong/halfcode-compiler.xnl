@@ -1,0 +1,8 @@
+<KindDefinition #Demo.ResourceWorkflow.KindDefinition.PageObject apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Experimental"
+  description = "Kind definition for target-neutral interactive object owners with shared target and operation catalogs."
+  resourceKind = "PageObject"
+  sourceShapes = ["directory"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+}>

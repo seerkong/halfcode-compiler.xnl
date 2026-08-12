@@ -1,0 +1,135 @@
+<decisions apiVersion="codument.tech/v1alpha1" [
+  <decision #mission.halfcode-compiler-xnl-migration.scope-boundary { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+    <question ?01M02KBYH01S2HM3GEC82BXWPW>
+    哪些 XML 属于本次 XNL 迁移边界？
+    </?01M02KBYH01S2HM3GEC82BXWPW>
+    <answer {  } (
+      <raw-answer ?01M02KBYH01S2HM3GEC82BXWPX>
+      将复制到 workspace 的 halfcode compiler 中的 XML 全部换成 XNL 风格。
+      </?01M02KBYH01S2HM3GEC82BXWPX>
+      <decision-text ?01M02KBYH01S2HM3GEC82BXWPY>
+      迁移全部产品 authoring/config XML、测试 fixture 及其代码/文档耦合；Codument 控制面 XML 保留。
+      </?01M02KBYH01S2HM3GEC82BXWPY>
+      <rationale ?01M02KBYH01S2HM3GEC82BXWPZ>
+      用户目标指向资源编译产品，而 Codument mission/track/config XML 由独立控制面协议规定；把后者改写会破坏本次 mission 的执行真源。
+      </?01M02KBYH01S2HM3GEC82BXWPZ>
+      <evidence ?01M02KBYH01S2HM3GEC82BXWQ0>
+      baseline inventory 为 38 个 app XML、9 个 package fixture XML、8 个 Codument XML；depa-flows AI workflow resource 规范也明确区分 XNL app bundle 与可保留的 Codument control artifacts。
+      </?01M02KBYH01S2HM3GEC82BXWQ0>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.semantic-migration { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+    <question ?01M02KBYH01S2HM3GEC82BXWQ1>
+    迁移应是 XML 语法转写还是重新建立 XNL-native DSL？
+    </?01M02KBYH01S2HM3GEC82BXWQ1>
+    <answer {  } (
+      <raw-answer ?01M02KBYH01S2HM3GEC82BXWQ2>
+      特别参考过去利用 XNL 特点做 DSL、配置的规范习惯。
+      </?01M02KBYH01S2HM3GEC82BXWQ2>
+      <decision-text ?01M02KBYH01S2HM3GEC82BXWQ3>
+      迁移 SHALL 以 XNL 的 Tag/#id/metadata/{}/()/[]、URI、单多文件同构和 DEPA code-ref 边界重新建模，不做逐标签机械转写。
+      </?01M02KBYH01S2HM3GEC82BXWQ3>
+      <rationale ?01M02KBYH01S2HM3GEC82BXWQ4>
+      只有把语法特性映射为领域职责，才能获得稳定 identity、唯一子域、列表、引用和可拆分性；保留 XML 树形习惯只会制造 XNL 外观的 XML。
+      </?01M02KBYH01S2HM3GEC82BXWQ4>
+      <evidence ?01M02KBYH01S2HM3GEC82BXWQ5>
+      xnl-core parser/tests 与 depa-flows foundation syntax/naming/depa axioms。
+      </?01M02KBYH01S2HM3GEC82BXWQ5>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.entry-and-identity { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.97 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+    <question ?01M02KBYH01S2HM3GEC82BXWQ6>
+    资源 kind、identity 与目录入口由什么决定？
+    </?01M02KBYH01S2HM3GEC82BXWQ6>
+    <answer {  } (
+      <raw-answer ?01M02KBYH01S2HM3GEC82BXWQ7>
+      遵循过去的 XNL DSL 规范习惯。
+      </?01M02KBYH01S2HM3GEC82BXWQ7>
+      <decision-text ?01M02KBYH01S2HM3GEC82BXWQ8>
+      资源 kind/identity SHALL 来自 XNL 根 Tag 与 #id；目录 bundle SHALL 使用 manifest.xnl，文件路径只负责布局。
+      </?01M02KBYH01S2HM3GEC82BXWQ8>
+      <rationale ?01M02KBYH01S2HM3GEC82BXWQ9>
+      这保持内容真源、路径非权威和单/多文件同构，避免继续使用 KindDefinition.xml/Function.xml 等 kind-named entry。
+      </?01M02KBYH01S2HM3GEC82BXWQ9>
+      <evidence ?01M02KBYH01S2HM3GEC82BXWQA>
+      depa-flows naming axioms M-N1、M-N5、M-N6 与 flow-core files。
+      </?01M02KBYH01S2HM3GEC82BXWQA>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.publication-identity { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+    <question ?01M02KBYH01S2HM3GEC82BXWQB>
+    迁移后的唯一公开 npm identity 是什么？
+    </?01M02KBYH01S2HM3GEC82BXWQB>
+    <answer {  } (
+      <raw-answer ?01M02KBYH01S2HM3GEC82BXWQC>
+      目标 workspace 命名为 halfcode-compiler.xnl，并希望 XML 全部换成 XNL 风格。
+      </?01M02KBYH01S2HM3GEC82BXWQC>
+      <decision-text ?01M02KBYH01S2HM3GEC82BXWQD>
+      唯一公开 npm package SHALL 为 halfcode-compiler.xnl；内部 workspace packages 继续保持 private。
+      </?01M02KBYH01S2HM3GEC82BXWQD>
+      <rationale ?01M02KBYH01S2HM3GEC82BXWQE>
+      旧 publication decision 明确把 halfcode-compiler.xml 留作 XML 产品并为未来 halfcode-compiler.xnl 预留独立边界；本 mission 正是在启动该 XNL 产品边界。
+      </?01M02KBYH01S2HM3GEC82BXWQE>
+      <evidence ?01M02KBYH01S2HM3GEC82BXWQF>
+      workspace identity、用户迁移目标，以及 completed add-unified-xml-package track 的 proposal/decision provenance。
+      </?01M02KBYH01S2HM3GEC82BXWQF>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.parser-authority { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+    <question ?01M02KBYH01S2HM3GEC82BXWQG>
+    产品使用哪一个 XNL parsing authority？
+    </?01M02KBYH01S2HM3GEC82BXWQG>
+    <answer {  } (
+      <raw-answer ?01M02KBYH01S2HM3GEC82BXWQH>
+      阅读并基于 xnl.ts 数据格式开发。
+      </?01M02KBYH01S2HM3GEC82BXWQH>
+      <decision-text ?01M02KBYH01S2HM3GEC82BXWQJ>
+      产品 SHALL 使用 xnl-core 的公开 parser/AST/formatter 能力；具体依赖版本由实现 track 根据 lockfile 与发布可用性固定。
+      </?01M02KBYH01S2HM3GEC82BXWQJ>
+      <rationale ?01M02KBYH01S2HM3GEC82BXWQK>
+      复用实际语言实现可避免在 halfcode 内再造不兼容 XNL parser，版本选择则应由可执行证据而非 mission 猜测决定。
+      </?01M02KBYH01S2HM3GEC82BXWQK>
+      <evidence ?01M02KBYH01S2HM3GEC82BXWQM>
+      xnl-core package exports、parser/types/formatter 与 parser/dotted-tag/round-trip tests。
+      </?01M02KBYH01S2HM3GEC82BXWQM>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.single-authority { priority = "P1" status = "accepted" durable_candidate = true confidence = 0.96 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.parser-authority"] } (
+    <question ?01M02KBYH01S2HM3GEC82BXWQN>
+    最终是否长期同时支持 XML 与 XNL authoring？
+    </?01M02KBYH01S2HM3GEC82BXWQN>
+    <answer {  } (
+      <raw-answer ?01M02KBYH01S2HM3GEC82BXWQP>
+      最好把其中的 XML 全都换成 XNL 风格。
+      </?01M02KBYH01S2HM3GEC82BXWQP>
+      <decision-text ?01M02KBYH01S2HM3GEC82BXWQQ>
+      最终产品 SHALL 只保留 XNL authoring authority；迁移期兼容读取只能是受测试保护且有明确删除 gate 的临时机制。
+      </?01M02KBYH01S2HM3GEC82BXWQQ>
+      <rationale ?01M02KBYH01S2HM3GEC82BXWQR>
+      长期双 parser/双文件入口会制造两份定义真源、双倍验证面和语义漂移，与 XNL-only config 习惯相冲突。
+      </?01M02KBYH01S2HM3GEC82BXWQR>
+      <evidence ?01M02KBYH01S2HM3GEC82BXWQS>
+      用户目标、depa-flows M-N9 与 AI workflow XNL-only authoring 规则。
+      </?01M02KBYH01S2HM3GEC82BXWQS>
+    )>
+  )>
+  <decision #mission.halfcode-compiler-xnl-migration.defer-businessobject-pageobject { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+    <question ?01M02KBYH01S2HM3GEC82BXWQT>
+    BusinessObject 与 PageObject 应在何时迁移？
+    </?01M02KBYH01S2HM3GEC82BXWQT>
+    <answer {  } (
+      <raw-answer ?01M02KBYH01S2HM3GEC82BXWQV>
+      BusinessObject, PageObject 要放到最后做，因为参考的 halfcode-compiler.xml 正在进行 API 重构。
+      </?01M02KBYH01S2HM3GEC82BXWQV>
+      <decision-text ?01M02KBYH01S2HM3GEC82BXWQW>
+      BusinessObject 与 PageObject SHALL 在通用 XNL parser、consumer、authoring 和 distribution 基础完成后最后迁移；末段 track 创建前必须重新观察参考 API。
+      </?01M02KBYH01S2HM3GEC82BXWQW>
+      <rationale ?01M02KBYH01S2HM3GEC82BXWQX>
+      当前 descriptor 与 application-assembly API 正在漂移，提前冻结会把过时形状固化进 XNL DSL，并导致随后重复迁移。
+      </?01M02KBYH01S2HM3GEC82BXWQX>
+      <evidence ?01M02KBYH01S2HM3GEC82BXWQY>
+      用户明确排序约束；mission 启动观察到参考实现的 PageObject descriptor、application-assembly source 和 tests 存在未提交改动。
+      </?01M02KBYH01S2HM3GEC82BXWQY>
+    )>
+  )>
+]>

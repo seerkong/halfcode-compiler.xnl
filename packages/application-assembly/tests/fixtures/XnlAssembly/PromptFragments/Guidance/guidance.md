@@ -1,0 +1,2 @@
+Use semantic XNL channels.
+

@@ -1,0 +1,20 @@
+<SkillCapsule #Demo.ResourceWorkflow.Skill.Main apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Main demo resource workflow Skill capsule."
+} (
+  <SkillMetadata { href = "vfs://./SKILL.metadata.yaml" format = "yaml" }>
+  <Template { href = "vfs://./SKILL.template.ejs" format = "ejs" }>
+  <ResourceMappings { href = "vfs://./resource-mappings.xnl" format = "xnl" }>
+  <Includes [
+    <Include { kind = "PromptFragment" ref = "resource://Demo.ResourceWorkflow.PromptFragment.SkillPrelude" }>
+    <Include { kind = "PromptFragment" ref = "resource://Demo.ResourceWorkflow.Shared.PromptFragment.ReusableWorkflowGuidance" }>
+    <Include { kind = "ComposedFunction" ref = "resource://Demo.ResourceWorkflow.ComposedFunction.PrepareWorkflow" }>
+    <Include { kind = "Function" ref = "resource://Demo.ResourceWorkflow.Function.PrepareProcedure" }>
+    <Include { kind = "BusinessObject" ref = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Member" }>
+    <Include { kind = "BusinessObject" ref = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Tool" }>
+    <Include { kind = "BusinessObject" ref = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Reservation" }>
+    <Include { kind = "PageObject" ref = "resource://Demo.ResourceWorkflow.PageObject.ReservationDetail" }>
+    <Include { kind = "ApplicationSOP" ref = "resource://Demo.ResourceWorkflow.ApplicationSOP.MakerSpaceReservationApproval" }>
+    <Include { kind = "WikiPage" ref = "resource://Demo.ResourceWorkflow.Wiki.MakerSpaceReservationLifecycle" }>
+  ]>
+)>

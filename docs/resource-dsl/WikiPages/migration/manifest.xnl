@@ -1,0 +1,6 @@
+<WikiPage #Halfcode.ResourceDsl.Wiki.migration apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Migration guidance from non-canonical resource representations."
+} (
+  <Instruction { href = "vfs://@/migration.md" format = "markdown" }>
+)>

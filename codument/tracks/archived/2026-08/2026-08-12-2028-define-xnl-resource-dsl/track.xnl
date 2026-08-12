@@ -1,0 +1,101 @@
+<Track #define-xnl-resource-dsl version="1" apiVersion="codument.tech/v1alpha1" { status = "completed" goal = "冻结可由 xnl-core 直接表达和验证的 halfcode XNL resource DSL" description = "定义通用资源文档、catalog、KindDefinition、mapping、URI 与 code ref 契约，BusinessObject/PageObject 专用 API 延后" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-12T17:12:00Z" updated_at = "2026-08-12T17:28:00Z" modeling_base_commit = "67896c2db79ba136c960ef2d60711304a333e323" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "output" name = "resource-dsl-docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle { role = "output" name = "behavior" domain = "codument" path = "vfs://@/codument/behaviors/" }>
+    <MaterialBundle { role = "output" name = "modeling" domain = "codument" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_define-xnl-resource-dsl { name = "define-xnl-resource-dsl" } (
+    <Description ?01M02KBYHXQBFKRG6D5S31P3P3>
+    先冻结语义通道与文档族，再用真实 xnl-core parser 验证代表性实例。
+    </?01M02KBYHXQBFKRG6D5S31P3P3>
+    <SubNodes [
+      <TaskGroup #P1 { name = "资源语言契约" status = "DONE" order = 0 } (
+        <Description ?01M02KBYHXQBFKRG6D5S31P3P4>
+        建立 DSL authority、文档族与迁移边界。
+        </?01M02KBYHXQBFKRG6D5S31P3P4>
+        <Gate [
+          <Criterion ?01M02KBYHXQBFKRG6D5S31P3P5>
+          P1 所有任务 DONE
+          </?01M02KBYHXQBFKRG6D5S31P3P5>
+          <Criterion ?01M02KBYHXQBFKRG6D5S31P3P6>
+          BusinessObject/PageObject 专用 schema 未被提前固化
+          </?01M02KBYHXQBFKRG6D5S31P3P6>
+        ]>
+        <SubNodes [
+          <Task { id = "T1.1" name = "定义 XNL 通道、身份与引用规则" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYHXQBFKRG6D5S31P3P7>
+            编写 resource DSL 首页、语法分配和 VFS/code reference 规则。
+            </?01M02KBYHXQBFKRG6D5S31P3P7>
+            <Acceptance [
+              <Criterion { id = "T1.1-AC1" checked = true } ?01M02KBYHXQBFKRG6D5S31P3P8>
+              tag/#id/properties/body/extension 均有唯一明确职责
+              </?01M02KBYHXQBFKRG6D5S31P3P8>
+              <Criterion { id = "T1.1-AC2" checked = true } ?01M02KBYHXQBFKRG6D5S31P3P9>
+              相对、workspace 与 code export 引用有 canonical 语法
+              </?01M02KBYHXQBFKRG6D5S31P3P9>
+            ]>
+          )>
+          <Task { id = "T1.2" name = "定义 package、kind、descriptor 与 mapping 文档族" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYHXQBFKRG6D5S31P3PA>
+            提供代表性 XNL 文档并说明 XML authority 的迁移映射。
+            </?01M02KBYHXQBFKRG6D5S31P3PA>
+            <Acceptance [
+              <Criterion { id = "T1.2-AC1" checked = true } ?01M02KBYHXQBFKRG6D5S31P3PB>
+              四类代表文档具有完整例子
+              </?01M02KBYHXQBFKRG6D5S31P3PB>
+              <Criterion { id = "T1.2-AC2" checked = true } ?01M02KBYHXQBFKRG6D5S31P3PC>
+              BusinessObject/PageObject 仅保留通用 envelope，不含专用 API
+              </?01M02KBYHXQBFKRG6D5S31P3PC>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "契约机械验证" status = "DONE" order = 1 } (
+        <Description ?01M02KBYHXQBFKRG6D5S31P3PD>
+        验证实例语法与 Codument 合约结构。
+        </?01M02KBYHXQBFKRG6D5S31P3PD>
+        <Gate [
+          <Criterion ?01M02KBYHXQBFKRG6D5S31P3PE>
+          P2 所有任务 DONE
+          </?01M02KBYHXQBFKRG6D5S31P3PE>
+          <Criterion ?01M02KBYHXQBFKRG6D5S31P3PF>
+          所有 XNL example 可由当前 xnl-core 解析
+          </?01M02KBYHXQBFKRG6D5S31P3PF>
+          <Criterion ?01M02KBYHXQBFKRG6D5S31P3PG>
+          Codument strict validation 通过
+          </?01M02KBYHXQBFKRG6D5S31P3PG>
+        ]>
+        <SubNodes [
+          <Task { id = "T2.1" name = "执行 XNL example contract tests" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYHXQBFKRG6D5S31P3PH>
+            从文档提取实例并使用当前 xnl-core parse/round-trip。
+            </?01M02KBYHXQBFKRG6D5S31P3PH>
+            <Acceptance [
+              <Criterion { id = "T2.1-AC1" checked = true } ?01M02KBYHXQBFKRG6D5S31P3PJ>
+              所有示例 parse 成功
+              </?01M02KBYHXQBFKRG6D5S31P3PJ>
+              <Criterion { id = "T2.1-AC2" checked = true } ?01M02KBYHXQBFKRG6D5S31P3PK>
+              round-trip 保留资源 identity 与核心通道
+              </?01M02KBYHXQBFKRG6D5S31P3PK>
+            ]>
+          )>
+          <Task { id = "T2.2" name = "验证 behavior、modeling 与 track" status = "DONE" order = 1 priority = "P1" } (
+            <Description ?01M02KBYHXQBFKRG6D5S31P3PM>
+            运行 behavior/modeling validation、track strict validation 与边界扫描。
+            </?01M02KBYHXQBFKRG6D5S31P3PM>
+            <Acceptance [
+              <Criterion { id = "T2.2-AC1" checked = true } ?01M02KBYHXQBFKRG6D5S31P3PN>
+              behavior/modeling deltas 均通过校验
+              </?01M02KBYHXQBFKRG6D5S31P3PN>
+              <Criterion { id = "T2.2-AC2" checked = true } ?01M02KBYHXQBFKRG6D5S31P3PP>
+              track strict validation 通过且专用 BO/PO 字段为空
+              </?01M02KBYHXQBFKRG6D5S31P3PP>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+)>

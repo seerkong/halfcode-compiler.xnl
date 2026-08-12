@@ -1,0 +1,25 @@
+<module #publication_xnl.halfcode_compiler_xnl apiVersion="codument.tech/v1alpha1" {
+  kind = "module"
+  visibility = "public"
+  depends_on = [
+    "modeling://domain/resource_core/layered_registry"
+    "modeling://domain/resource_core/dependency_snapshot"
+  ]
+  behaviors = [
+    "behavior://package-distribution/requirements/xnl-public-package"
+    "behavior://resource-loading/requirements/layered-effective-registry"
+    "behavior://resource-loading/requirements/resource-dependency-snapshot"
+  ]
+} [
+  <desc ?desc>
+  halfcode-compiler.xnl 是 XNL 编译器唯一公开 npm capsule；在保留既有入口的同时，从 resource-core 子路径 additive 暴露 layered registry 与 dependency snapshot contracts。
+  </?desc>
+  <capsule-tree ?tree>
+  packages/distribution/package.json # 保留公开 identity 与全部既有 exports
+  packages/distribution/src/resource-core.ts # 重导出 layered registry 与 dependency snapshot 公共 API
+  packages/distribution/tools/verify-package.ts # packed tarball 的旧/新 runtime 与 TypeScript consumer smoke
+  packages/resource-core/src/index.ts # 单树 API 与 additive 公共 contracts
+  packages/resource-core/src/layered-registry.ts # ordered named layer composition 与 effective provenance
+  packages/resource-core/src/dependency-snapshot.ts # canonical digest、typed graph 与 immutable snapshot
+  </?tree>
+]>

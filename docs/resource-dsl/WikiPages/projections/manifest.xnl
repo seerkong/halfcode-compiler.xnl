@@ -1,0 +1,6 @@
+<WikiPage #Halfcode.ResourceDsl.Wiki.projections apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Normalized, layered, content identity and dependency snapshot projections."
+} (
+  <Instruction { href = "vfs://@/projections.md" format = "markdown" }>
+)>

@@ -1,0 +1,23 @@
+{
+  "name": "halfcode-compiler",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "verify": "bun run packages/workspace-tools/src/verify.ts",
+    "generate": "bun run apps/demo-resource-workflow-contracts/tools/generate-schemas.ts",
+    "generate:check": "bun run apps/demo-resource-workflow-contracts/tools/generate-schemas.ts --check",
+    "build:demo-resource-workflow-skill": "bun run apps/demo-resource-workflow-skill-capsule/src/build.ts",
+    "build:package": "bun run --cwd packages/distribution build",
+    "package:check": "bun run --cwd packages/distribution check"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "devDependencies": {
+    "bun-types": "1.3.6",
+    "typescript": "5.9.3"
+  }
+}

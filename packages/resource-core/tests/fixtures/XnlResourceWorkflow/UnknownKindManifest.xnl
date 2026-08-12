@@ -1,0 +1,10 @@
+<ResourcePackage #demo.resource_workflow.unknown_kind apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Unknown kind fixture"
+} (
+  <Catalogs [
+    <Catalog #kind_definitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>
+    <Catalog #ghosts { kind = "Ghost" shape = "single-file" root = "vfs://./Notes/" }>
+  ]>
+)>
+

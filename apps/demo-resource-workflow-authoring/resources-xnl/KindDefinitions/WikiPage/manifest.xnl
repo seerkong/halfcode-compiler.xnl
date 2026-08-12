@@ -1,0 +1,12 @@
+<KindDefinition #Demo.ResourceWorkflow.KindDefinition.WikiPage apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Kind definition for WikiPage resources."
+  resourceKind = "WikiPage"
+  sourceShapes = ["directory"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+} (
+  <DescriptorContract (
+    <RequiredFiles [ <File { name = "instruction.md" }> ]>
+  )>
+)>

@@ -1,0 +1,35 @@
+<behavior-patch capability="package-distribution" version="1">
+  <Metadata>
+    <ApiVersion>codument.tech/v1alpha1</ApiVersion>
+  </Metadata>
+  <upsert selector="behavior://package-distribution/requirements/unified-public-package">
+    <requirement id="unified-public-package">
+      <statement>系统 SHALL 将 XML 编译器能力作为唯一公开 npm 包 halfcode-compiler.xml 发布，且私有 workspace 包不得成为消费者依赖。</statement>
+      <suite id="public-imports" name="公开入口">
+        <case id="import-root-api">
+          <given>消费者只安装 halfcode-compiler.xml</given>
+          <when>消费者从包根入口导入高级 assembly 与 Skill capsule 编译 API</when>
+          <then>导入与类型检查 SHALL 成功</then>
+        </case>
+        <case id="import-subpath-api">
+          <given>消费者只安装 halfcode-compiler.xml</given>
+          <when>消费者从已声明的 runtime、resource、schema 和 testing 子路径导入能力</when>
+          <then>导入与类型检查 SHALL 成功，未声明路径 SHALL 保持封装</then>
+        </case>
+      </suite>
+      <suite id="artifact-integrity" name="发布制品完整性">
+        <case id="no-private-package-reference">
+          <given>统一包完成生产构建</given>
+          <when>扫描生成的 JavaScript、声明文件和 tarball metadata</when>
+          <then>制品 SHALL 不包含对 halfcode-compiler-* 私有 workspace 包的运行时或类型引用</then>
+        </case>
+        <case id="generated-runtime-import">
+          <given>Skill capsule compiler 生成 callable bundle</given>
+          <when>检查生成 bundle 的 runtime import</when>
+          <then>生成代码 SHALL 从 halfcode-compiler.xml/authoring-runtime 导入 runWithRuntime</then>
+        </case>
+      </suite>
+    </requirement>
+  </upsert>
+</behavior-patch>
+

@@ -1,0 +1,41 @@
+<component #resource_core.loader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/xnl-resource-tree" "behavior://resource-authoring/requirements/xnl-resource-language" "behavior://xnl-product-closure/requirements/no-product-xml"] } [
+  <desc ?01M02KBYHBMTPMEQTQYGVN1KKJ>
+  仅加载 XNL resource authority、校验通用 identity/apiVersion、目录与引用边界，并生成保留 Kind-owned 可选属性的规范化 registry；不存在 XML fallback。
+  </?01M02KBYHBMTPMEQTQYGVN1KKJ>
+  <runtime ?runtime>
+  interface ResourceCoreRuntime { readFile: ReadFile; readDirectory: ReadDirectory; realpath: Realpath; xnlParser: XnlParser }
+  </?runtime>
+  <input ?input>
+  interface LoadResourceTreeInput { rootDir: string; manifestPath?: "manifest.xnl" }
+  </?input>
+  <config ?config>
+  interface ResourceCoreConfig { canonicalManifest: "manifest.xnl" }
+  </?config>
+  <output ?output>
+  type LoadResourceTreeOutput = ResourceTree | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  解析 XNL authority → 校验共同字段 → 规范化 ResourceNode → 注册 KindDefinition → 扫描 catalog → 校验 identity/containment → 输出只读 registry
+  </?ctrl>
+]>
+
+<object #resource_core.resource_record apiVersion="codument.tech/v1alpha1" { kind = "entity" fact_grade = "derived_projection_cache" single_writer = "modeling://domain/resource_core/loader" } [
+  <desc ?01M02KBYHBMTPMEQTQYGVN1KKK>
+  由 XNL authority 可重建的通用资源记录；身份与 apiVersion 是共同边界，description/lifecycle 等业务属性由具体 Kind 拥有并可缺省。
+  </?01M02KBYHBMTPMEQTQYGVN1KKK>
+  <types ?types>
+  interface ResourceRecord {
+      resourceId: string
+      kind: string
+      description?: string
+      metadata: { apiVersion: string; version?: string; lifecycle?: string }
+      node: ResourceNode
+      documentUri: string
+      logicalPath: string
+      sourceShape: "single-file" | "directory" | "manifest"
+    }
+  </?types>
+  <fact-source ?01M02KBYHBMTPMEQTQYGVN1KKM>
+  事实源是资源作者拥有的 XNL 文档；registry 保留字段存在或缺失的事实，是只读派生投影，不填充虚假默认值，也不反写 authority。
+  </?01M02KBYHBMTPMEQTQYGVN1KKM>
+]>

@@ -1,0 +1,39 @@
+<Track #add-versioned-kind-definitions apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "让 KindDefinition 成为资源 apiVersion 兼容性与当前版本的声明式 authority。" description = "增加版本契约校验和代码侧确定性 migration registry。" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-15T10:18:36.272Z" updated_at = "2026-08-15T10:25:59Z" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "resource-dsl" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "kind-definition" domain = "code" path = "vfs://@/packages/kind-definition/" }>
+    <MaterialBundle { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+  ]>
+  <TaskSpace #space_add-versioned-kind-definitions { name = "add-versioned-kind-definitions" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "版本契约与迁移注册" status = "DONE" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "添加版本与迁移路径回归测试" status = "DONE" order = 0 }>
+          <Task #P1-T2 { name = "实现公共 KindDefinition 与 migration registry API" status = "DONE" order = 1 }>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "loader 与 authoring 接入" status = "DONE" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "解析并校验 Kind apiVersion contract" status = "DONE" order = 0 }>
+          <Task #P2-T2 { name = "更新 KindDefinitions 与 DSL 文档" status = "DONE" order = 1 }>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "完整验证" status = "DONE" order = 2 } (
+        <SubNodes [
+          <Task #P3-T1 { name = "运行全仓与公开包验证" status = "DONE" order = 0 }>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_add-versioned-kind-definitions" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+      <Node #P3 [
+        <After { ref = "P2" }>
+      ]>
+    ]>
+  ]>
+)>

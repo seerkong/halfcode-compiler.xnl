@@ -1,0 +1,12 @@
+<Function #demo.resource_workflow.prepare_data apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  title = "Prepare workflow data"
+} (
+  <Instruction ?instruction>
+  接收输入并产生下游 procedure 所需的规范数据。
+  </?instruction>
+  <CodeBinding {
+    src = "vfs://@/apps/demo-resource-workflow-authoring/src/procedures.ts#prepareProcedure"
+  }>
+)>
+

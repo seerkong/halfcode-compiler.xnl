@@ -1,0 +1,35 @@
+<Track #support-single-file-catalog-entry apiVersion="codument.tech/v1alpha1" version="1" {
+  status = "completed"
+  goal = "让 single-file Catalog 可用 entry 精确选择同目录中的一个 XNL 资源。"
+  description = "扩展 resource-core catalog discovery、测试与 DSL 文档，并按末端补丁发布 0.2.1。"
+  question_mode = "decision-tree"
+  question_severity = "auto"
+  commit_mode = "manual"
+  created_at = "2026-08-15T11:37:11.859Z"
+  updated_at = "2026-08-15T11:40:21Z"
+} (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "output" name = "resource-loader" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "resource-docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle { role = "output" name = "distribution" domain = "package" path = "vfs://@/packages/distribution/" }>
+  ]>
+  <TaskSpace #space_support-single-file-catalog-entry { name = "support-single-file-catalog-entry" version = "1" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Catalog selection" status = "DONE" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "添加 shared-root 选择与非法 entry 测试" status = "DONE" order = 0 }>
+          <Task #P1-T2 { name = "实现 single-file entry discovery" status = "DONE" order = 1 }>
+          <Task #P1-T3 { name = "更新 resource DSL 文档" status = "DONE" order = 2 }>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Release verification" status = "DONE" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "末端补丁升级到 0.2.1" status = "DONE" order = 0 }>
+          <Task #P2-T2 { name = "运行全仓与 distribution 检查" status = "DONE" order = 1 }>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule []>
+  <Hooks []>
+)>

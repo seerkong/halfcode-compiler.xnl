@@ -1,0 +1,53 @@
+<decisions apiVersion="codument.tech/v1alpha1" [
+  <decision #track.expose_loader_content_identities.loader_authority apiVersion="codument.tech/v1alpha1" {
+    priority = "P0"
+    status = "accepted"
+    durable_candidate = true
+  } (
+    <question ?q>authority digest 应由谁读取和计算？</?q>
+    <answer { } (
+      <raw-answer ?raw>资源标准与 bytes authority 必须由 Halfcode 负责，host 不应重复资源管理逻辑。</?raw>
+      <decision-text ?text>canonical loader 在解析同一次 raw byte read 时计算每个 business resource 的 authority identity；consumer 不重复读文件或摘要 normalized AST。</?text>
+      <rationale ?why>loader 已拥有 IO、containment 与 provenance，只有这一边界能保持 digest 与实际 authority bytes 一致且不产生第二 scanner。</?why>
+      <evidence ?evidence>dependency snapshot 要求全部 effective content identities，而 0.2.1 loader 当前只返回 ResourceRecord。</?evidence>
+    )>
+  )>
+  <decision #track.expose_loader_content_identities.compatibility_surface apiVersion="codument.tech/v1alpha1" {
+    priority = "P0"
+    status = "accepted"
+    durable_candidate = true
+  } (
+    <question ?q>如何公开 identities 而不破坏 structural ResourceTree consumer？</?q>
+    <answer { } (
+      <raw-answer ?raw>0.2.1 API 必须保留，新增能力采用 additive contract。</?raw>
+      <decision-text ?text>保留 ResourceTree 不变，loadResourceTree 返回 additive authentic LoadedResourceTree subtype；composeLayeredResourceRegistry 继续接受 structural ResourceTree，新 projector 才要求 loaded authenticity。</?text>
+      <rationale ?why>旧 fixtures 和 consumers 可继续构造/读取 ResourceTree，同时运行冻结链路获得可信 bytes identity。</?why>
+      <evidence ?evidence>现有 public compatibility tests 与 depa-flows 0.2.1 projection seam。</?evidence>
+    )>
+  )>
+  <decision #track.expose_loader_content_identities.effective_selection apiVersion="codument.tech/v1alpha1" {
+    priority = "P0"
+    status = "accepted"
+    durable_candidate = true
+  } (
+    <question ?q>多 layer 的 effective content identity 由 host 还是 Halfcode 选择？</?q>
+    <answer { } (
+      <raw-answer ?raw>Host 只拥有 roots 与 layer policy，generic selection/digest 规则仍由 Halfcode拥有。</?raw>
+      <decision-text ?text>Halfcode 提供 authentic effective identity projector，按 registry 的 exact effectiveLayerId/origin 选择 loader identity并合并显式 contributions；不解释领域引用。</?text>
+      <rationale ?why>避免 Eidolon/depa 复制 shadow 选择与 digest 校验，同时维持 Kind owner 对 material/edge 语义的所有权。</?why>
+      <evidence ?evidence>现有 layered registry provenance 与 typed snapshot boundary。</?evidence>
+    )>
+  )>
+  <decision #track.expose_loader_content_identities.release_boundary apiVersion="codument.tech/v1alpha1" {
+    priority = "P0"
+    status = "accepted"
+  } (
+    <question ?q>本 track 是否直接发布 npm 0.2.2？</?q>
+    <answer { } (
+      <raw-answer ?raw>发布是外部不可逆动作，mission 已要求先取得明确 authority。</?raw>
+      <decision-text ?text>本 track 只准备并验证 0.2.2 candidate；npm publish 与 registry receipt 留给 mission HALFCODE_RELEASE-T3 的显式授权步骤。</?text>
+      <rationale ?why>可以完成全部本地实现与 tarball 证据，同时不越过外部发布权限边界。</?why>
+      <evidence ?evidence>Mission Revision 11 的 HALFCODE_RELEASE-T3。</?evidence>
+    )>
+  )>
+]>

@@ -1,0 +1,3 @@
+<PromptFragment #demo.xnl_assembly.prompt.guidance apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Active" description = "Guidance" } (
+  <Instruction { href = "vfs://./guidance.md" format = "markdown" }>
+)>

@@ -1,0 +1,39 @@
+<component #resource_core.loader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/xnl-resource-tree"] } [
+  <desc ?01M02KBYJ0PA4MRDF6XV5GDJNE>
+  加载 XNL resource authority、校验目录与引用边界，并生成不暴露 parser 私有结构的规范化 registry。
+  </?01M02KBYJ0PA4MRDF6XV5GDJNE>
+  <runtime ?runtime>
+  interface ResourceCoreRuntime { readFile: ReadFile; readDirectory: ReadDirectory; realpath: Realpath; xnlParser: XnlParser }
+  </?runtime>
+  <input ?input>
+  interface LoadResourceTreeInput { rootDir: string; manifestPath?: string }
+  </?input>
+  <config ?config>
+  interface ResourceCoreConfig { canonicalManifest: "manifest.xnl"; allowLegacyXmlDuringMigration: boolean }
+  </?config>
+  <output ?output>
+  type LoadResourceTreeOutput = ResourceTree | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  解析 authority → 规范化 ResourceNode → 先注册 KindDefinition → 扫描 catalog → 校验 identity/containment → 输出只读 registry
+  </?ctrl>
+]>
+
+<object #resource_core.resource_record apiVersion="codument.tech/v1alpha1" { kind = "entity" fact_grade = "derived_projection_cache" single_writer = "modeling://domain/resource_core/loader" } [
+  <desc ?01M02KBYJ0PA4MRDF6XV5GDJNF>
+  由 XNL authority 可重建的资源记录；身份、语义通道与 provenance 显式分离。
+  </?01M02KBYJ0PA4MRDF6XV5GDJNF>
+  <types ?types>
+  interface ResourceRecord {
+    resourceId: string
+    kind: string
+    node: ResourceNode
+    documentUri: string
+    logicalPath: string
+    sourceShape: "single-file" | "directory" | "manifest"
+  }
+  </?types>
+  <fact-source ?01M02KBYJ0PA4MRDF6XV5GDJNG>
+  事实源是资源作者拥有的 XNL 文档；registry 是只读派生投影，不反写 authority。
+  </?01M02KBYJ0PA4MRDF6XV5GDJNG>
+]>

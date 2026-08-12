@@ -1,0 +1,132 @@
+<object #resource_consumers.skill_capsule_dependency apiVersion="codument.tech/v1alpha1" {
+  kind = "entity"
+  fact_grade = "derived_projection_cache"
+  single_writer = "modeling://domain/resource_consumers/application_assembly"
+} [
+  <desc ?>由 SkillCapsule XNL authority 投影的 sibling Skill 依赖；只表达 resource identity 与精确版本 binding，不替代普通 Includes。</?>
+  <types ?dependency_types>
+  interface SkillCapsuleDependency {
+    ref: `resource://${string}`
+    fqn: string
+    version: string
+  }
+  </?dependency_types>
+  <fact-source ?>事实源是 SkillCapsule XNL 的 SkillDependencies；application assembly 只读投影并验证目标 kind/version，不反写 XNL。</?>
+]>
+
+<object #resource_consumers.skill_capsule_distribution_plan apiVersion="codument.tech/v1alpha1" {
+  kind = "entity"
+  fact_grade = "derived_projection_cache"
+  single_writer = "modeling://domain/resource_consumers/skill_distribution_planner"
+} [
+  <desc ?>从 roots 的完整 sibling dependency closure 可重建的不可变分发计划；以 canonical base64 string 冻结全部 file bytes、relative target 与 digest，不含 host 安装路径。</?>
+  <types ?plan_types>
+  interface SkillCapsuleDistributionPlan {
+    format: "halfcode.skill-distribution/v1"
+    roots: readonly SkillCapsuleIdentity[]
+    topology: readonly string[]
+    capsules: readonly PlannedSkillCapsule[]
+    files: readonly PlannedSkillFile[]
+    closureDigest: string
+  }
+
+  interface PlannedSkillFile {
+    skillFqn: string
+    skillVersion: string
+    capsuleRelativePath: string
+    targetRelativePath: string
+    contentBase64: string
+    readonly content: Uint8Array // compatibility getter; returns a defensive copy
+    contentDigest: string
+  }
+  </?plan_types>
+  <constraint ?required_skill_entry>每个 root 或 dependency PlannedSkillCapsule 的 files 非空，且恰有一个 root-level capsuleRelativePath="SKILL.md"，其 targetRelativePath 严格等于 &lt;safe-output-name&gt;/SKILL.md；digest 不是该结构事实的 authority。</?required_skill_entry>
+  <fact-source ?>XNL ResourcePackage、assembly、schemas 与 mapping material 是输入事实；plan 是只读派生投影，apply 不得回读 source 或改写 plan。</?>
+]>
+
+<component #resource_consumers.skill_distribution_planner apiVersion="codument.tech/v1alpha1" {
+  kind = "component"
+  behaviors = [
+    "behavior://skill-capsule-distribution/requirements/version-authority"
+    "behavior://skill-capsule-distribution/requirements/sibling-dependency-closure"
+    "behavior://skill-capsule-distribution/requirements/deterministic-complete-plan"
+  ]
+} [
+  <desc ?>解析 root Skills 的完整依赖图，冻结每个 capsule 的全部输出并在零写入下完成 topology、collision 与 digest preflight。</?>
+  <runtime ?planner_runtime>实现使用 package-owned Node file materializer 与 SHA-256 adapter；public planner API 不接受可替换 runtime，也不把函数对象写入 plan。</?planner_runtime>
+  <input ?planner_input>
+  interface SkillDistributionPlannerInput {
+    assembly: ApplicationAssembly
+    rootSkillFqns: readonly string[]
+    schemas?: SchemaRegistry
+  }
+  </?planner_input>
+  <config ?planner_config>
+  interface SkillDistributionPlannerConfig {
+    format: "halfcode.skill-distribution/v1"
+    digestAlgorithm: "sha256"
+  }
+  </?planner_config>
+  <output ?planner_output>
+  type SkillDistributionPlannerOutput = Promise&lt;SkillCapsuleDistributionPlan&gt;
+  // validation failures throw SkillCapsuleDistributionError with a stable code
+  </?planner_output>
+  <pseudo { kind = "ctrl" } ?planner_ctrl>
+  解析 roots 与 exact version dependencies → 区分 YAML name absent 与 present-invalid → dependency-first stable topology → 用共享 UTF-16 code-unit/code-point scanner 在任何 normalize/join 前验证 raw mapping/generated owner+target（unpaired surrogate fail closed，合法 non-BMP identity 保留）→ 生成每 capsule 唯一 canonical SKILL.md 并冻结全 closure bytes → collision preflight → 计算 file/capsule/closure digests → 返回 immutable plan
+  </?planner_ctrl>
+]>
+
+<component #resource_consumers.skill_distribution_applier apiVersion="codument.tech/v1alpha1" {
+  kind = "component"
+  behaviors = [
+    "behavior://skill-capsule-distribution/requirements/atomic-group-apply"
+    "behavior://skill-capsule-distribution/requirements/single-capsule-compatibility"
+  ]
+} [
+  <desc ?>只消费已冻结 distribution plan，在 caller-provided output root 的同父 staging 中完成 readback 与 rollback-capable 原子组切换。</?>
+  <runtime ?applier_runtime>实现使用 package-owned Node atomic filesystem 与 SHA-256 adapter；public options 只接受 outputRoot 与可选故障观测 hook。</?applier_runtime>
+  <input ?applier_input>
+  interface SkillDistributionApplierInput {
+    plan: SkillCapsuleDistributionPlan
+    outputRoot: string
+    onStep?: (step: SkillCapsuleApplyStep) =&gt; void | Promise&lt;void&gt;
+  }
+  </?applier_input>
+  <config ?applier_config>
+  interface SkillDistributionApplierConfig {
+    requireSameParentStaging: true
+    rollbackOnFailure: true
+  }
+  </?applier_config>
+  <output ?applier_output>
+  interface SkillDistributionReceipt {
+    outputRoot: string
+    closureDigest: string
+    installedSkills: readonly SkillCapsuleIdentity[]
+    files: readonly string[]
+  }
+  </?applier_output>
+  <pseudo { kind = "ctrl" } ?applier_ctrl>
+  校验每 capsule canonical SKILL.md 最小结构 → 逐 file 校验 capsuleRelativePath/targetRelativePath，lexical 失败稳定报告 raw skillFqn owner+field+JSON raw target → 校验 plan digests → 同父 staging 写完整 closure → readback 校验 → live 改名为 backup → staging 原子改名为 live → 成功清理 backup；任一步失败恢复上一 live root
+  </?applier_ctrl>
+  <not-owned-here ?>Eidolon global/workspace root、系统 Skill 名称、安装/升级 policy 与产品生命周期由 host 拥有；本 component 只使用显式 outputRoot。</?>
+]>
+
+<policy #resource_consumers.skill_distribution_authority apiVersion="codument.tech/v1alpha1" {
+  kind = "policy"
+  behaviors = [
+    "behavior://skill-capsule-distribution/requirements/version-authority"
+    "behavior://skill-capsule-distribution/requirements/atomic-group-apply"
+  ]
+} [
+  <desc ?>Skill XNL 版本、dependency graph、distribution plan 与 host installation policy 必须保持单一且分层的 authority。</?>
+  <pseudo { kind = "rule" } ?authority_rule>
+  XNL SkillCapsule metadata.version -> canonical Skill version
+  SKILL.metadata.yaml.version absent or equals canonical version -> accepted projection
+  SKILL.metadata.yaml.name absent -> legacy FQN-last-segment fallback; present -> explicit safe segment or fail closed
+  raw ResourceMappings target -> shared UTF-16 lexical validator before any normalization/join/digest; unpaired surrogate never becomes U+FFFD and accepted Unicode keeps code-unit identity
+  planner -> only writer of SkillCapsuleDistributionPlan
+  applier -> only writer of caller-provided live distribution root
+  host policy -> never inferred by Halfcode
+  </?authority_rule>
+]>

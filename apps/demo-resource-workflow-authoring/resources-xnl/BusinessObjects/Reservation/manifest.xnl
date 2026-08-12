@@ -1,0 +1,47 @@
+<BusinessObject #Demo.ResourceWorkflow.BO.MakerSpace.Reservation apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Reservation business-object resource and local capability manifest."
+  parentRef = "MakerSpace.Resource"
+  purpose = "Represents a member request to reserve and use a tool."
+} (
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+  <Identity [ <Property #reservationNumber { typeRef = "MakerSpace.Type.ReservationNumber" required = true }> ]>
+  <Properties [
+    <Property #workflowState { typeRef = "MakerSpace.Type.ReservationState" required = true role = "state" }>
+    <Property #startTime { typeRef = "builtin:DateTime" required = true role = "measurement" }>
+    <Property #endTime { typeRef = "builtin:DateTime" required = true role = "measurement" }>
+  ]>
+  <ComputedProperties [
+    <ComputedProperty #durationMinutes { typeRef = "builtin:Number" statement = "Duration is the number of minutes between startTime and endTime." }>
+  ]>
+  <Constraints [
+    <Rule { ref = "MakerSpace.Rule.ToolRequiresCertification" }>
+    <Rule { ref = "MakerSpace.Rule.ReservationWindowOrdered" }>
+  ]>
+  <Lifecycles [ <StateMachine { ref = "MakerSpace.Lifecycle.Reservation" }> ]>
+  <Operations [
+    <Action #approve {
+      resourceRef = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Reservation.Action.Approve"
+      target = "single"
+      targetKindFqn = "Demo.ResourceWorkflow.BO.MakerSpace.Reservation"
+      invocationModes = ["single" "batch"]
+      effect = "write"
+    }>
+    <Mutation #markApproved {
+      resourceRef = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Reservation.Mutation.MarkApproved"
+      target = "single"
+      targetKindFqn = "Demo.ResourceWorkflow.BO.MakerSpace.Reservation"
+      invocationModes = ["single"]
+      effect = "write"
+    }>
+  ]>
+  <RelatedResources [
+    <Resource { ref = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Member" }>
+    <Resource { ref = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Tool" }>
+  ]>
+  <Evidences [ <Evidence { ref = "manual:makerspace-policy" }> ]>
+  <Catalogs [
+    <Catalog #Actions { kind = "BusinessAction" shape = "manifest" root = "vfs://./Actions/" entry = "manifest.xnl" }>
+    <Catalog #Mutations { kind = "BusinessMutation" shape = "manifest" root = "vfs://./Mutations/" entry = "manifest.xnl" }>
+  ]>
+)>

@@ -1,0 +1,6 @@
+<WikiPage #Halfcode.ResourceDsl.Wiki.index apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Resource DSL overview and progressive documentation index."
+} (
+  <Instruction { href = "vfs://@/index.md" format = "markdown" }>
+)>

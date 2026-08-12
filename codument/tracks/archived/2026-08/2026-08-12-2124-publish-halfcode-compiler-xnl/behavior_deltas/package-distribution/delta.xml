@@ -1,0 +1,5 @@
+<behavior-patch capability="package-distribution" version="1">
+  <Metadata>
+    <ApiVersion>codument.tech/v1alpha1</ApiVersion>
+  </Metadata><upsert selector="behavior://package-distribution/requirements/xnl-public-package"><requirement id="xnl-public-package"><statement>系统 SHALL 只以 halfcode-compiler.xnl 作为 XNL compiler 的公开 npm identity，并保证根入口、所有声明子路径、生成 runtime import 与 tarball consumer 一致。</statement><suite id="xnl-package"><case id="public-imports"><given>消费者只安装 halfcode-compiler.xnl tarball</given><when>导入根入口与全部公开子路径并执行 TypeScript 检查</when><then>runtime 与 type imports SHALL 成功且制品不引用私有 workspace 包</then></case><case id="generated-runtime"><given>compiler 生成 callable bundle</given><when>检查其 runtime import</when><then>specifier SHALL 为 halfcode-compiler.xnl/authoring-runtime</then></case><case id="no-xml-public-identity"><given>公开源码、文档与 package metadata</given><when>扫描产品 identity</when><then>不得残留 halfcode-compiler.xml；历史 Codument provenance 除外</then></case></suite></requirement></upsert></behavior-patch>
+

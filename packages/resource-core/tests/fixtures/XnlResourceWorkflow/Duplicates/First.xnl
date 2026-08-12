@@ -1,0 +1,2 @@
+<Note #demo.resource_workflow.note.duplicate apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Active" description = "First" }>
+

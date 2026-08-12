@@ -1,0 +1,8 @@
+<SkillCapsule #demo.xnl_assembly.skill.demo apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Active" description = "Demo skill" } (
+  <SkillMetadata { href = "vfs://./skill.yaml" format = "yaml" }>
+  <Template { href = "vfs://./SKILL.md" format = "markdown" }>
+  <SkillDependencies [
+    <SkillDependency { ref = "resource://demo.xnl_assembly.skill.dependency" version = "1.0.0" }>
+  ]>
+  <Includes [ <Include { kind = "Function" ref = "resource://demo.xnl_assembly.function.prepare" }> ]>
+)>

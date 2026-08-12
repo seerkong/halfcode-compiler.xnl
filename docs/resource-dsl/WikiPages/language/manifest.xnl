@@ -1,0 +1,6 @@
+<WikiPage #Halfcode.ResourceDsl.Wiki.language apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "XNL language channels and authority projection rules."
+} (
+  <Instruction { href = "vfs://@/language.md" format = "markdown" }>
+)>

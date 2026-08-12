@@ -1,0 +1,14 @@
+{
+  "kind": "Contract",
+  "fqn": "Demo.ResourceWorkflow.Contract.ComposedFunction.PrepareWorkflow",
+  "input": {
+    "source": "input.ts",
+    "export": "PrepareWorkflowInput",
+    "schemaId": "Demo.ResourceWorkflow.Contract.PrepareWorkflow.Input"
+  },
+  "output": {
+    "source": "output.ts",
+    "export": "PrepareWorkflowOutput",
+    "schemaId": "Demo.ResourceWorkflow.Contract.PrepareWorkflow.Output"
+  }
+}

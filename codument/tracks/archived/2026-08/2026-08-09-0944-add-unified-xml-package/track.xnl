@@ -1,0 +1,125 @@
+<Track #add-unified-xml-package version="1" apiVersion="codument.tech/v1alpha1" { status = "completed" goal = "新增唯一公开 npm 包 halfcode-compiler.xml，并确保发布产物不依赖私有 workspace 包" description = "建立统一发布 capsule、显式子路径、JS/类型 bundling 与 tarball consumer 验证" question_mode = "decision-tree" question_severity = "light" commit_mode = "manual" created_at = "2026-08-09T06:02:36Z" updated_at = "2026-08-09T06:44:00Z" modeling_base_commit = "f6f577c8106745d7777782fd56e9e0dad1446920" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "output" name = "package" domain = "code" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "behavior" domain = "codument" path = "vfs://@/codument/behaviors/" }>
+    <MaterialBundle { role = "output" name = "modeling" domain = "codument" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_add-unified-xml-package { name = "add-unified-xml-package" } (
+    <Description ?01M02KBYHM9QCARYVZ707C7E6Q>
+    实现并验证 halfcode-compiler.xml 单包发布边界
+    </?01M02KBYHM9QCARYVZ707C7E6Q>
+    <SubNodes [
+      <TaskGroup #P1 { name = "统一发布 capsule" status = "DONE" order = 0 } (
+        <Description ?01M02KBYHM9QCARYVZ707C7E6R>
+        以测试先行方式建立 distribution package、公共入口和生成代码迁移
+        </?01M02KBYHM9QCARYVZ707C7E6R>
+        <Gate [
+          <Criterion ?01M02KBYHM9QCARYVZ707C7E6S>
+          P1 所有任务 DONE
+          </?01M02KBYHM9QCARYVZ707C7E6S>
+          <Criterion ?01M02KBYHM9QCARYVZ707C7E6T>
+          类型检查与目标测试通过
+          </?01M02KBYHM9QCARYVZ707C7E6T>
+        ]>
+        <SubNodes [
+          <Task { id = "T1.1" name = "冻结统一包公共契约" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYHM9QCARYVZ707C7E6V>
+            为根入口、子路径、package metadata 和生成 runtime import 编写失败测试
+            </?01M02KBYHM9QCARYVZ707C7E6V>
+            <Acceptance [
+              <Criterion { id = "T1.1-AC1" checked = true } ?01M02KBYHM9QCARYVZ707C7E6W>
+              测试覆盖 behavior delta 中的公开导入与生成 runtime import 场景
+              </?01M02KBYHM9QCARYVZ707C7E6W>
+              <Criterion { id = "T1.1-AC2" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0A>
+              实现前测试能暴露缺失 distribution package 或旧 runtime specifier
+              </?01M02KBYHNB1NMGXKYGWMFMM0A>
+            ]>
+          )>
+          <Task { id = "T1.2" name = "实现 distribution package" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYHNB1NMGXKYGWMFMM0B>
+            新增 halfcode-compiler.xml manifest、入口文件、tsdown 构建配置和根构建命令
+            </?01M02KBYHNB1NMGXKYGWMFMM0B>
+            <Acceptance [
+              <Criterion { id = "T1.2-AC1" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0C>
+              所有声明的 ESM 与 types exports 均指向生成文件
+              </?01M02KBYHNB1NMGXKYGWMFMM0C>
+              <Criterion { id = "T1.2-AC2" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0D>
+              构建成功生成 JavaScript 与 bundled .d.ts
+              </?01M02KBYHNB1NMGXKYGWMFMM0D>
+              <Criterion { id = "T1.2-AC3" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0E>
+              workspace-tools 未进入公开入口
+              </?01M02KBYHNB1NMGXKYGWMFMM0E>
+            ]>
+          )>
+          <Task { id = "T1.3" name = "迁移生成代码 runtime 入口" status = "DONE" order = 2 priority = "P0" } (
+            <Description ?01M02KBYHNB1NMGXKYGWMFMM0F>
+            将 callable bundle runtime import 切换为 halfcode-compiler.xml/authoring-runtime 并更新说明
+            </?01M02KBYHNB1NMGXKYGWMFMM0F>
+            <Acceptance [
+              <Criterion { id = "T1.3-AC1" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0G>
+              生成 bundle 只引用统一包 runtime 子路径
+              </?01M02KBYHNB1NMGXKYGWMFMM0G>
+              <Criterion { id = "T1.3-AC2" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0H>
+              现有 compiler-skill 行为测试通过
+              </?01M02KBYHNB1NMGXKYGWMFMM0H>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "发布制品验证" status = "DONE" order = 1 } (
+        <Description ?01M02KBYHNB1NMGXKYGWMFMM0J>
+        机械验证 dist、npm tarball 和临时消费者环境
+        </?01M02KBYHNB1NMGXKYGWMFMM0J>
+        <Gate [
+          <Criterion ?01M02KBYHNB1NMGXKYGWMFMM0K>
+          P2 所有任务 DONE
+          </?01M02KBYHNB1NMGXKYGWMFMM0K>
+          <Criterion ?01M02KBYHNB1NMGXKYGWMFMM0M>
+          全量 typecheck、test、verify、generate:check 通过
+          </?01M02KBYHNB1NMGXKYGWMFMM0M>
+          <Criterion ?01M02KBYHNB1NMGXKYGWMFMM0N>
+          npm tarball consumer smoke 通过
+          </?01M02KBYHNB1NMGXKYGWMFMM0N>
+        ]>
+        <SubNodes [
+          <Task { id = "T2.1" name = "实现发布制品守卫" status = "DONE" order = 0 priority = "P0" } (
+            <Description ?01M02KBYHNB1NMGXKYGWMFMM0P>
+            增加 dist 私有引用扫描、npm pack 与临时消费者 runtime/type smoke
+            </?01M02KBYHNB1NMGXKYGWMFMM0P>
+            <Acceptance [
+              <Criterion { id = "T2.1-AC1" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0Q>
+              dist JS 与 .d.ts 零 halfcode-compiler-* 引用
+              </?01M02KBYHNB1NMGXKYGWMFMM0Q>
+              <Criterion { id = "T2.1-AC2" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0R>
+              只安装 tarball 的临时项目可导入根入口和全部公开子路径
+              </?01M02KBYHNB1NMGXKYGWMFMM0R>
+              <Criterion { id = "T2.1-AC3" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0S>
+              tarball 不包含 apps、内部 packages 源码或 Codument 工作区
+              </?01M02KBYHNB1NMGXKYGWMFMM0S>
+            ]>
+          )>
+          <Task { id = "T2.2" name = "执行全量发布验收" status = "DONE" order = 1 priority = "P0" } (
+            <Description ?01M02KBYHNB1NMGXKYGWMFMM0T>
+            运行 package build/check 与仓库全量回归，审查最终 diff
+            </?01M02KBYHNB1NMGXKYGWMFMM0T>
+            <Acceptance [
+              <Criterion { id = "T2.2-AC1" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0V>
+              build、package check、typecheck、18+ tests、verify 和 generate:check 全部通过
+              </?01M02KBYHNB1NMGXKYGWMFMM0V>
+              <Criterion { id = "T2.2-AC2" checked = true } ?01M02KBYHNB1NMGXKYGWMFMM0W>
+              旧私有 scope 与废弃包名无残留
+              </?01M02KBYHNB1NMGXKYGWMFMM0W>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+)>

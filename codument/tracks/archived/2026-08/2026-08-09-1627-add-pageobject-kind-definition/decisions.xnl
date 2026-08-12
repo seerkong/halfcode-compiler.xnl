@@ -1,0 +1,40 @@
+<decisions apiVersion="codument.tech/v1alpha1" [
+  <decision #track.add-pageobject-kind-definition.target-neutral { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" } (
+    <question ?01M02KBYHRR1CYF018250F6X8P>
+    PageObject kind 是否承载 browser-robot selector 与 CDP 细节？
+    </?01M02KBYHRR1CYF018250F6X8P>
+    <answer {  } (
+      <raw-answer ?01M02KBYHRR1CYF018250F6X8Q>
+      不承载
+      </?01M02KBYHRR1CYF018250F6X8Q>
+      <decision-text ?01M02KBYHRR1CYF018250F6X8R>
+      PageObject SHALL 只描述可交互表面的 identity、code binding 与命名 operation exports。
+      </?01M02KBYHRR1CYF018250F6X8R>
+      <rationale ?01M02KBYHRR1CYF018250F6X8S>
+      halfcode 是 target-neutral authoring/compiler authority，浏览器投影属于消费者。
+      </?01M02KBYHRR1CYF018250F6X8S>
+      <evidence ?01M02KBYHRR1CYF018250F6X8T>
+      ipageobject-app-authoring external TrackLink 与用户唯一聚合入口要求。
+      </?01M02KBYHRR1CYF018250F6X8T>
+    )>
+  )>
+  <decision #track.add-pageobject-kind-definition.root-export { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.add-pageobject-kind-definition.target-neutral"] } (
+    <question ?01M02KBYHRR1CYF018250F6X8V>
+    消费者应从何处读取 PageObject assembly API？
+    </?01M02KBYHRR1CYF018250F6X8V>
+    <answer {  } (
+      <raw-answer ?01M02KBYHRR1CYF018250F6X8W>
+      distribution 根入口
+      </?01M02KBYHRR1CYF018250F6X8W>
+      <decision-text ?01M02KBYHRR1CYF018250F6X8X>
+      新增 PageObject assembly API SHALL 由 halfcode-compiler.xml 根入口导出，不要求消费者依赖内部包或子路径。
+      </?01M02KBYHRR1CYF018250F6X8X>
+      <rationale ?01M02KBYHRR1CYF018250F6X8Y>
+      distribution 是唯一发布与演进边界。
+      </?01M02KBYHRR1CYF018250F6X8Y>
+      <evidence ?01M02KBYHRR1CYF018250F6X8Z>
+      browser-robot 消费约束。
+      </?01M02KBYHRR1CYF018250F6X8Z>
+    )>
+  )>
+]>

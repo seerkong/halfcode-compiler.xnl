@@ -1,0 +1,14 @@
+<BusinessObject #Demo.ResourceWorkflow.BO.MakerSpace.Member apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Member business-object resource."
+  parentRef = "MakerSpace.Resource"
+  purpose = "Represents a workshop member as a domain object."
+} (
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+  <Identity [ <Property #memberNumber { typeRef = "MakerSpace.Type.MemberNumber" required = true }> ]>
+  <Properties [
+    <Property #displayName { typeRef = "builtin:String" required = true role = "display-name" }>
+    <Property #certificationState { typeRef = "MakerSpace.Type.CertificationState" required = true role = "classification" }>
+  ]>
+  <Evidences [ <Evidence { ref = "manual:makerspace-policy" }> ]>
+)>

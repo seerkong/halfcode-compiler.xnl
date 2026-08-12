@@ -1,0 +1,16 @@
+<PageObject #Demo.ResourceWorkflow.PageObject.ReservationDetail apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Experimental"
+  description = "Reservation detail interactive surface."
+  localId = "reservation-detail"
+} (
+  <CodeBinding { package = "demo-resource-workflow-authoring" module = "./src/PageObjects/ReservationDetail" }>
+  <TargetKinds [
+    <TargetKind #ReservationDetailForm { kindFqn = "Demo.ResourceWorkflow.PageObject.ReservationDetail.Form" role = "nested-subject" }>
+  ]>
+  <Operations [
+    <Action #open { export = "open" target = "none" invocationModes = ["single"] effect = "write" }>
+    <Action #fill { export = "fill" target = "single" targetKindFqn = "Demo.ResourceWorkflow.PageObject.ReservationDetail.Form" invocationModes = ["single" "batch"] effect = "write" }>
+    <Action #save { export = "save" target = "none" invocationModes = ["single"] effect = "write" }>
+    <Mutation #reconcile { export = "reconcile" target = "single" targetKindFqn = "Demo.ResourceWorkflow.PageObject.ReservationDetail.Form" invocationModes = ["single"] effect = "mixed" }>
+  ]>
+)>

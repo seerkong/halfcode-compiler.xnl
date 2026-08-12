@@ -1,0 +1,4 @@
+<behavior-patch capability="resource-loading" version="1">
+  <Metadata><ApiVersion>codument.tech/v1alpha1</ApiVersion></Metadata>
+  <upsert selector="behavior://resource-loading/requirements/multi-root-resource-documents"><requirement id="multi-root-resource-documents"><statement>系统 SHALL 仅在 KindDefinition 显式允许时，把 XNL 文件的多个顶层同 Kind 节点加载为独立资源记录。</statement><suite id="forest" name="XNL resource forest"><case id="load-forest"><given>single-file catalog 的 Kind 声明 documentCardinality many</given><when>文件含多个同 Kind data roots</when><then>每个 root SHALL 以独立 identity 进入 registry并共享文档 provenance</then></case><case id="single-remains-strict"><given>Kind 缺省或声明 documentCardinality one</given><when>文件出现多个顶层根</when><then>loader SHALL 拒绝该文档</then></case><case id="reject-mixed-forest"><given>forest 含不同 tag、缺失或重复 identity</given><when>loader 验证文档</when><then>系统 SHALL 返回稳定 diagnostics 且不产生 tree</then></case></suite></requirement></upsert>
+</behavior-patch>

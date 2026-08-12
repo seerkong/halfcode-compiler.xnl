@@ -1,0 +1,11 @@
+<module #publication_xnl.halfcode_compiler_xnl apiVersion="codument.tech/v1alpha1" { kind = "module" visibility = "public" depends_on = [] behaviors = ["behavior://package-distribution/requirements/xnl-public-package"] } [
+  <desc ?01M02KBYJ4BTY8CG5P0Q78X6M6>
+  halfcode-compiler.xnl 是 XNL 编译器唯一公开 npm capsule，拥有 package identity、exports、类型声明与 tarball 边界。
+  </?01M02KBYJ4BTY8CG5P0Q78X6M6>
+  <capsule-tree ?01M02KBYJ4BTY8CG5P0Q78X6M7>
+  packages/distribution/package.json # 公开 identity 与 exports
+  packages/distribution/src/*.ts # 能力入口投影
+  packages/distribution/tools/verify-package.ts # tarball runtime/type consumer smoke
+  packages/compiler-skill/src/index.ts # 生成 halfcode-compiler.xnl/authoring-runtime import
+  </?01M02KBYJ4BTY8CG5P0Q78X6M7>
+]>

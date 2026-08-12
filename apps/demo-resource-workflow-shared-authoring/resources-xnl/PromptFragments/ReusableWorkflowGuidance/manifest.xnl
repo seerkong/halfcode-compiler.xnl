@@ -1,0 +1,6 @@
+<PromptFragment #Demo.ResourceWorkflow.Shared.PromptFragment.ReusableWorkflowGuidance apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Reusable guidance for deterministic workflow preparation."
+} (
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+)>

@@ -1,0 +1,13 @@
+{
+  "name": "halfcode-compiler-resource-projection",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "packageKind": "framework",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "halfcode-compiler-resource-core": "workspace:*"
+  }
+}

@@ -1,0 +1,59 @@
+<decision #track.add_unified_xml_package.publication_identity apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" blocks = ["design.md" "track.xml" "implementation"] durable_candidate = true } (
+  <question ?01M02KBYHK65580Z5MZZFV0P27>
+  统一公开 npm 包使用什么身份？
+  </?01M02KBYHK65580Z5MZZFV0P27>
+  <answer {  } (
+    <raw-answer ?01M02KBYHK65580Z5MZZFV0P28>
+    请按照 halfcode-compiler.xml 作为统一发布包。
+    </?01M02KBYHK65580Z5MZZFV0P28>
+    <decision-text ?01M02KBYHK65580Z5MZZFV0P29>
+    唯一公开 npm 包命名为 halfcode-compiler.xml。
+    </?01M02KBYHK65580Z5MZZFV0P29>
+    <rationale ?01M02KBYHK65580Z5MZZFV0P2A>
+    点号后缀明确标识 XML 产品变体，并为未来 halfcode-compiler.xnl 留出独立版本边界。
+    </?01M02KBYHK65580Z5MZZFV0P2A>
+    <evidence ?01M02KBYHK65580Z5MZZFV0P2B>
+    用户在本 track 创建请求中明确指定。
+    </?01M02KBYHK65580Z5MZZFV0P2B>
+  )>
+)>
+
+<decision #track.add_unified_xml_package.publication_boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" blocks = ["design.md" "implementation"] durable_candidate = true } (
+  <question ?01M02KBYHK65580Z5MZZFV0P2C>
+  公开包与内部 workspace 包如何分界？
+  </?01M02KBYHK65580Z5MZZFV0P2C>
+  <answer {  } (
+    <raw-answer ?01M02KBYHK65580Z5MZZFV0P2D>
+    使用统一入口包，避免发布多个子包。
+    </?01M02KBYHK65580Z5MZZFV0P2D>
+    <decision-text ?01M02KBYHK65580Z5MZZFV0P2E>
+    新增独立 distribution package；内部 workspace 包保持 private，并在构建时同时内联 JavaScript 与类型声明。
+    </?01M02KBYHK65580Z5MZZFV0P2E>
+    <rationale ?01M02KBYHK65580Z5MZZFV0P2F>
+    源码职责边界与 registry 发布边界可以分离，外部版本 authority 必须唯一。
+    </?01M02KBYHK65580Z5MZZFV0P2F>
+    <evidence ?01M02KBYHK65580Z5MZZFV0P2G>
+    现有内部包全部 private 且使用 workspace 依赖；直接转发会让消费者依赖未发布包。
+    </?01M02KBYHK65580Z5MZZFV0P2G>
+  )>
+)>
+
+<decision #track.add_unified_xml_package.public_api_shape apiVersion="codument.tech/v1alpha1" { priority = "P1" status = "accepted" blocks = ["design.md" "implementation"] durable_candidate = true } (
+  <question ?01M02KBYHK65580Z5MZZFV0P2H>
+  统一包如何组织公共 API？
+  </?01M02KBYHK65580Z5MZZFV0P2H>
+  <answer {  } (
+    <raw-answer ?01M02KBYHK65580Z5MZZFV0P2J>
+    采用统一包和能力子路径。
+    </?01M02KBYHK65580Z5MZZFV0P2J>
+    <decision-text ?01M02KBYHK65580Z5MZZFV0P2K>
+    根入口只暴露高级 assembly/compiler API；低层资源、schema、runtime 和 testing 通过显式 subpath exports 暴露。
+    </?01M02KBYHK65580Z5MZZFV0P2K>
+    <rationale ?01M02KBYHK65580Z5MZZFV0P2M>
+    避免重名符号平铺并限制 semver 承诺面。
+    </?01M02KBYHK65580Z5MZZFV0P2M>
+    <evidence ?01M02KBYHK65580Z5MZZFV0P2N>
+    内部包中存在相近类型名，workspace-tools 仅服务仓库治理而非消费者。
+    </?01M02KBYHK65580Z5MZZFV0P2N>
+  )>
+)>

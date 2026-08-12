@@ -1,0 +1,59 @@
+<decision #track.define_xnl_resource_dsl.channel_allocation apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" blocks = ["design.md" "implementation"] durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+  <question ?01M02KBYHV85ET9BEZ29R5VMD0>
+  XNL 的 tag、id、properties、body 与 extension 分别承载什么？
+  </?01M02KBYHV85ET9BEZ29R5VMD0>
+  <answer {  } (
+    <raw-answer ?01M02KBYHV85ET9BEZ29R5VMD1>
+    沿用 depa-flows 的 XNL DSL 习惯，按语义分配不同通道。
+    </?01M02KBYHV85ET9BEZ29R5VMD1>
+    <decision-text ?01M02KBYHV85ET9BEZ29R5VMD2>
+    tag 表示资源 kind，#id 表示规范身份，{} 表示无序元数据，[] 表示有序或可重复成员，() 表示唯一命名子域。
+    </?01M02KBYHV85ET9BEZ29R5VMD2>
+    <rationale ?01M02KBYHV85ET9BEZ29R5VMD3>
+    固定通道语义可避免 XML 属性前缀泄漏，也使 parser、validator 与 authoring 文档共享同一模型。
+    </?01M02KBYHV85ET9BEZ29R5VMD3>
+    <evidence ?01M02KBYHV85ET9BEZ29R5VMD4>
+    xnl-core 数据模型与 depa-flows flow DSL 规范。
+    </?01M02KBYHV85ET9BEZ29R5VMD4>
+  )>
+)>
+
+<decision #track.define_xnl_resource_dsl.reference_identity apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" blocks = ["design.md" "implementation"] durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+  <question ?01M02KBYHV85ET9BEZ29R5VMD5>
+  资源、物料与代码导出如何寻址？
+  </?01M02KBYHV85ET9BEZ29R5VMD5>
+  <answer {  } (
+    <raw-answer ?01M02KBYHV85ET9BEZ29R5VMD6>
+    使用 XNL/VFS 已有 URI 语义，不发明第二套路径语法。
+    </?01M02KBYHV85ET9BEZ29R5VMD6>
+    <decision-text ?01M02KBYHV85ET9BEZ29R5VMD7>
+    资源身份使用 #id；相对物料用 vfs://./，workspace 物料用 vfs://@/，代码导出通过 URI fragment #ExportName 寻址。
+    </?01M02KBYHV85ET9BEZ29R5VMD7>
+    <rationale ?01M02KBYHV85ET9BEZ29R5VMD8>
+    URI 自描述且能跨磁盘布局保持逻辑引用稳定。
+    </?01M02KBYHV85ET9BEZ29R5VMD8>
+    <evidence ?01M02KBYHV85ET9BEZ29R5VMD9>
+    xnl-vfs 约定与现有资源 source/code binding 需求。
+    </?01M02KBYHV85ET9BEZ29R5VMD9>
+  )>
+)>
+
+<decision #track.define_xnl_resource_dsl.defer_businessobject_pageobject apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" blocks = ["design.md" "implementation"] durable_candidate = true confidence = 0.99 reversibility = "high" } (
+  <question ?01M02KBYHV85ET9BEZ29R5VMDA>
+  本 track 是否冻结 BusinessObject/PageObject 的专用 XNL schema？
+  </?01M02KBYHV85ET9BEZ29R5VMDA>
+  <answer {  } (
+    <raw-answer ?01M02KBYHV85ET9BEZ29R5VMDB>
+    BusinessObject、PageObject 要放到最后做，参考实现正在进行 API 重构。
+    </?01M02KBYHV85ET9BEZ29R5VMDB>
+    <decision-text ?01M02KBYHV85ET9BEZ29R5VMDC>
+    本 track 仅定义二者可复用的通用资源外壳；专用字段、操作模型、assembly 与 public API 全部延后到 mission 的 LATE-BO-PO group。
+    </?01M02KBYHV85ET9BEZ29R5VMDC>
+    <rationale ?01M02KBYHV85ET9BEZ29R5VMDD>
+    提前固化会把正在变化的 XML-era API 复制进新的长期 DSL。
+    </?01M02KBYHV85ET9BEZ29R5VMDD>
+    <evidence ?01M02KBYHV85ET9BEZ29R5VMDE>
+    用户约束及参考仓库 PageObject assembly 的未提交 API diff。
+    </?01M02KBYHV85ET9BEZ29R5VMDE>
+  )>
+)>

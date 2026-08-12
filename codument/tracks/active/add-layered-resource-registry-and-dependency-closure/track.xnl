@@ -1,0 +1,161 @@
+<Track #add-layered-resource-registry-and-dependency-closure apiVersion="codument.tech/v1alpha1" version="1" {
+  status = "completed"
+  goal = "为 Halfcode 增加通用 ordered named layer registry、显式 tombstone、content revision 与 typed dependency snapshot。"
+  description = "以 additive public API 保持 0.2.1 单树 consumer 兼容，并通过两条独立 TDD 支线和公共包验收收口。"
+  question_mode = "decision-tree"
+  question_severity = "auto"
+  commit_mode = "manual"
+  created_at = "2026-08-15T16:36:58Z"
+  updated_at = "2026-08-15T18:11:59Z"
+  modeling_base_commit = "056ec4c29cb181db8b733f8b180995b326317c34"
+} (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #modeling_deltas { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle #resource_core { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle #resource_docs { role = "output" name = "resource-dsl-docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle #behavior_registry { role = "output" name = "behavior" domain = "behavior" path = "vfs://@/codument/behaviors/" }>
+    <MaterialBundle #modeling_registry { role = "output" name = "modeling" domain = "modeling" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_add-layered-resource-registry-and-dependency-closure {
+    name = "add-layered-resource-registry-and-dependency-closure"
+    version = "1"
+    child_mode = "dag"
+  } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "兼容基线与 RED contracts" status = "DONE" order = 0 } (
+        <Description ?desc>
+        在改实现前锁定现有单树公共行为，并为 named layers 与 typed dependency snapshot 写出失败测试。
+        </?desc>
+        <SubNodes [
+          <Task #P1-T1 { name = "冻结 0.2.1 单树 API characterization" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?>旧式 consumer 继续只调用 loadResourceTree/validateResourceTree 并读取 byKind/kindDefinitions。</?>
+              <Criterion #P1-T1-AC2 { checked = true } ?>测试锁定现有函数签名、normalized facts 与 public specifiers，不要求迁移。</?>
+              <Criterion #P1-T1-AC3 { checked = true } ?>初始 dirty files 被记录并在任务 diff 中保持不丢失。</?>
+            ]>
+          )>
+          <Task #P1-T2 { name = "编写 ordered named layer RED tests" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?>失败测试覆盖 precedence、shadow provenance、explicit tombstone 与 absence-not-delete。</?>
+              <Criterion #P1-T2-AC2 { checked = true } ?>失败测试覆盖重复 layer id、identity-kind conflict 与 KindDefinition conflict。</?>
+              <Criterion #P1-T2-AC3 { checked = true } ?>测试使用 base/override 等中性 layer id，不出现产品路径特判。</?>
+            ]>
+          )>
+          <Task #P1-T3 { name = "编写 typed dependency snapshot RED tests" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P1-T3-AC1 { checked = true } ?>失败测试覆盖 content/material contributions、typed edges、roots、closure 与三个 revisions。</?>
+              <Criterion #P1-T3-AC2 { checked = true } ?>失败测试覆盖缺失 endpoint、cycle、矛盾 contribution 和输入顺序稳定性。</?>
+              <Criterion #P1-T3-AC3 { checked = true } ?>反例证明无 typed edge 时，任意 resource-like 字符串不会进入 closure。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Layered effective registry" status = "DONE" order = 1 } (
+        <Description ?desc>
+        只实现已验证 ResourceTree 的 ordered named layer composition、显式 tombstone 和 effective provenance。
+        </?desc>
+        <SubNodes [
+          <Task #P2-T1 { name = "定义 additive layer/effective contracts" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?>公共 readonly types 独立于旧 ResourceTree/ResourceRegistry，不增加旧记录必填字段。</?>
+              <Criterion #P2-T1-AC2 { checked = true } ?>API 只接受 ordered named layers 和显式 tombstones，不接受 host path policy。</?>
+            ]>
+          )>
+          <Task #P2-T2 { name = "实现 precedence、shadow、tombstone 与 Kind contract 合并" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?>P1-T2 的全部 RED tests 转绿。</?>
+              <Criterion #P2-T2-AC2 { checked = true } ?>effective/byKind 与完整 entries/provenance 均稳定排序并冻结。</?>
+              <Criterion #P2-T2-AC3 { checked = true } ?>identity-kind 和 KindDefinition conflict fail closed，absence 不产生 tombstone。</?>
+            ]>
+          )>
+          <Task #P2-T3 { name = "重构 layer diagnostics 与 provenance" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P2-T3-AC1 { checked = true } ?>diagnostic code/location 不泄漏绝对机器路径。</?>
+              <Criterion #P2-T3-AC2 { checked = true } ?>实现不重新扫描磁盘、不复制单包 loader、不按 layer 名称分支。</?>
+              <Criterion #P2-T3-AC3 { checked = true } ?>Resource DSL 文档解释 projection/authority 边界且不含 host-specific 操作。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "Content identity 与 dependency snapshot" status = "DONE" order = 2 } (
+        <Description ?desc>
+        只实现 canonical digest、显式 contributions、typed dependency graph 与 immutable snapshot。
+        </?desc>
+        <SubNodes [
+          <Task #P3-T1 { name = "实现 canonical content identity 与 registry revision" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P3-T1-AC1 { checked = true } ?>authority/material contributions 均有稳定 key、digest 和 provenance。</?>
+              <Criterion #P3-T1-AC2 { checked = true } ?>canonical ordering 不依赖 Map/file enumeration，机器绝对路径不进入摘要。</?>
+              <Criterion #P3-T1-AC3 { checked = true } ?>compositionRevision 只覆盖 layer/effective identity/shadow/tombstone/Kind facts；snapshot registryRevision 另覆盖全部 effective content digests。</?>
+            ]>
+          )>
+          <Task #P3-T2 { name = "实现 typed edge closure 与 snapshot revision" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P3-T2-AC1 { checked = true } ?>只从显式 roots 和 typed edges 遍历，P1-T3 的反例保持不产生隐式依赖。</?>
+              <Criterion #P3-T2-AC2 { checked = true } ?>snapshot 输出稳定包含 closure、参与 edges、resource revisions、registry/snapshot revision。</?>
+              <Criterion #P3-T2-AC3 { checked = true } ?>缺失 endpoint、cycle 和矛盾 digest 返回稳定 diagnostics，不输出 partial snapshot。</?>
+            ]>
+          )>
+          <Task #P3-T3 { name = "重构 typed graph 与 digest 边界" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P3-T3-AC1 { checked = true } ?>P1-T3 全部 RED tests 转绿并覆盖相同语义输入的 revision 稳定性。</?>
+              <Criterion #P3-T3-AC2 { checked = true } ?>源码不存在 arbitrary string/resource:// 全树扫描或自然语言关键词判断。</?>
+              <Criterion #P3-T3-AC3 { checked = true } ?>Kind-specific edge extraction 明确保留给 consumer/Kind owner。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P4 { name = "公共包、回归与高风险终态验收" status = "DONE" order = 3 } (
+        <Description ?desc>
+        汇合两条支线，验证 additive public API、packed package、完整回归和架构方向。
+        </?desc>
+        <SubNodes [
+          <Task #P4-T1 { name = "发布 additive resource-core API 与双 consumer smoke" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P4-T1-AC1 { checked = true } ?>既有十个 public specifiers、root identity 和旧 consumer import 全部保留。</?>
+              <Criterion #P4-T1-AC2 { checked = true } ?>packed tarball 的新 runtime/type consumer 可组合 layers 并构建 snapshot。</?>
+              <Criterion #P4-T1-AC3 { checked = true } ?>dist 不泄漏 private workspace package specifier。</?>
+            ]>
+          )>
+          <Task #P4-T2 { name = "运行定向、全仓与 package 验证" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P4-T2-AC1 { checked = true } ?>resource-core 定向 tests 与全仓 bun test 通过。</?>
+              <Criterion #P4-T2-AC2 { checked = true } ?>bun run typecheck、bun run verify 通过。</?>
+              <Criterion #P4-T2-AC3 { checked = true } ?>bun run package:check 完成 packed runtime/type smoke。</?>
+            ]>
+          )>
+          <Task #P4-T3 { name = "审查 dirty base、authority 与禁止项" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P4-T3-AC1 { checked = true } ?>初始 unrelated dirty changes 保持存在且未被本 track 回退或覆盖。</?>
+              <Criterion #P4-T3-AC2 { checked = true } ?>diff 只含本 track 规划的 core/tests/docs/distribution/Codument 资产。</?>
+              <Criterion #P4-T3-AC3 { checked = true } ?>静态审查确认无 Eidolon/global/workspace 路径特判、无任意字符串/自然语言模糊 dependency routing。</?>
+              <Criterion #P4-T3-AC4 { checked = true } ?>behavior/modeling delta、analysis findings 和公共 API 文档与实际实现一致。</?>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_add-layered-resource-registry-and-dependency-closure" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+      <Node #P3 [
+        <After { ref = "P1" }>
+      ]>
+      <Node #P4 [
+        <After { ref = "P2" }>
+        <After { ref = "P3" }>
+      ]>
+    ]>
+  ]>
+  <Hooks []>
+)>

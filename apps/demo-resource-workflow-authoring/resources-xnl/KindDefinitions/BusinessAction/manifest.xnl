@@ -1,0 +1,12 @@
+<KindDefinition #Demo.ResourceWorkflow.KindDefinition.BusinessAction apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Stable"
+  description = "Kind definition for executable BusinessAction resources owned by a BusinessObject."
+  resourceKind = "BusinessAction"
+  sourceShapes = ["manifest"]
+  currentApiVersion = "halfcode.resources/v1"
+  supportedApiVersions = ["halfcode.resources/v1"]
+} (
+  <DescriptorContract (
+    <RequiredFiles [ <File { name = "instruction.md" }> ]>
+  )>
+)>

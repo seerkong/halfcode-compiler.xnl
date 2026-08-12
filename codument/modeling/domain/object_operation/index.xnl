@@ -1,0 +1,59 @@
+<component #object_operation.protocol apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://object-operation-contract/requirements/shared-definition" "behavior://object-operation-contract/requirements/four-dimensional-call"] } [
+  <desc ?01KZWEXM8PNJ9MTVSFBTZ0X5DN>
+  PageObject 与 BusinessObject 共用的对象操作数据契约和纯校验组件；owner XNL 是 definition authority。
+  </?01KZWEXM8PNJ9MTVSFBTZ0X5DN>
+  <runtime ?r>
+  type ObjectOperationRuntime = unknown // 由 host 绑定，AI-facing call 不提供
+  </?r>
+  <input ?i>
+  interface ObjectOperationHandlerInput {
+      targets: ObjectTargets
+      invocation: ObjectInvocation
+    }
+  </?i>
+  <config ?c>
+  type ObjectOperationConfig = JsonObject | undefined
+  </?c>
+  <output ?o>
+  type ObjectOperationOutput = unknown
+  </?o>
+  <pseudo { kind = "ctrl" } ?p>
+  读取 owner XNL definition → 校验 target/behavior/mode → 解析 capsule-private binding → handler(runtime, targets, invocation, config)
+  </?p>
+]>
+
+<module #object_operation.assembly_catalog apiVersion="codument.tech/v1alpha1" { kind = "module" depends_on = ["modeling://domain/object_operation/protocol"] behaviors = ["behavior://application-assembly/requirements/xnl-generic-consumers"] } [
+  <desc ?01KZWEXM8PNJ9MTVSFBTZ0X5DP>
+  Application assembly 中对象 operation catalog 的单一规范化投影边界。
+  </?01KZWEXM8PNJ9MTVSFBTZ0X5DP>
+  <capsule-tree ?01KZWEXM8PNJ9MTVSFBTZ0X5DQ>
+
+  packages/application-assembly/src/index.ts
+    ObjectOperationDefinition / ObjectTargets / ObjectInvocation  # public Data 与 validator
+    readPageObject / readBusinessObject                            # XNL owner reader
+    assertObjectOperationAssemblyClosure                           # target、definition、binding 闭包
+    </capsule-tree>
+    <not-owned-here ?>运行调度、DOM selector 与平台 adapter 不属于该 module。
+  </?01KZWEXM8PNJ9MTVSFBTZ0X5DQ>
+]>
+
+<component #object_operation.generated_bundle apiVersion="codument.tech/v1alpha1" { kind = "component" depends_on = ["modeling://domain/object_operation/assembly_catalog"] behaviors = ["behavior://object-operation-compilation/requirements/generated-object-entry" "behavior://object-operation-compilation/requirements/no-double-authority"] } [
+  <desc ?01KZWEXM8PNJ9MTVSFBTZ0X5DR>
+  生成 Skill capsule 内的对象操作 registry 与运行入口，以 registry definition 校验并调用私有 binding handler。
+  </?01KZWEXM8PNJ9MTVSFBTZ0X5DR>
+  <runtime ?r>
+  type Runtime = AuthoringRuntime // host 初始化
+  </?r>
+  <input ?i>
+  type Input = ObjectOperationCall
+  </?i>
+  <config ?c>
+  type Config = ObjectOperationConfig | undefined
+  </?c>
+  <output ?o>
+  type Output = unknown
+  </?o>
+  <pseudo { kind = "ctrl" } ?p>
+  resolve definition from generated registry → validate call → resolve capsule-private handler → handler(runtime, targets, invocation, config)
+  </?p>
+]>

@@ -1,0 +1,6 @@
+<WikiPage #Demo.ResourceWorkflow.Wiki.MakerSpaceReservationLifecycle apiVersion="halfcode.resources/v1" version="1.0.0" {
+  lifecycle = "Active"
+  description = "Concept page for the MakerSpace Reservation lifecycle."
+} (
+  <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
+)>
