@@ -1,0 +1,79 @@
+<decision #track.add_multi_skill_capsule_dependency_distribution.version_authority apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" blocks = ["implementation" "tests"] } (
+  <question ?01M0QN276EGTE2DJNM7H7Z4T3J>
+  SkillCapsule 的发布版本由 XNL 还是 SKILL.metadata.yaml 拥有？
+  </?01M0QN276EGTE2DJNM7H7Z4T3J>
+  <answer {  } (
+    <raw-answer ?01M0QN276EGTE2DJNM7H7Z4T3K>
+    资源标准仍然通过 halfcode-compiler.xnl 实现。
+    </?01M0QN276EGTE2DJNM7H7Z4T3K>
+    <decision-text ?01M0QN276EGTE2DJNM7H7Z4T3M>
+    XNL SkillCapsule root metadata version 是唯一 authority；YAML version 可省略，存在时必须相等且只能作为投影。
+    </?01M0QN276EGTE2DJNM7H7Z4T3M>
+    <rationale ?01M0QN276EGTE2DJNM7H7Z4T3N>
+    资源 identity/version 属于 XNL authority；允许 YAML 独立覆盖会使 dependency binding 与 digest 不可确定。
+    </?01M0QN276EGTE2DJNM7H7Z4T3N>
+    <evidence ?01M0QN276EGTE2DJNM7H7Z4T3P>
+    当前 demo XNL version 为 1.0.0，而 SKILL.metadata.yaml version 为 0.0.0，已出现实际漂移。
+    </?01M0QN276EGTE2DJNM7H7Z4T3P>
+  )>
+)>
+
+<decision #track.add_multi_skill_capsule_dependency_distribution.dependency_relation apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" blocks = ["implementation" "tests" "docs"] } (
+  <question ?01M0QN276EGTE2DJNM7H7Z4T3Q>
+  Sibling SkillCapsule dependency 是否复用 Includes？
+  </?01M0QN276EGTE2DJNM7H7Z4T3Q>
+  <answer {  } (
+    <raw-answer ?01M0QN276EGTE2DJNM7H7Z4T3R>
+    需要显式 sibling Skill dependency、拓扑、环、缺失和 version 校验。
+    </?01M0QN276EGTE2DJNM7H7Z4T3R>
+    <decision-text ?01M0QN276EGTE2DJNM7H7Z4T3S>
+    新增 SkillDependencies/SkillDependency typed relation；每条 dependency 使用 resource ref 与 exact version，不把 Includes 模糊解释为 Skill dependency。
+    </?01M0QN276EGTE2DJNM7H7Z4T3S>
+    <rationale ?01M0QN276EGTE2DJNM7H7Z4T3T>
+    Includes 表达编入当前 Skill 的普通资源，dependency 表达多个独立可安装 Skill 的生命周期关系，两者必须分离。
+    </?01M0QN276EGTE2DJNM7H7Z4T3T>
+    <evidence ?01M0QN276EGTE2DJNM7H7Z4T3V>
+    当前 selectSkillResources 仅选择普通资源，assembly SkillCapsuleResource 没有 dependencies 字段。
+    </?01M0QN276EGTE2DJNM7H7Z4T3V>
+  )>
+)>
+
+<decision #track.add_multi_skill_capsule_dependency_distribution.plan_apply_boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" blocks = ["implementation" "tests"] } (
+  <question ?01M0QN276EGTE2DJNM7H7Z4T3W>
+  多 Skill 分发如何保证 deterministic preflight 与原子应用？
+  </?01M0QN276EGTE2DJNM7H7Z4T3W>
+  <answer {  } (
+    <raw-answer ?01M0QN276EGTE2DJNM7H7Z4T3X>
+    完整 deterministic compile plan 与 apply 分离，全 closure collision preflight，原子成组 apply。
+    </?01M0QN276EGTE2DJNM7H7Z4T3X>
+    <decision-text ?01M0QN276EGTE2DJNM7H7Z4T3Y>
+    Planner 冻结完整 closure 的 bytes/relative targets/digests 且零写入；Applier 只消费已验证 plan，在 caller-provided root staging、readback、原子切换并可回滚。
+    </?01M0QN276EGTE2DJNM7H7Z4T3Y>
+    <rationale ?01M0QN276EGTE2DJNM7H7Z4T3Z>
+    若 plan 保存 source path 并在 apply 时重读，两个阶段之间 source 可漂移；若逐 capsule commit，失败会产生混合版本。
+    </?01M0QN276EGTE2DJNM7H7Z4T3Z>
+    <evidence ?01M0QN276EGTE2DJNM7H7Z4T40>
+    当前 compileResourceSkillCapsule 在同一函数中先 rm outputDir 再逐文件写入，只具备单 capsule preflight。
+    </?01M0QN276EGTE2DJNM7H7Z4T40>
+  )>
+)>
+
+<decision #track.add_multi_skill_capsule_dependency_distribution.host_and_compatibility_boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "high" blocks = ["implementation" "package-smoke"] } (
+  <question ?01M0QN276EGTE2DJNM7H7Z4T41>
+  Halfcode 是否拥有 Eidolon 安装路径/policy，以及现有单 capsule API 是否可破坏？
+  </?01M0QN276EGTE2DJNM7H7Z4T41>
+  <answer {  } (
+    <raw-answer ?01M0QN276EGTE2DJNM7H7Z4T42>
+    Halfcode 只实现资源标准；Eidolon 另行消费，保持当前 public API compatibility。
+    </?01M0QN276EGTE2DJNM7H7Z4T42>
+    <decision-text ?01M0QN276EGTE2DJNM7H7Z4T43>
+    Halfcode 只对 caller-provided generic output root 提供 plan/apply；不出现 Eidolon path/policy。现有单 capsule API 保持签名和结果，以单 root compatibility wrapper 复用新机制。
+    </?01M0QN276EGTE2DJNM7H7Z4T43>
+    <rationale ?01M0QN276EGTE2DJNM7H7Z4T44>
+    host policy 与通用 compiler authority 分离，同时避免已发布 0.2.1 consumer 被无关破坏。
+    </?01M0QN276EGTE2DJNM7H7Z4T44>
+    <evidence ?01M0QN276EGTE2DJNM7H7Z4T45>
+    halfcode-compiler.xnl 已公开 root/skill-capsule subpath；Eidolon 安装属于 host mission 的独立职责。
+    </?01M0QN276EGTE2DJNM7H7Z4T45>
+  )>
+)>

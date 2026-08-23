@@ -1,0 +1,46 @@
+<BehaviorPatch #track.publish-halfcode-resource-dsl-system-skill.behavior_patch.skill-capsule-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "skill-capsule-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://skill-capsule-distribution/requirements/canonical-skill-provenance" } (
+      <Requirement #canonical-skill-provenance (
+        <Statement ?>Every planned SkillCapsule SHALL expose XNL apiVersion/version identity and exactly one canonical provenance manifest binding source identity, generator protocol and payload digests.</?>
+        <Suites [
+          <Suite #provenance { name = "Canonical provenance" } (
+            <Cases [
+              <Case #generate-stable-provenance (<Given ?>equivalent authority and payload bytes in different enumeration order</?> <When ?>the planner builds the capsule</?> <Then ?>provenance and enclosing digests SHALL be byte-identical</?>)>
+              <Case #bind-source-authority (<Given ?>source identity, version or payload bytes change</?> <When ?>the capsule is replanned</?> <Then ?>the corresponding provenance and enclosing digests SHALL change</?>)>
+              <Case #reject-invalid-provenance-before-write (<Given ?>missing, duplicate, malformed or mismatched provenance facts</?> <When ?>the applier validates the plan</?> <Then ?>it SHALL fail before target mutation</?>)>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://skill-capsule-distribution/requirements/canonical-resource-dsl-consumer-skill" } (
+      <Requirement #canonical-resource-dsl-consumer-skill (
+        <Statement ?>Halfcode SHALL compile sys-halfcode-resource-dsl from canonical Resource DSL resources into a versioned, progressively loadable and host-neutral SkillCapsule.</?>
+        <Suites [
+          <Suite #consumer-skill { name = "Canonical Resource DSL consumer Skill" } (
+            <Cases [
+              <Case #compile-canonical-docs (<Given ?>the canonical Resource DSL package and system Skill root</?> <When ?>the planner compiles it</?> <Then ?>references SHALL contain registered docs and examples without a second maintained body</?>)>
+              <Case #keep-minimal-skill-router (<Given ?>the compiled SKILL.md</?> <When ?>a consumer selects a Resource DSL task</?> <Then ?>it SHALL only route progressive reference loading and contain no host operation</?>)>
+              <Case #keep-system-skill-version-policy (<Given ?>the Skill descriptor</?> <When ?>assembly validates identity</?> <Then ?>XNL SHALL be the sole authority for name, apiVersion and version 1.0.0</?>)>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://skill-capsule-distribution/requirements/consumer-skill-compatibility" } (
+      <Requirement #consumer-skill-compatibility (
+        <Statement ?>The consumer Skill and provenance extension SHALL preserve legacy compiler calls, public specifiers and the Halfcode/Eidolon authority boundary.</?>
+        <Suites [
+          <Suite #consumer-skill-compatibility-suite { name = "Consumer compatibility" } (
+            <Cases [
+              <Case #preserve-public-surface (<Given ?>legacy and current packed consumers</?> <When ?>they import public entrypoints</?> <Then ?>existing calls SHALL remain valid and new provenance APIs SHALL be additive</?>)>
+              <Case #exclude-host-policy (<Given ?>the package and compiled Skill</?> <When ?>boundaries are inspected</?> <Then ?>no Eidolon path, installer or routing policy SHALL appear</?>)>
+              <Case #leave-registry-unchanged (<Given ?>the completed track</?> <When ?>registry and residues are inspected</?> <Then ?>the candidate SHALL remain unpublished with no staging residue</?>)>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

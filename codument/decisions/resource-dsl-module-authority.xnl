@@ -1,0 +1,39 @@
+<decision #track.expose_resource_dsl_module.composition apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
+  <question ?q>
+  怎样让下游 SkillCapsule 依赖已发布 Resource DSL Skill？
+  </?q>
+  <answer {  } (
+    <raw-answer ?raw>
+    依赖闭包必须继续由 Halfcode 统一规划。
+    </?raw>
+    <decision-text ?text>
+    发布 package-contained authoring module，让 Halfcode 在一个 application assembly 中解析 typed sibling dependency；不在 host 合并 bundled plans。
+    </?text>
+    <rationale ?why>
+    dependency topology、collision 与 content validation 继续只有 Halfcode 一个 authority。
+    </?why>
+    <evidence ?evidence>
+    0.2.2 已有 bundled plan 与 source-repository module，但 tarball 尚未携带 source root。
+    </?evidence>
+  )>
+)>
+
+<decision #track.expose_resource_dsl_module.source_equivalence apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+  <question ?q>
+  package source 与 bundled plan 怎样保持一致？
+  </?q>
+  <answer {  } (
+    <raw-answer ?raw>
+    不能让 packaged module 和 bundled plan 从不同物料生成。
+    </?raw>
+    <decision-text ?text>
+    构建时先复制 canonical ResourcePackage 到 package-contained root，再从该 copy 重新规划 bundled plan，并由 tarball consumer 比较 projection。
+    </?text>
+    <rationale ?why>
+    发布包内 source module 和 bundled plan 来自同一份生成物料。
+    </?why>
+    <evidence ?evidence>
+    当前 post-tsdown build 已独立生成 bundled plan，可在同一步增加 source copy。
+    </?evidence>
+  )>
+)>

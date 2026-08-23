@@ -1,0 +1,7 @@
+# Archive Summary: add-layered-resource-registry-and-dependency-closure
+
+- track.add_layered_resource_registry_and_dependency_closure.compatibility
+- track.add_layered_resource_registry_and_dependency_closure.dependency_authority
+- track.add_layered_resource_registry_and_dependency_closure.layer_scope
+- track.add_layered_resource_registry_and_dependency_closure.revision_boundary
+- track.add_layered_resource_registry_and_dependency_closure.track_slicing

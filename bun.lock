@@ -73,7 +73,7 @@
     },
     "packages/distribution": {
       "name": "halfcode-compiler.xnl",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "dependencies": {
         "typescript": "5.9.3",
         "yaml": "^2.8.0",

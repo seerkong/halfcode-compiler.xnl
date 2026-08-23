@@ -1,0 +1,189 @@
+<Track #add-multi-skill-capsule-dependency-distribution apiVersion="codument.tech/v1alpha1" version="1" {
+  status = "completed"
+  goal = "让 Halfcode 以单一 XNL version authority 规划并原子应用多 SkillCapsule dependency closure。"
+  description = "增加 typed sibling dependency、完整 deterministic distribution plan、全闭包 collision preflight、atomic group apply 和 legacy single-capsule compatibility。"
+  question_mode = "decision-tree"
+  question_severity = "auto"
+  commit_mode = "manual"
+  modeling_base_commit = "056ec4c29cb181db8b733f8b180995b326317c34"
+  created_at = "2026-08-15T16:38:17Z"
+  updated_at = "2026-08-15T20:44:04Z"
+} (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #modeling_deltas { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle #application_assembly { role = "output" name = "application-assembly" domain = "code" path = "vfs://@/packages/application-assembly/" }>
+    <MaterialBundle #compiler_skill { role = "output" name = "compiler-skill" domain = "code" path = "vfs://@/packages/compiler-skill/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle #fixtures { role = "output" name = "skill-fixtures" domain = "test" path = "vfs://@/apps/demo-resource-workflow-authoring/resources-xnl/" }>
+    <MaterialBundle #docs { role = "output" name = "resource-dsl-docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle #behavior { role = "output" name = "behavior" domain = "behavior" path = "vfs://@/codument/behaviors/" }>
+    <MaterialBundle #modeling { role = "output" name = "modeling" domain = "modeling" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_add-multi-skill-capsule-dependency-distribution {
+    name = "add-multi-skill-capsule-dependency-distribution"
+    version = "1"
+    child_mode = "dag"
+  } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Baseline、XNL authority 与 dependency projection" status = "DONE" order = 0 } (
+        <Description ?>保护当前 dirty base，先用 characterization/RED tests 锁定单 capsule compatibility，再增加 canonical version 与 typed sibling dependency projection。</?>
+        <SubNodes [
+          <Task #P1-T1 { name = "记录 dirty baseline 并建立单 capsule characterization tests" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?>analysis 记录可恢复的 modeling base、已知 baseline facts 与初始 inventory 缺失限制；执行审计确认未 reset、checkout、stash 或清理已知 baseline 文件。</?>
+              <Criterion #P1-T1-AC2 { checked = true } ?>测试锁定 legacy API signature、plan files、输出内容关键事实和 preflight 失败保留旧 outputDir。</?>
+              <Criterion #P1-T1-AC3 { checked = true } ?>新增 multi-skill fixtures 首先以预期失败证明 dependency/version 行为尚未实现。</?>
+            ]>
+          )>
+          <Task #P1-T2 { name = "添加 XNL/YAML version 与 dependency assembly RED tests" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?>覆盖 YAML version omitted/matching/conflicting 三种情况。</?>
+              <Criterion #P1-T2-AC2 { checked = true } ?>覆盖 empty、direct、transitive、shared、missing、wrong-kind 与 exact-version mismatch dependencies。</?>
+              <Criterion #P1-T2-AC3 { checked = true } ?>测试证明 Includes 不会被隐式解释为 Skill dependency。</?>
+            ]>
+          )>
+          <Task #P1-T3 { name = "实现 canonical Skill version 与 typed dependency projection" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P1-T3-AC1 { checked = true } ?>SkillCapsuleResource additive 暴露 canonical version 与 readonly dependencies。</?>
+              <Criterion #P1-T3-AC2 { checked = true } ?>冲突 YAML version 在任何 compiler write 前稳定失败。</?>
+              <Criterion #P1-T3-AC3 { checked = true } ?>无 dependency 的既有 assembly fixture 保持兼容。</?>
+              <Criterion #P1-T3-AC4 { checked = true } ?>Skill metadata name 缺失可走既有 fallback；显式 empty/whitespace/control/unsafe name 必须稳定拒绝，不能被当成缺失。</?>
+            ]>
+          )>
+        ]>
+      )>
+
+      <TaskGroup #P2 { name = "Deterministic closure planner" status = "DONE" order = 1 } (
+        <Description ?>以 TDD 建立完整依赖图、稳定拓扑、冻结 bytes、全闭包 file claims 与 digest 计划，plan 阶段零目标写入。</?>
+        <SubNodes [
+          <Task #P2-T1 { name = "添加 dependency graph、determinism 与 closure collision RED tests" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?>missing/kind/version/self-cycle/multi-cycle 均有稳定 diagnostic/cycle path。</?>
+              <Criterion #P2-T1-AC2 { checked = true } ?>资源集合与 JSON schema object-key 枚举顺序变化不改变 topology、files 或 digests；schema arrays 保留语义顺序。</?>
+              <Criterion #P2-T1-AC3 { checked = true } ?>跨 capsule duplicate name、same target、任意非相邻 prefix overlap 与 mapping/generated collision 全部 fail before write。</?>
+              <Criterion #P2-T1-AC4 { checked = true } ?>测试观察 plan 成功/失败期间 caller live root 均未变化。</?>
+            ]>
+          )>
+          <Task #P2-T2 { name = "实现 dependency resolver 与 dependency-first stable topology" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?>多 root 共享 dependency 去重且 dependency 先于 dependent。</?>
+              <Criterion #P2-T2-AC2 { checked = true } ?>同一 ready set 使用 FQN lexical tie-break。</?>
+              <Criterion #P2-T2-AC3 { checked = true } ?>resolver 只读 ApplicationAssembly.byFqn，不创建第二 catalog/scanner。</?>
+            ]>
+          )>
+          <Task #P2-T3 { name = "实现完整 immutable plan、content claims 与 versioned digests" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P2-T3-AC1 { checked = true } ?>所有 raw generated/mapped targets 在 normalize/join 前验证，不静默改写非法或未配对 surrogate authority；plan 只冻结 immutable content 与 safe relative target。</?>
+              <Criterion #P2-T3-AC2 { checked = true } ?>plan 的 serializable projection 不含 absolute path、timestamp 或函数对象。</?>
+              <Criterion #P2-T3-AC3 { checked = true } ?>content/capsule/closure digest 算法有 format/version，canonical sort 后可重复。</?>
+              <Criterion #P2-T3-AC4 { checked = true } ?>每个 planned capsule 必须非空且恰含一个 canonical `SKILL.md` claim；重签 digest 不能把空/缺失/重复入口伪装为完整 Skill。</?>
+            ]>
+          )>
+          <Task #P2-T4 { name = "重构单 capsule file generation 供 planner 复用" status = "DONE" order = 3 } (
+            <Acceptance [
+              <Criterion #P2-T4-AC1 { checked = true } ?>reference/callable/object/mapping 输出只有一个内容生成 authority。</?>
+              <Criterion #P2-T4-AC2 { checked = true } ?>characterization tests 继续通过且无无关输出漂移。</?>
+            ]>
+          )>
+        ]>
+      )>
+
+      <TaskGroup #P3 { name = "Atomic group applier 与 legacy bridge" status = "DONE" order = 2 } (
+        <Description ?>先用故障注入测试定义 staging/readback/commit/rollback，再实现 generic caller-root applier 和单 root compatibility wrapper。</?>
+        <SubNodes [
+          <Task #P3-T1 { name = "添加 plan tamper 与 atomic rollback RED tests" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P3-T1-AC1 { checked = true } ?>format/path/content/closure digest tamper、非法 raw path/code point/unpaired surrogate 在任何 parent/staging/live mutation 前以稳定 code 失败。</?>
+              <Criterion #P3-T1-AC2 { checked = true } ?>stage/readback/backup/live-rename 故障注入均不暴露新旧混合 root。</?>
+              <Criterion #P3-T1-AC3 { checked = true } ?>source 在 plan 后变化不改变 apply 内容。</?>
+            ]>
+          )>
+          <Task #P3-T2 { name = "实现 same-parent staging、readback 与 rollback-capable commit" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P3-T2-AC1 { checked = true } ?>成功只产生从非空 roots 完全可达的 plan closure 和 matching receipt。</?>
+              <Criterion #P3-T2-AC2 { checked = true } ?>任一失败恢复上一 live root并清理非 live staging。</?>
+              <Criterion #P3-T2-AC3 { checked = true } ?>API 只接受显式 outputRoot，不推导任何 host-specific path/policy。</?>
+            ]>
+          )>
+          <Task #P3-T3 { name = "把 legacy single-capsule APIs 接到单 root plan/apply" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P3-T3-AC1 { checked = true } ?>compileSkillCapsule 与 compileResourceSkillCapsule 签名/返回 shape 保持。</?>
+              <Criterion #P3-T3-AC2 { checked = true } ?>原有输出文件集合、排序与核心内容通过 characterization。</?>
+              <Criterion #P3-T3-AC3 { checked = true } ?>legacy preflight/apply 失败保留上一 outputDir。</?>
+            ]>
+          )>
+        ]>
+      )>
+
+      <TaskGroup #P4 { name = "Resource DSL、公开 package 与 consumer smoke" status = "DONE" order = 3 } (
+        <Description ?>把 typed dependency/version/plan/apply 标准写入 canonical XNL examples/docs，并以 additive exports 和 tarball consumer 锁定 public compatibility。</?>
+        <SubNodes [
+          <Task #P4-T1 { name = "更新 SkillCapsule KindDefinition、fixtures 与 DSL 文档" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P4-T1-AC1 { checked = true } ?>示例至少包含 root/devops、authoring、run 与共享 DSL dependency topology。</?>
+              <Criterion #P4-T1-AC2 { checked = true } ?>文档明确 XNL version authority、YAML projection、Includes/Dependencies 边界和 exact version。</?>
+              <Criterion #P4-T1-AC3 { checked = true } ?>文档明确 Halfcode 不拥有 Eidolon install path/policy。</?>
+            ]>
+          )>
+          <Task #P4-T2 { name = "增加 additive distribution exports 与 tarball RED/smoke" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P4-T2-AC1 { checked = true } ?>root 与 skill-capsule subpath 同时导出 legacy 和新 plan/apply 类型/函数。</?>
+              <Criterion #P4-T2-AC2 { checked = true } ?>tarball runtime/type consumer 可构造 plan 类型并导入 API。</?>
+              <Criterion #P4-T2-AC3 { checked = true } ?>dist/tarball 不引用 private workspace package，不包含 host policy。</?>
+            ]>
+          )>
+        ]>
+      )>
+
+      <TaskGroup #P5 { name = "完整验证、dirty-base 审计与方向收口" status = "DONE" order = 4 } (
+        <Description ?>运行 focused/full/package checks，审计 public diff、资源 authority 与 dirty-base 保护，并执行终态 coding attractor 审查。</?>
+        <SubNodes [
+          <Task #P5-T1 { name = "运行 focused TDD suites 与 typecheck" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P5-T1-AC1 { checked = true } ?>application-assembly、compiler-skill、resource-mapping focused tests 全通过。</?>
+              <Criterion #P5-T1-AC2 { checked = true } ?>typecheck 与 generate:check 全通过。</?>
+            ]>
+          )>
+          <Task #P5-T2 { name = "运行 full tests、workspace verify 与 package smoke" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P5-T2-AC1 { checked = true } ?>bun test 与 bun run verify 全通过。</?>
+              <Criterion #P5-T2-AC2 { checked = true } ?>bun run package:check 的 tarball runtime/type smoke 全通过。</?>
+              <Criterion #P5-T2-AC3 { checked = true } ?>无 partial distribution/staging/backup/temp artifact 残留。</?>
+            ]>
+          )>
+          <Task #P5-T3 { name = "审计 compatibility、authority、host boundary 与 dirty diff" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P5-T3-AC1 { checked = true } ?>无 XNL/YAML version 双 authority，无第二 Skill dependency scanner/catalog。</?>
+              <Criterion #P5-T3-AC2 { checked = true } ?>无 Eidolon/home/global/workspace path 或 installer policy 进入 Halfcode contracts/docs。</?>
+              <Criterion #P5-T3-AC3 { checked = true } ?>legacy public API/tarball exports 兼容，新增 API 为 additive。</?>
+              <Criterion #P5-T3-AC4 { checked = true } ?>execution/diff 审计记录 baseline 证据与限制，并证明已知 tracked baseline 制品保持 HEAD-identical、未被清理。</?>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_add-multi-skill-capsule-dependency-distribution" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+      <Node #P3 [
+        <After { ref = "P2" }>
+      ]>
+      <Node #P4 [
+        <After { ref = "P3" }>
+      ]>
+      <Node #P5 [
+        <After { ref = "P4" }>
+      ]>
+    ]>
+  ]>
+  <Hooks []>
+)>

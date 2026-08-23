@@ -58,6 +58,7 @@ describe("halfcode-compiler.xnl distribution contract", () => {
     const bundledSystemSkills = await import("../../distribution/src/bundled-system-skills")
 
     expect(Object.keys(bundledSystemSkills)).toEqual([
+      "loadHalfcodeResourceDslSystemSkillModule",
       "loadHalfcodeResourceDslSystemSkillPlan",
     ])
   })

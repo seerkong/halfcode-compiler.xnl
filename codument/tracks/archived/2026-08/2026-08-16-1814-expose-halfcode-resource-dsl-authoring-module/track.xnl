@@ -1,0 +1,88 @@
+<Track #expose-halfcode-resource-dsl-authoring-module apiVersion="codument.tech/v1alpha1" version="1" {
+  status = "completed"
+  goal = "把 canonical Resource DSL system Skill 作为 package-contained authoring module 公开，并发布 additive 0.2.3。"
+  description = "下游可在同一 Halfcode application assembly 中声明 typed sibling dependency，无需 host 合并 ready plans。"
+  question_mode = "decision-tree"
+  question_severity = "auto"
+  commit_mode = "manual"
+  created_at = "2026-08-16T13:32:00Z"
+  updated_at = "2026-08-16T15:14:00Z"
+  modeling_base_commit = "c9a39880eb7a0f580cf5f238f941c46cf89fab87"
+} (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #modeling_deltas { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle #resource_dsl { role = "input" name = "resource-dsl" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle #behavior { role = "output" name = "behavior" domain = "behavior" path = "vfs://@/codument/behaviors/" }>
+    <MaterialBundle #modeling { role = "output" name = "modeling" domain = "modeling" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_expose-halfcode-resource-dsl-authoring-module {
+    name = "expose-halfcode-resource-dsl-authoring-module"
+    version = "1"
+    child_mode = "dag"
+  } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "public module contract 与 RED baseline" status = "DONE" order = 0 } (
+        <Description ?>先锁定 0.2.2 ready-plan/public-package 兼容，再建立 package-contained module 与跨 module sibling closure 的边界基线。</?>
+        <SubNodes [
+          <Task #P1-T1 { name = "增加 public module 与 tarball boundary tests" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?>source package tests require a package-contained descriptor and exact ResourcePackage load。</?>
+              <Criterion #P1-T1-AC2 { checked = true } ?>fresh tarball consumer requires module replan projection to equal bundled ready plan。</?>
+            ]>
+          )>
+          <Task #P1-T2 { name = "冻结 existing plan/specifier compatibility" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?>现有十 entrypoints、ready-plan identity/bytes 与 legacy consumers 保持。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "package-contained module 实现" status = "DONE" order = 1 } (
+        <Description ?>由 distribution build 生成 source tree，并从同一 tree 规划 ready plan。</?>
+        <SubNodes [
+          <Task #P2-T1 { name = "生成 package-contained ResourcePackage tree" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?>dist source tree 与 canonical docs physical files byte-equivalent。</?>
+              <Criterion #P2-T1-AC2 { checked = true } ?>ready plan 从 packaged tree 生成并保持现有 Skill projection。</?>
+            ]>
+          )>
+          <Task #P2-T2 { name = "公开 immutable module loader" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?>root package 返回 bound to installed package 的 AuthoringModuleDescriptor。</?>
+              <Criterion #P2-T2-AC2 { checked = true } ?>downstream exact sibling dependency 在 one planner closure 内解析。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "0.2.3 package、发布与终审" status = "DONE" order = 2 } (
+        <Description ?>完成 full/package gates，发布最小补丁并独立复核 authority boundary。</?>
+        <SubNodes [
+          <Task #P3-T1 { name = "运行 focused/full/type/generate/package gates" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P3-T1-AC1 { checked = true } ?>focused/full/type/generate/verify 与 real tarball runtime/type consumer 全部通过。</?>
+              <Criterion #P3-T1-AC2 { checked = true } ?>静态检查无 host policy、source/file substitute 或 package residue。</?>
+            ]>
+          )>
+          <Task #P3-T2 { name = "发布并读取 registry 0.2.3 receipt" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P3-T2-AC1 { checked = true } ?>npm registry exact 0.2.3 可安装，root module 与 ready plan 均可用。</?>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_expose-halfcode-resource-dsl-authoring-module" } [
+      <Node #P2 [<After { ref = "P1" }>]>
+      <Node #P3 [<After { ref = "P2" }>]>
+    ]>
+  ]>
+)>

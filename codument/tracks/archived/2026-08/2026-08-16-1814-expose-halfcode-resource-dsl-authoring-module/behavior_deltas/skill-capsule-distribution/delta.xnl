@@ -1,0 +1,32 @@
+<BehaviorPatch #track.expose-halfcode-resource-dsl-authoring-module.behavior_patch.skill-capsule-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "skill-capsule-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://skill-capsule-distribution/requirements/composable-resource-dsl-authoring-module" } (
+      <Requirement #composable-resource-dsl-authoring-module (
+        <Statement ?>The published Halfcode package SHALL expose its canonical Resource DSL system Skill as a package-contained application-assembly module for typed sibling composition.</?>
+        <Suites [
+          <Suite #resource-dsl-module-composition { name = "Composable Resource DSL module" } (
+            <Cases [
+              <Case #module-load-package-contained (<Given ?>a consumer installs only the published package</?> <When ?>it loads the module</?> <Then ?>the descriptor SHALL resolve a package-contained ResourcePackage</?>)>
+              <Case #module-replan-equivalent-skill (<Given ?>the module and bundled plan from the same package</?> <When ?>the consumer replans the system Skill</?> <Then ?>identity, files, provenance and closure digest SHALL be equivalent</?>)>
+              <Case #module-compose-with-sibling-capsules (<Given ?>a downstream exact sibling dependency</?> <When ?>both modules are planned together</?> <Then ?>one closure SHALL contain dependency and root without host topology logic</?>)>
+              <Case #module-preserve-host-boundary (<Given ?>the module, resources and plan</?> <When ?>responsibilities are inspected</?> <Then ?>they SHALL contain no host path, installer transaction or product routing policy</?>)>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://skill-capsule-distribution/requirements/resource-dsl-module-patch-compatibility" } (
+      <Requirement #resource-dsl-module-patch-compatibility (
+        <Statement ?>The module export SHALL be additive, preserve existing package and system Skill identities, and ship as the smallest terminal patch.</?>
+        <Suites [
+          <Suite #resource-dsl-module-patch { name = "Module patch compatibility" } (
+            <Cases [
+              <Case #module-preserve-public-surface (<Given ?>existing and new module consumers</?> <When ?>they compile against the patch tarball</?> <Then ?>existing specifiers SHALL remain valid and the new loader SHALL be available</?>)>
+              <Case #module-publish-terminal-patch (<Given ?>all package gates pass</?> <When ?>the release is published</?> <Then ?>the registry identity SHALL be the exact smallest patch with no source substitute</?>)>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

@@ -1,0 +1,98 @@
+<component #resource_core.loader apiVersion="codument.tech/v1alpha1" {
+  kind = "component"
+  behaviors = [
+    "behavior://resource-loading/requirements/xnl-resource-tree"
+    "behavior://resource-loading/requirements/loader-content-identities"
+    "behavior://resource-authoring/requirements/xnl-resource-language"
+    "behavior://xnl-product-closure/requirements/no-product-xml"
+  ]
+} [
+  <desc ?01M02KBYHBMTPMEQTQYGVN1KKJ>
+  单次读取 XNL authority bytes，完成 fatal UTF-8 decode、解析、containment/Kind/identity 校验和 raw-byte SHA-256 identity 投影；只返回由当前 loader 建立的 authentic LoadedResourceTree，不存在 XML fallback。
+  </?01M02KBYHBMTPMEQTQYGVN1KKJ>
+  <runtime ?runtime>
+  interface ResourceCoreRuntime { readFileBytes: ReadFileBytes; readDirectory: ReadDirectory; realpath: Realpath; xnlParser: XnlParser; sha256: Sha256 }
+  </?runtime>
+  <input ?input>
+  interface LoadResourceTreeInput { rootDir: string; manifestPath?: "manifest.xnl" }
+  </?input>
+  <config ?config>
+  interface ResourceCoreConfig { canonicalManifest: "manifest.xnl"; textEncoding: "utf-8-fatal"; digest: "sha256" }
+  </?config>
+  <output ?output>
+  type LoadResourceTreeOutput = LoadedResourceTree | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  单次读取 raw bytes → fatal UTF-8 decode + raw SHA-256 → 解析/验证 XNL roots → 注册 ResourceRecord → 为每个业务 resource 建 identity → 冻结并登记 LoadedResourceTree
+  </?ctrl>
+]>
+
+<object #resource_core.resource_record apiVersion="codument.tech/v1alpha1" { kind = "entity" fact_grade = "derived_projection_cache" single_writer = "modeling://domain/resource_core/loader" } [
+  <desc ?01M02KBYHBMTPMEQTQYGVN1KKK>
+  由 XNL authority 可重建的通用资源记录；身份与 apiVersion 是共同边界，description/lifecycle 等业务属性由具体 Kind 拥有并可缺省。
+  </?01M02KBYHBMTPMEQTQYGVN1KKK>
+  <types ?types>
+  interface ResourceRecord {
+      resourceId: string
+      kind: string
+      description?: string
+      metadata: { apiVersion: string; version?: string; lifecycle?: string }
+      node: ResourceNode
+      documentUri: string
+      logicalPath: string
+      sourceShape: "single-file" | "directory" | "manifest"
+    }
+  </?types>
+  <fact-source ?01M02KBYHBMTPMEQTQYGVN1KKM>
+  事实源是资源作者拥有的 XNL 文档；registry 保留字段存在或缺失的事实，是只读派生投影，不填充虚假默认值，也不反写 authority。
+  </?01M02KBYHBMTPMEQTQYGVN1KKM>
+]>
+
+<object #resource_core.loaded_resource_tree apiVersion="codument.tech/v1alpha1" {
+  kind = "entity"
+  fact_grade = "derived_projection_cache"
+  single_writer = "modeling://domain/resource_core/loader"
+} [
+  <desc ?desc>
+  ResourceTree 的 additive loader 输出 subtype；contentIdentities 精确覆盖 registry business resources，既不是第二份 authoring authority，也不把 identities 变成 structural ResourceTree 的必填字段。
+  </?desc>
+  <types ?types>
+  interface LoadedResourceTree extends ResourceTree {
+    readonly contentIdentities: ReadonlyMap&lt;string, ResourceContentIdentity&gt;
+  }
+  </?types>
+  <invariants ?invariants>
+  只由 canonical loader 创建并在当前 runtime 登记；authorityDigest 来自同次读取的 raw bytes；forest roots 可共享 authorityDigest，但 resourceId/contentDigest 必须独立；manifest、KindDefinition 与 tombstone 不进入此 map；输出不可变。
+  </?invariants>
+  <fact-source ?source>
+  事实源是 ResourcePackage catalog 实际加载的 XNL authority bytes；本对象是可重建 projection。
+  </?source>
+]>
+
+<component #resource_core.effective_content_identity_projector apiVersion="codument.tech/v1alpha1" {
+  kind = "component"
+  behaviors = ["behavior://resource-loading/requirements/loader-content-identities"]
+} [
+  <desc ?desc>
+  根据 authentic effective registry 的 exact layer/origin facts，从 authentic loaded trees 选择所有 present effective resource identities，并只合并 Kind owner 显式提供的 typed contributions。
+  </?desc>
+  <runtime ?runtime>
+  type EffectiveContentIdentityRuntime = Readonly&lt;Record&lt;never, never&gt;&gt;
+  </?runtime>
+  <input ?input>
+  interface ResolveEffectiveResourceContentIdentitiesInput {
+    registry: EffectiveResourceRegistry
+    layers: readonly ResourceLayerContentIdentityInput[]
+    contributions?: ReadonlyMap&lt;string, readonly ResourceDigestContribution[]&gt;
+  }
+  </?input>
+  <config ?config>
+  interface EffectiveContentIdentityConfig { layerBinding: "exact"; ordering: "utf16-code-unit"; partial: "reject" }
+  </?config>
+  <output ?output>
+  type EffectiveContentIdentityOutput = ReadonlyMap&lt;string, ResourceContentIdentity&gt; | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "dataflow" } ?dataflow>
+  验证 registry/tree authenticity → 核对 layer 顺序与 package identity → 按 effective origin 选择 authority identity → 合并显式 contributions → 拒绝 missing/extra/conflict → 稳定排序并冻结 map
+  </?dataflow>
+]>

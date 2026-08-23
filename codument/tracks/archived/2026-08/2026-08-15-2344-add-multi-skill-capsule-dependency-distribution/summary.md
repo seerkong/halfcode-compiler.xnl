@@ -1,0 +1,6 @@
+# Archive Summary: add-multi-skill-capsule-dependency-distribution
+
+- track.add_multi_skill_capsule_dependency_distribution.dependency_relation
+- track.add_multi_skill_capsule_dependency_distribution.host_and_compatibility_boundary
+- track.add_multi_skill_capsule_dependency_distribution.plan_apply_boundary
+- track.add_multi_skill_capsule_dependency_distribution.version_authority

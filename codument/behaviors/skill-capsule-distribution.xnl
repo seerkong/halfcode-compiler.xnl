@@ -1,0 +1,565 @@
+<Behavior #skill-capsule-distribution apiVersion="codument.tech/v1alpha1" version="1" (
+  <Requirements [
+    <Requirement #version-authority (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG5J>
+      系统 SHALL 以 SkillCapsule XNL root metadata version 作为 capsule 的唯一版本 authority，并 SHALL 拒绝与之冲突的 YAML version。
+      </?01M0QNKXY828YK30Y27A9VZG5J>
+      <Suites [
+        <Suite #version-projection { name = "版本投影" } (
+          <Cases [
+            <Case #accept-omitted-yaml-version (
+              <Given ?01M0QNKXY828YK30Y27A9VZG5K>
+              SkillCapsule XNL 声明 version 且 SKILL.metadata.yaml 未声明 version
+              </?01M0QNKXY828YK30Y27A9VZG5K>
+              <When ?01M0QNKXY828YK30Y27A9VZG5M>
+              application assembly 投影该 SkillCapsule
+              </?01M0QNKXY828YK30Y27A9VZG5M>
+              <Then ?01M0QNKXY828YK30Y27A9VZG5N>
+              投影 SHALL 使用 XNL version，并 SHALL NOT 制造第二份 YAML authority
+              </?01M0QNKXY828YK30Y27A9VZG5N>
+            )>
+            <Case #accept-matching-yaml-version (
+              <Given ?01M0QNKXY828YK30Y27A9VZG5P>
+              XNL version 与 YAML version 完全相同
+              </?01M0QNKXY828YK30Y27A9VZG5P>
+              <When ?01M0QNKXY828YK30Y27A9VZG5Q>
+              application assembly 投影 Skill metadata
+              </?01M0QNKXY828YK30Y27A9VZG5Q>
+              <Then ?01M0QNKXY828YK30Y27A9VZG5R>
+              系统 SHALL 接受资源并把 canonical XNL version 暴露给 compiler
+              </?01M0QNKXY828YK30Y27A9VZG5R>
+            )>
+            <Case #reject-conflicting-yaml-version (
+              <Given ?01M0QNKXY828YK30Y27A9VZG5S>
+              XNL version 与 YAML version 不同
+              </?01M0QNKXY828YK30Y27A9VZG5S>
+              <When ?01M0QNKXY828YK30Y27A9VZG5T>
+              application assembly 加载 SkillCapsule
+              </?01M0QNKXY828YK30Y27A9VZG5T>
+              <Then ?01M0QNKXY828YK30Y27A9VZG5V>
+              系统 SHALL 在 compiler 写入前返回稳定 version conflict diagnostic
+              </?01M0QNKXY828YK30Y27A9VZG5V>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #sibling-dependency-closure (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG5W>
+      系统 SHALL 使用显式 SkillDependencies 解析 sibling SkillCapsule 的精确版本依赖，并 SHALL 生成无缺失、无环且稳定的传递闭包拓扑。
+      </?01M0QNKXY828YK30Y27A9VZG5W>
+      <Suites [
+        <Suite #dependency-resolution { name = "依赖解析" } (
+          <Cases [
+            <Case #resolve-transitive-shared-dependencies (
+              <Given ?01M0QNKXY828YK30Y27A9VZG5X>
+              多个 root Skill 通过 resource ref 共享传递 sibling dependencies
+              </?01M0QNKXY828YK30Y27A9VZG5X>
+              <When ?01M0QNKXY828YK30Y27A9VZG5Y>
+              planner 解析完整 closure
+              </?01M0QNKXY828YK30Y27A9VZG5Y>
+              <Then ?01M0QNKXY828YK30Y27A9VZG5Z>
+              每个 Skill SHALL 只出现一次，dependency SHALL 先于 dependent，ready tie SHALL 按 FQN 稳定排序
+              </?01M0QNKXY828YK30Y27A9VZG5Z>
+            )>
+            <Case #reject-missing-or-wrong-kind (
+              <Given ?01M0QNKXY828YK30Y27A9VZG60>
+              SkillDependency 指向不存在资源或非 SkillCapsule resource
+              </?01M0QNKXY828YK30Y27A9VZG60>
+              <When ?01M0QNKXY828YK30Y27A9VZG61>
+              planner 构建 dependency graph
+              </?01M0QNKXY828YK30Y27A9VZG61>
+              <Then ?01M0QNKXY828YK30Y27A9VZG62>
+              系统 SHALL 返回稳定 diagnostic 且 SHALL NOT 产生 distribution plan
+              </?01M0QNKXY828YK30Y27A9VZG62>
+            )>
+            <Case #reject-version-mismatch (
+              <Given ?01M0QNKXY828YK30Y27A9VZG63>
+              SkillDependency exact version 与目标 SkillCapsule XNL version 不同
+              </?01M0QNKXY828YK30Y27A9VZG63>
+              <When ?01M0QNKXY828YK30Y27A9VZG64>
+              planner 验证 dependency binding
+              </?01M0QNKXY828YK30Y27A9VZG64>
+              <Then ?01M0QNKXY828YK30Y27A9VZG65>
+              系统 SHALL 拒绝闭包且 SHALL 报告 ref、expected version 与 actual version
+              </?01M0QNKXY828YK30Y27A9VZG65>
+            )>
+            <Case #reject-cycle (
+              <Given ?01M0QNKXY828YK30Y27A9VZG66>
+              Skill dependency graph 含 self-cycle 或 multi-node cycle
+              </?01M0QNKXY828YK30Y27A9VZG66>
+              <When ?01M0QNKXY828YK30Y27A9VZG67>
+              planner 计算 topology
+              </?01M0QNKXY828YK30Y27A9VZG67>
+              <Then ?01M0QNKXY828YK30Y27A9VZG68>
+              系统 SHALL 拒绝计划并 SHALL 返回规范化 cycle path
+              </?01M0QNKXY828YK30Y27A9VZG68>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #deterministic-complete-plan (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG69>
+      系统 SHALL 在零目标写入的 plan 阶段以不可变可序列化 authority 捕获完整 Skill closure 的所有输出 bytes、relative targets 与版本化 digests，并 SHALL 在返回计划前完成全闭包 collision preflight。
+      </?01M0QNKXY828YK30Y27A9VZG69>
+      <Suites [
+        <Suite #plan { name = "完整计划" } (
+          <Cases [
+            <Case #same-input-same-plan (
+              <Given ?01M0QNKXY828YK30Y27A9VZG6A>
+              assembly、root Skills、schemas 与 compiler options 语义相同，但资源枚举顺序或 schema plain-object key 插入顺序不同
+              </?01M0QNKXY828YK30Y27A9VZG6A>
+              <When ?01M0QNKXY828YK30Y27A9VZG6B>
+              planner 分别生成 distribution plan
+              </?01M0QNKXY828YK30Y27A9VZG6B>
+              <Then ?01M0QNKXY828YK30Y27A9VZG6C>
+              可序列化 plan、topology、file order、capsule digests 与 closure digest SHALL 完全相同
+              </?01M0QNKXY828YK30Y27A9VZG6C>
+            )>
+            <Case #plan-does-not-write (
+              <Given ?01M0QNKXY828YK30Y27A9VZG6D>
+              caller 提供已存在的 live output root
+              </?01M0QNKXY828YK30Y27A9VZG6D>
+              <When ?01M0QNKXY828YK30Y27A9VZG6E>
+              planner 成功或因 dependency/schema/mapping 失败
+              </?01M0QNKXY828YK30Y27A9VZG6E>
+              <Then ?01M0QNKXY828YK30Y27A9VZG6F>
+              live output root SHALL 保持逐字节不变
+              </?01M0QNKXY828YK30Y27A9VZG6F>
+            )>
+            <Case #reject-closure-collision-before-write (
+              <Given ?01M0QNKXY828YK30Y27A9VZG6G>
+              任意两个 closure file claims 相同、按 path segment 前缀覆盖，或 mapping target 与 generated target 冲突；包括 lexical sibling 夹在 ancestor/descendant 之间的 a、a-b、a/b
+              </?01M0QNKXY828YK30Y27A9VZG6G>
+              <When ?01M0QNKXY828YK30Y27A9VZG6H>
+              planner 执行全闭包 preflight
+              </?01M0QNKXY828YK30Y27A9VZG6H>
+              <Then ?01M0QNKXY828YK30Y27A9VZG6J>
+              系统 SHALL 以确定性的原始冲突 owners 与 targets 在任何 target/staging mutation 前拒绝，不得退化为 file-set error 或泄漏 EEXIST
+              </?01M0QNKXY828YK30Y27A9VZG6J>
+            )>
+            <Case #canonical-schema-json (
+              <Given ?01M0QNKXY828YK30Y27A9VZG6K>
+              callable 与 object operation 的 input/output schemas 仅有 top-level/nested plain-object key 插入顺序不同，array 顺序相同
+              </?01M0QNKXY828YK30Y27A9VZG6K>
+              <When ?01M0QNKXY828YK30Y27A9VZG6M>
+              planner 生成 reference、callable registry、object registry 与 digests
+              </?01M0QNKXY828YK30Y27A9VZG6M>
+              <Then ?01M0QNKXY828YK30Y27A9VZG6N>
+              系统 SHALL 对 object keys 使用固定 UTF-16 顺序并产生完全相同 bytes/projection/digests；array 顺序 SHALL 保留且其改变 SHALL 改变输出
+              </?01M0QNKXY828YK30Y27A9VZG6N>
+            )>
+            <Case #reject-non-json-schema (
+              <Given ?01M0QNKXY828YK30Y27A9VZG6P>
+              被引用 schema 含 nested undefined、non-finite number、non-plain/accessor/symbol value、sparse/extra-property array 或 cycle
+              </?01M0QNKXY828YK30Y27A9VZG6P>
+              <When ?01M0QNKXY828YK30Y27A9VZG6Q>
+              planner 在共享 schema reader boundary 建立 canonical JSON authority
+              </?01M0QNKXY828YK30Y27A9VZG6Q>
+              <Then ?01M0QNKXY828YK30Y27A9VZG6R>
+              系统 SHALL 以稳定 SKILL_SCHEMA_INVALID 在任何 target mutation 前 fail closed，不得依赖 JSON.stringify 的丢弃、替换或原生异常语义
+              </?01M0QNKXY828YK30Y27A9VZG6R>
+            )>
+            <Case #reject-unsafe-path-lexemes (
+              <Given ?01M0QNKXY828YK30Y27A9VZG6S>
+              Skill output name、legacy reference、generated/mapping claim 或 planned relative target 含 unpaired UTF-16 high/low surrogate、NUL/C0/C1 control、output segment separator、encoded separator/control、dot segment、absolute/backslash/empty/segment-whitespace 等不安全 lexical fact
+              </?01M0QNKXY828YK30Y27A9VZG6S>
+              <When ?01M0QNKXY828YK30Y27A9VZG6T>
+              planner 或 legacy compiler 建立 output claims
+              </?01M0QNKXY828YK30Y27A9VZG6T>
+              <Then ?01M0QNKXY828YK30Y27A9VZG6V>
+              系统 SHALL 复用单一明确 UTF-16 code-unit/code-point/segment contract，在任何 normalize/join/safeResolve/digest 与 output parent/staging/live mutation 前以对应稳定 Halfcode code 拒绝，保留 raw owner+target；不得把非法 raw authority 静默规范化为合法 target 或 U+FFFD，合法 paired surrogate/non-BMP/中文 Unicode SHALL 原样保留且 join 前后 identity 不变
+              </?01M0QNKXY828YK30Y27A9VZG6V>
+            )>
+            <Case #reject-present-invalid-yaml-name (
+              <Given ?01M0QNKXY828YK30Y27A9VZG6W>
+              真实 XNL SkillCapsule 引用的 YAML name 字段显式存在，但值为 empty、whitespace、control、non-string 或其他 unsafe output segment
+              </?01M0QNKXY828YK30Y27A9VZG6W>
+              <When ?01M0QNKXY828YK30Y27A9VZG6X>
+              planner 解析 Skill output identity
+              </?01M0QNKXY828YK30Y27A9VZG6X>
+              <Then ?01M0QNKXY828YK30Y27A9VZG6Y>
+              系统 SHALL 以 SKILL_OUTPUT_NAME_INVALID 在任何 target mutation 前拒绝；只有字段完全 absent 才 MAY 使用 legacy FQN-last-segment fallback
+              </?01M0QNKXY828YK30Y27A9VZG6Y>
+            )>
+            <Case #freeze-source-bytes (
+              <Given ?01M0QNKXY828YK30Y27A9VZG6Z>
+              plan 已成功生成，之后 authoring source 发生变化
+              </?01M0QNKXY828YK30Y27A9VZG6Z>
+              <When ?01M0QNKXY828YK30Y27A9VZG70>
+              applier 使用既有 plan
+              </?01M0QNKXY828YK30Y27A9VZG70>
+              <Then ?01M0QNKXY828YK30Y27A9VZG71>
+              applier SHALL 使用 plan 中冻结 bytes，不得重读变化后的 source
+              </?01M0QNKXY828YK30Y27A9VZG71>
+            )>
+            <Case #immutable-planned-content-authority (
+              <Given ?01M0QNKXY828YK30Y27A9VZG72>
+              planner 已返回含 canonical base64 content authority 与 compatibility byte view 的 plan
+              </?01M0QNKXY828YK30Y27A9VZG72>
+              <When ?01M0QNKXY828YK30Y27A9VZG73>
+              caller 修改从 compatibility view 取得的 Uint8Array
+              </?01M0QNKXY828YK30Y27A9VZG73>
+              <Then ?01M0QNKXY828YK30Y27A9VZG74>
+              可序列化 projection、content digest 与后续 apply bytes SHALL 保持不变
+              </?01M0QNKXY828YK30Y27A9VZG74>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #atomic-group-apply (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG75>
+      系统 SHALL 把完整 distribution plan 作为一个原子组应用到 caller-provided output root，并 SHALL 在 stage、readback 或 commit 失败时恢复上一完整 root。
+      </?01M0QNKXY828YK30Y27A9VZG75>
+      <Suites [
+        <Suite #apply { name = "成组应用" } (
+          <Cases [
+            <Case #install-complete-closure (
+              <Given ?01M0QNKXY828YK30Y27A9VZG76>
+              有效 plan 含多个具有 dependency 的 SkillCapsules
+              </?01M0QNKXY828YK30Y27A9VZG76>
+              <When ?01M0QNKXY828YK30Y27A9VZG77>
+              applier 成功完成 stage、readback 与 commit
+              </?01M0QNKXY828YK30Y27A9VZG77>
+              <Then ?01M0QNKXY828YK30Y27A9VZG78>
+              live root SHALL 包含 plan 声明的完整且仅此一套 files，并返回 matching closure digest receipt
+              </?01M0QNKXY828YK30Y27A9VZG78>
+            )>
+            <Case #reject-invalid-plan-before-live-mutation (
+              <Given ?01M0QNKXY828YK30Y27A9VZG79>
+              plan format、relative path、canonical content、content digest 或 closure digest 被修改
+              </?01M0QNKXY828YK30Y27A9VZG79>
+              <When ?01M0QNKXY828YK30Y27A9VZG7A>
+              applier 校验 plan
+              </?01M0QNKXY828YK30Y27A9VZG7A>
+              <Then ?01M0QNKXY828YK30Y27A9VZG7B>
+              系统 SHALL 在 live mutation 前拒绝，上一 root SHALL 保持不变
+              </?01M0QNKXY828YK30Y27A9VZG7B>
+            )>
+            <Case #reject-redigested-unsafe-plan-path (
+              <Given ?01M0QNKXY828YK30Y27A9VZG7C>
+              caller 把 planned capsule/target relative path 改为含 NUL、其他 C0/C1 control 或 unpaired high/low surrogate，并重新计算 matching capsule 与 closure digests
+              </?01M0QNKXY828YK30Y27A9VZG7C>
+              <When ?01M0QNKXY828YK30Y27A9VZG7D>
+              applier revalidate plan
+              </?01M0QNKXY828YK30Y27A9VZG7D>
+              <Then ?01M0QNKXY828YK30Y27A9VZG7E>
+              系统 SHALL 在创建 output root parent 或 staging 之前以 SKILL_PLAN_TARGET_INVALID 拒绝；诊断 SHALL 稳定保留 raw skillFqn owner、capsuleRelativePath 或 targetRelativePath field 名与 JSON-escaped raw target；旧 live text/binary bytes SHALL 不变且不得泄漏 Node path TypeError
+              </?01M0QNKXY828YK30Y27A9VZG7E>
+            )>
+            <Case #reject-incomplete-root-closure-before-live-mutation (
+              <Given ?01M0QNKXY828YK30Y27A9VZG7F>
+              plan 声明空 roots，或含任意无法从 roots 沿显式 SkillDependencies 到达的 capsule，即使 caller 已重新计算 matching closure digest
+              </?01M0QNKXY828YK30Y27A9VZG7F>
+              <When ?01M0QNKXY828YK30Y27A9VZG7G>
+              applier 校验完整 plan graph
+              </?01M0QNKXY828YK30Y27A9VZG7G>
+              <Then ?01M0QNKXY828YK30Y27A9VZG7H>
+              系统 SHALL fail closed 且上一 live root SHALL 保持逐字节不变
+              </?01M0QNKXY828YK30Y27A9VZG7H>
+            )>
+            <Case #reject-resigned-invalid-required-skill-entry (
+              <Given ?01M0QNKXY828YK30Y27A9VZG7J>
+              任一 root 或 dependency capsule 的 files 为空，或 canonical root-level SKILL.md 缺失、重复、大小写错误、target 错误，且 caller 已重新计算 matching capsule/closure digests
+              </?01M0QNKXY828YK30Y27A9VZG7J>
+              <When ?01M0QNKXY828YK30Y27A9VZG7K>
+              applier 校验完整 plan 结构
+              </?01M0QNKXY828YK30Y27A9VZG7K>
+              <Then ?01M0QNKXY828YK30Y27A9VZG7M>
+              系统 SHALL 在 content digest 与任何 output parent/staging/live mutation 前以 SKILL_PLAN_REQUIRED_FILE_INVALID 拒绝，上一 live text/binary bytes SHALL 不变且不得遗留 staging
+              </?01M0QNKXY828YK30Y27A9VZG7M>
+            )>
+            <Case #rollback-partial-commit (
+              <Given ?01M0QNKXY828YK30Y27A9VZG7N>
+              live root 已有上一完整版本，commit 在 backup 后或 live rename 时失败
+              </?01M0QNKXY828YK30Y27A9VZG7N>
+              <When ?01M0QNKXY828YK30Y27A9VZG7P>
+              applier 执行 rollback
+              </?01M0QNKXY828YK30Y27A9VZG7P>
+              <Then ?01M0QNKXY828YK30Y27A9VZG7Q>
+              上一完整 root SHALL 恢复且 SHALL NOT 暴露新旧混合 files
+              </?01M0QNKXY828YK30Y27A9VZG7Q>
+            )>
+            <Case #caller-owns-output-root (
+              <Given ?01M0QNKXY828YK30Y27A9VZG7R>
+              caller 选择任意合法 output root
+              </?01M0QNKXY828YK30Y27A9VZG7R>
+              <When ?01M0QNKXY828YK30Y27A9VZG7S>
+              Halfcode 计划或应用 Skill distribution
+              </?01M0QNKXY828YK30Y27A9VZG7S>
+              <Then ?01M0QNKXY828YK30Y27A9VZG7T>
+              Halfcode SHALL 只使用显式 root，不得推导 Eidolon、home、global 或 workspace 安装路径/policy
+              </?01M0QNKXY828YK30Y27A9VZG7T>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #single-capsule-compatibility (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG7V>
+      系统 SHALL 保持既有单 Skill capsule public compile APIs 的签名与外部结果，同时 MAY 在内部复用单 root distribution plan/apply。
+      </?01M0QNKXY828YK30Y27A9VZG7V>
+      <Suites [
+        <Suite #compatibility { name = "兼容性" } (
+          <Cases [
+            <Case #preserve-legacy-output (
+              <Given ?01M0QNKXY828YK30Y27A9VZG7W>
+              现有 consumer 使用 compileSkillCapsule 或 compileResourceSkillCapsule
+              </?01M0QNKXY828YK30Y27A9VZG7W>
+              <When ?01M0QNKXY828YK30Y27A9VZG7X>
+              以原有输入编译单 capsule
+              </?01M0QNKXY828YK30Y27A9VZG7X>
+              <Then ?01M0QNKXY828YK30Y27A9VZG7Y>
+              返回 shape、Skill name、排序后的 file list 与生成制品 SHALL 与 characterization baseline 兼容
+              </?01M0QNKXY828YK30Y27A9VZG7Y>
+            )>
+            <Case #preserve-preflight-old-output (
+              <Given ?01M0QNKXY828YK30Y27A9VZG7Z>
+              单 capsule compile 的 dependency、schema 或 target preflight 失败且 outputDir 已有上一结果
+              </?01M0QNKXY828YK30Y27A9VZG7Z>
+              <When ?01M0QNKXY828YK30Y27A9VZG80>
+              legacy API 返回失败
+              </?01M0QNKXY828YK30Y27A9VZG80>
+              <Then ?01M0QNKXY828YK30Y27A9VZG81>
+              上一 outputDir SHALL 保持不变
+              </?01M0QNKXY828YK30Y27A9VZG81>
+            )>
+            <Case #public-package-smoke (
+              <Given ?01M0QNKXY828YK30Y27A9VZG82>
+              consumer 只安装 halfcode-compiler.xnl tarball
+              </?01M0QNKXY828YK30Y27A9VZG82>
+              <When ?01M0QNKXY828YK30Y27A9VZG83>
+              运行 runtime/type imports
+              </?01M0QNKXY828YK30Y27A9VZG83>
+              <Then ?01M0QNKXY828YK30Y27A9VZG84>
+              根入口和 skill-capsule subpath SHALL 同时提供 legacy 与 additive distribution API，且不得泄漏 private workspace specifier
+              </?01M0QNKXY828YK30Y27A9VZG84>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #canonical-skill-provenance (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG85>
+      Every planned SkillCapsule SHALL expose XNL apiVersion/version identity and exactly one canonical provenance manifest binding source identity, generator protocol and payload digests.
+      </?01M0QNKXY828YK30Y27A9VZG85>
+      <Suites [
+        <Suite #provenance { name = "Canonical provenance" } (
+          <Cases [
+            <Case #generate-stable-provenance (
+              <Given ?01M0QNKXY828YK30Y27A9VZG86>
+              equivalent authority and payload bytes in different enumeration order
+              </?01M0QNKXY828YK30Y27A9VZG86>
+              <When ?01M0QNKXY828YK30Y27A9VZG87>
+              the planner builds the capsule
+              </?01M0QNKXY828YK30Y27A9VZG87>
+              <Then ?01M0QNKXY828YK30Y27A9VZG88>
+              provenance and enclosing digests SHALL be byte-identical
+              </?01M0QNKXY828YK30Y27A9VZG88>
+            )>
+            <Case #bind-source-authority (
+              <Given ?01M0QNKXY828YK30Y27A9VZG89>
+              source identity, version or payload bytes change
+              </?01M0QNKXY828YK30Y27A9VZG89>
+              <When ?01M0QNKXY828YK30Y27A9VZG8A>
+              the capsule is replanned
+              </?01M0QNKXY828YK30Y27A9VZG8A>
+              <Then ?01M0QNKXY828YK30Y27A9VZG8B>
+              the corresponding provenance and enclosing digests SHALL change
+              </?01M0QNKXY828YK30Y27A9VZG8B>
+            )>
+            <Case #reject-invalid-provenance-before-write (
+              <Given ?01M0QNKXY828YK30Y27A9VZG8C>
+              missing, duplicate, malformed or mismatched provenance facts
+              </?01M0QNKXY828YK30Y27A9VZG8C>
+              <When ?01M0QNKXY828YK30Y27A9VZG8D>
+              the applier validates the plan
+              </?01M0QNKXY828YK30Y27A9VZG8D>
+              <Then ?01M0QNKXY828YK30Y27A9VZG8E>
+              it SHALL fail before target mutation
+              </?01M0QNKXY828YK30Y27A9VZG8E>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #canonical-resource-dsl-consumer-skill (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG8F>
+      Halfcode SHALL compile sys-halfcode-resource-dsl from canonical Resource DSL resources into a versioned, progressively loadable and host-neutral SkillCapsule.
+      </?01M0QNKXY828YK30Y27A9VZG8F>
+      <Suites [
+        <Suite #consumer-skill { name = "Canonical Resource DSL consumer Skill" } (
+          <Cases [
+            <Case #compile-canonical-docs (
+              <Given ?01M0QNKXY828YK30Y27A9VZG8G>
+              the canonical Resource DSL package and system Skill root
+              </?01M0QNKXY828YK30Y27A9VZG8G>
+              <When ?01M0QNKXY828YK30Y27A9VZG8H>
+              the planner compiles it
+              </?01M0QNKXY828YK30Y27A9VZG8H>
+              <Then ?01M0QNKXY828YK30Y27A9VZG8J>
+              references SHALL contain registered docs and examples without a second maintained body
+              </?01M0QNKXY828YK30Y27A9VZG8J>
+            )>
+            <Case #keep-minimal-skill-router (
+              <Given ?01M0QNKXY828YK30Y27A9VZG8K>
+              the compiled SKILL.md
+              </?01M0QNKXY828YK30Y27A9VZG8K>
+              <When ?01M0QNKXY828YK30Y27A9VZG8M>
+              a consumer selects a Resource DSL task
+              </?01M0QNKXY828YK30Y27A9VZG8M>
+              <Then ?01M0QNKXY828YK30Y27A9VZG8N>
+              it SHALL only route progressive reference loading and contain no host operation
+              </?01M0QNKXY828YK30Y27A9VZG8N>
+            )>
+            <Case #keep-system-skill-version-policy (
+              <Given ?01M0QNKXY828YK30Y27A9VZG8P>
+              the Skill descriptor
+              </?01M0QNKXY828YK30Y27A9VZG8P>
+              <When ?01M0QNKXY828YK30Y27A9VZG8Q>
+              assembly validates identity
+              </?01M0QNKXY828YK30Y27A9VZG8Q>
+              <Then ?01M0QNKXY828YK30Y27A9VZG8R>
+              XNL SHALL be the sole authority for name, apiVersion and version 1.0.0
+              </?01M0QNKXY828YK30Y27A9VZG8R>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #consumer-skill-compatibility (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG8S>
+      The consumer Skill and provenance extension SHALL preserve legacy compiler calls, public specifiers and the Halfcode/Eidolon authority boundary.
+      </?01M0QNKXY828YK30Y27A9VZG8S>
+      <Suites [
+        <Suite #consumer-skill-compatibility-suite { name = "Consumer compatibility" } (
+          <Cases [
+            <Case #preserve-public-surface (
+              <Given ?01M0QNKXY828YK30Y27A9VZG8T>
+              legacy and current packed consumers
+              </?01M0QNKXY828YK30Y27A9VZG8T>
+              <When ?01M0QNKXY828YK30Y27A9VZG8V>
+              they import public entrypoints
+              </?01M0QNKXY828YK30Y27A9VZG8V>
+              <Then ?01M0QNKXY828YK30Y27A9VZG8W>
+              existing calls SHALL remain valid and new provenance APIs SHALL be additive
+              </?01M0QNKXY828YK30Y27A9VZG8W>
+            )>
+            <Case #exclude-host-policy (
+              <Given ?01M0QNKXY828YK30Y27A9VZG8X>
+              the package and compiled Skill
+              </?01M0QNKXY828YK30Y27A9VZG8X>
+              <When ?01M0QNKXY828YK30Y27A9VZG8Y>
+              boundaries are inspected
+              </?01M0QNKXY828YK30Y27A9VZG8Y>
+              <Then ?01M0QNKXY828YK30Y27A9VZG8Z>
+              no Eidolon path, installer or routing policy SHALL appear
+              </?01M0QNKXY828YK30Y27A9VZG8Z>
+            )>
+            <Case #leave-registry-unchanged (
+              <Given ?01M0QNKXY828YK30Y27A9VZG90>
+              the completed track
+              </?01M0QNKXY828YK30Y27A9VZG90>
+              <When ?01M0QNKXY828YK30Y27A9VZG91>
+              registry and residues are inspected
+              </?01M0QNKXY828YK30Y27A9VZG91>
+              <Then ?01M0QNKXY828YK30Y27A9VZG92>
+              the candidate SHALL remain unpublished with no staging residue
+              </?01M0QNKXY828YK30Y27A9VZG92>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #composable-resource-dsl-authoring-module (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG93>
+      The published Halfcode package SHALL expose its canonical Resource DSL system Skill as a package-contained application-assembly module for typed sibling composition.
+      </?01M0QNKXY828YK30Y27A9VZG93>
+      <Suites [
+        <Suite #resource-dsl-module-composition { name = "Composable Resource DSL module" } (
+          <Cases [
+            <Case #module-load-package-contained (
+              <Given ?01M0QNKXY828YK30Y27A9VZG94>
+              a consumer installs only the published package
+              </?01M0QNKXY828YK30Y27A9VZG94>
+              <When ?01M0QNKXY828YK30Y27A9VZG95>
+              it loads the module
+              </?01M0QNKXY828YK30Y27A9VZG95>
+              <Then ?01M0QNKXY828YK30Y27A9VZG96>
+              the descriptor SHALL resolve a package-contained ResourcePackage
+              </?01M0QNKXY828YK30Y27A9VZG96>
+            )>
+            <Case #module-replan-equivalent-skill (
+              <Given ?01M0QNKXY828YK30Y27A9VZG97>
+              the module and bundled plan from the same package
+              </?01M0QNKXY828YK30Y27A9VZG97>
+              <When ?01M0QNKXY828YK30Y27A9VZG98>
+              the consumer replans the system Skill
+              </?01M0QNKXY828YK30Y27A9VZG98>
+              <Then ?01M0QNKXY828YK30Y27A9VZG99>
+              identity, files, provenance and closure digest SHALL be equivalent
+              </?01M0QNKXY828YK30Y27A9VZG99>
+            )>
+            <Case #module-compose-with-sibling-capsules (
+              <Given ?01M0QNKXY828YK30Y27A9VZG9A>
+              a downstream exact sibling dependency
+              </?01M0QNKXY828YK30Y27A9VZG9A>
+              <When ?01M0QNKXY828YK30Y27A9VZG9B>
+              both modules are planned together
+              </?01M0QNKXY828YK30Y27A9VZG9B>
+              <Then ?01M0QNKXY828YK30Y27A9VZG9C>
+              one closure SHALL contain dependency and root without host topology logic
+              </?01M0QNKXY828YK30Y27A9VZG9C>
+            )>
+            <Case #module-preserve-host-boundary (
+              <Given ?01M0QNKXY828YK30Y27A9VZG9D>
+              the module, resources and plan
+              </?01M0QNKXY828YK30Y27A9VZG9D>
+              <When ?01M0QNKXY828YK30Y27A9VZG9E>
+              responsibilities are inspected
+              </?01M0QNKXY828YK30Y27A9VZG9E>
+              <Then ?01M0QNKXY828YK30Y27A9VZG9F>
+              they SHALL contain no host path, installer transaction or product routing policy
+              </?01M0QNKXY828YK30Y27A9VZG9F>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #resource-dsl-module-patch-compatibility (
+      <Statement ?01M0QNKXY828YK30Y27A9VZG9G>
+      The module export SHALL be additive, preserve existing package and system Skill identities, and ship as the smallest terminal patch.
+      </?01M0QNKXY828YK30Y27A9VZG9G>
+      <Suites [
+        <Suite #resource-dsl-module-patch { name = "Module patch compatibility" } (
+          <Cases [
+            <Case #module-preserve-public-surface (
+              <Given ?01M0QNKXY828YK30Y27A9VZG9H>
+              existing and new module consumers
+              </?01M0QNKXY828YK30Y27A9VZG9H>
+              <When ?01M0QNKXY828YK30Y27A9VZG9J>
+              they compile against the patch tarball
+              </?01M0QNKXY828YK30Y27A9VZG9J>
+              <Then ?01M0QNKXY828YK30Y27A9VZG9K>
+              existing specifiers SHALL remain valid and the new loader SHALL be available
+              </?01M0QNKXY828YK30Y27A9VZG9K>
+            )>
+            <Case #module-publish-terminal-patch (
+              <Given ?01M0QNKXY828YK30Y27A9VZG9M>
+              all package gates pass
+              </?01M0QNKXY828YK30Y27A9VZG9M>
+              <When ?01M0QNKXY828YK30Y27A9VZG9N>
+              the release is published
+              </?01M0QNKXY828YK30Y27A9VZG9N>
+              <Then ?01M0QNKXY828YK30Y27A9VZG9P>
+              the registry identity SHALL be the exact smallest patch with no source substitute
+              </?01M0QNKXY828YK30Y27A9VZG9P>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+  ]>
+)>

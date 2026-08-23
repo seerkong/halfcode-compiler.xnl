@@ -38,6 +38,20 @@ Each capsule identity includes the XNL `apiVersion` and `version`. The planner g
 
 The legacy `compileSkillCapsule` and `compileResourceSkillCapsule` APIs remain available from both the package root and `halfcode-compiler.xnl/skill-capsule`. The subpath also exports the new plan/apply APIs and `SkillCapsuleDependency` type.
 
+The package root also exposes the canonical Resource DSL system Skill in two forms. Use the module descriptor when composing it as a typed sibling dependency in a larger application assembly; use the immutable bundled plan when installing it directly:
+
+```ts
+import {
+  loadHalfcodeResourceDslSystemSkillModule,
+  loadHalfcodeResourceDslSystemSkillPlan,
+} from "halfcode-compiler.xnl"
+
+const resourceDslModule = loadHalfcodeResourceDslSystemSkillModule()
+const readyToInstall = await loadHalfcodeResourceDslSystemSkillPlan()
+```
+
+The module's resource root is contained in the installed npm package. Both forms are generated from that same packaged ResourcePackage during build, while `sys-halfcode-resource-dsl` keeps its independent `1.0.0` Skill version.
+
 Lower-level APIs are available through explicit subpaths such as `halfcode-compiler.xnl/resource-core` and `halfcode-compiler.xnl/authoring-runtime`.
 
 The resource-core subpath preserves the single-package loader and adds deterministic, read-only composition APIs:

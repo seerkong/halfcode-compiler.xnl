@@ -3,6 +3,7 @@ import { cp, mkdtemp, readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { halfcodeResourceDslSystemSkillModule } from "../../../apps/halfcode-resource-dsl-system-skill/src/index"
+import { demoResourceWorkflowAuthoringModule } from "../../../apps/demo-resource-workflow-authoring/src/index"
 import {
   resolveApplicationAssembly,
   type ApplicationAssembly,
@@ -51,6 +52,34 @@ test("compiles canonical Resource DSL documents and examples into progressive re
     version: "1.0.0",
   })
   expect(provenance.generatedBy).toBe("halfcode.skill-distribution/v1")
+})
+
+test("resolves a typed sibling dependency on the canonical Resource DSL Skill in one plan", async () => {
+  const downstreamRoot = await mkdtemp(join(tmpdir(), "halfcode-resource-dsl-dependent-module-"))
+  await cp(demoResourceWorkflowAuthoringModule.resourceRootDir, downstreamRoot, { recursive: true })
+  const descriptorPath = join(downstreamRoot, "SkillCapsules/TopologyAuthoring/manifest.xnl")
+  const descriptor = await readFile(descriptorPath, "utf8")
+  await writeFile(
+    descriptorPath,
+    descriptor.replace("example.resource_lifecycle.skill.resource_dsl", skillFqn),
+  )
+  const downstreamFqn = "example.resource_lifecycle.skill.authoring"
+  const combined = await resolveApplicationAssembly({
+    modules: [
+      halfcodeResourceDslSystemSkillModule,
+      { ...demoResourceWorkflowAuthoringModule, resourceRootDir: downstreamRoot },
+    ],
+    portBindings: [],
+  })
+
+  const plan = await planSkillCapsuleDistribution({
+    assembly: combined,
+    rootSkillFqns: [downstreamFqn],
+  })
+
+  expect(plan.topology).toEqual([skillFqn, downstreamFqn])
+  expect(plan.roots.map((root) => root.fqn)).toEqual([downstreamFqn])
+  expect(plan.capsules.map((capsule) => capsule.identity.fqn)).toEqual([skillFqn, downstreamFqn])
 })
 
 test("rejects a YAML name when the SkillCapsule descriptor owns the name", async () => {

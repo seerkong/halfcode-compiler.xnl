@@ -1,0 +1,72 @@
+<decision #track.add_layered_resource_registry_and_dependency_closure.layer_scope apiVersion="codument.tech/v1alpha1" {
+    priority = "P0"
+    status = "accepted"
+    durable_candidate = true
+    confidence = 0.99
+    reversibility = "medium"
+  } (
+    <question ?q>Halfcode 是否直接定义 global/workspace layers 与 host 路径？</?q>
+    <answer { } (
+      <raw-answer ?raw>Halfcode 继续作为通用资源 authority，host 自己绑定实际 roots。</?raw>
+      <decision-text ?text>Halfcode 只定义 ordered named layers；不定义 global/workspace 枚举、Eidolon 名称或机器路径。</?text>
+      <rationale ?why>同一机制必须可由 Codument、Eidolon 和其他 consumer 复用，layer 名不能携带产品策略。</?why>
+      <evidence ?evidence>Mission 的 ProjectRef/authority 边界与当前单包 resource-core contract。</?evidence>
+    )>
+)>
+<decision #track.add_layered_resource_registry_and_dependency_closure.dependency_authority apiVersion="codument.tech/v1alpha1" {
+    priority = "P0"
+    status = "accepted"
+    durable_candidate = true
+    confidence = 0.99
+    reversibility = "medium"
+  } (
+    <question ?q>resource core 如何发现 dependency edges？</?q>
+    <answer { } (
+      <raw-answer ?raw>确定性逻辑与领域语义必须分离，禁止模糊匹配。</?raw>
+      <decision-text ?text>只消费 Kind owner 提供的 typed edges 和显式 digest contributions；不扫描任意字符串或猜测引用。</?text>
+      <rationale ?why>任意字符串扫描会把领域语义复制到通用 core，产生不可审计的 false positive/negative。</?why>
+      <evidence ?evidence>当前 resource core 不解释 resource://；具体 application consumer 已拥有自己的引用语义。</?evidence>
+    )>
+)>
+<decision #track.add_layered_resource_registry_and_dependency_closure.compatibility apiVersion="codument.tech/v1alpha1" {
+    priority = "P0"
+    status = "accepted"
+    durable_candidate = true
+    confidence = 0.99
+    reversibility = "high"
+  } (
+    <question ?q>新 layered/snapshot 能力是否改造现有 ResourceTree 入口？</?q>
+    <answer { } (
+      <raw-answer ?raw>现有 consumer 必须继续复用 Halfcode 公共机制且不被破坏。</?raw>
+      <decision-text ?text>保留 0.2.1 单树 API 和 registry 字段；通过独立 additive API 暴露 effective registry 与 snapshot。</?text>
+      <rationale ?why>避免 forcing migration，并允许 host 在验证后逐步采用。</?why>
+      <evidence ?evidence>当前公开包和 Codument consumer 已固定使用 loadResourceTree 与 registry.byKind/kindDefinitions。</?evidence>
+    )>
+)>
+<decision #track.add_layered_resource_registry_and_dependency_closure.track_slicing apiVersion="codument.tech/v1alpha1" {
+    priority = "P1"
+    status = "accepted"
+  } (
+    <question ?q>named layers 与 dependency snapshot 是否需要立即拆成两个 tracks？</?q>
+    <answer { } (
+      <raw-answer ?raw>Mission 为该通用闭包预留一个候选 track，但要求两个职责分离。</?raw>
+      <decision-text ?text>当前保留一个 track，以 P2/P3 两个独立 phase 和 DAG 汇合；出现实际 contract 耦合风险时由 mission replan 拆轨。</?text>
+      <rationale ?why>共享 public compatibility/release 验收可减少重复，同时独立 RED tests 和 phases 防止职责融合。</?why>
+      <evidence ?evidence>Baseline 审计与 mission 的受控重规划条件。</?evidence>
+    )>
+)>
+<decision #track.add_layered_resource_registry_and_dependency_closure.revision_boundary apiVersion="codument.tech/v1alpha1" {
+    priority = "P0"
+    status = "accepted"
+    durable_candidate = true
+    confidence = 0.99
+    reversibility = "medium"
+  } (
+    <question ?q>layer composition、全部有效内容与一次 roots 闭包应由哪个 revision 负责？</?q>
+    <answer { } (
+      <raw-answer ?raw>结构投影和内容快照必须是两个可独立审计的事实，且不能信任调用方提供的 digest claim。</?raw>
+      <decision-text ?text>EffectiveResourceRegistry.compositionRevision 只绑定 layers、effective identity/presence、shadow/tombstone、选定 KindDefinition authority resourceId/contract 与 canonical VFS documentUri/logicalPath provenance，不绑定 ResourceRecord descriptor/node/metadata bytes；revision 保持为其精确兼容别名。不同 definition identity 不自行改变兼容 Kind contract 合并规则。snapshot registryRevision 绑定 compositionRevision 与全部 effective resources 经重算的 content digests；snapshotRevision 再绑定 roots、可达闭包和参与边。Snapshot 只接受 canonical composer 在当前 runtime 登记的 immutable registry。</?text>
+      <rationale ?why>内容变化不应伪装成 composition 变化，而不可达资源变化仍必须使运行前 registry checkpoint 失效；重新验证全部 content identities 可阻止伪造 claim 绕过冻结边界。</?why>
+      <evidence ?evidence>Fresh AttractorCheck 的 forged identity/content-insensitive revision 反例，以及 resource-core mutation/Unicode/content-change regressions。</?evidence>
+    )>
+)>

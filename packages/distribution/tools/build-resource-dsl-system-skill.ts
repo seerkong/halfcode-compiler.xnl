@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises"
+import { cp, mkdir, rm, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import { halfcodeResourceDslSystemSkillModule } from "../../../apps/halfcode-resource-dsl-system-skill/src/index"
 import { resolveApplicationAssembly } from "halfcode-compiler-application-assembly"
@@ -9,8 +9,13 @@ import {
 
 const distRoot = join(import.meta.dir, "../dist")
 const outputDir = join(distRoot, "system-skills")
+const packagedResourceRoot = join(outputDir, "resource-dsl")
+await mkdir(outputDir, { recursive: true })
+await rm(packagedResourceRoot, { recursive: true, force: true })
+await cp(halfcodeResourceDslSystemSkillModule.resourceRootDir, packagedResourceRoot, { recursive: true })
+
 const assembly = await resolveApplicationAssembly({
-  modules: [halfcodeResourceDslSystemSkillModule],
+  modules: [{ ...halfcodeResourceDslSystemSkillModule, resourceRootDir: packagedResourceRoot }],
   portBindings: [],
 })
 const plan = await planSkillCapsuleDistribution({
@@ -54,11 +59,11 @@ const moduleSource = [
   "",
 ].join("\n")
 
-await mkdir(outputDir, { recursive: true })
 await writeFile(join(outputDir, "sys-halfcode-resource-dsl.plan.js"), moduleSource)
 
 console.log(JSON.stringify({
   skill: plan.roots[0],
   files: plan.files.length,
+  sourceRoot: packagedResourceRoot,
   closureDigest: plan.closureDigest,
 }))

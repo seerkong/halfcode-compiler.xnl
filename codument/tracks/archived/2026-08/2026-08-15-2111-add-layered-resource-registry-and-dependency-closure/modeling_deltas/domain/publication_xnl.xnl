@@ -1,0 +1,23 @@
+<module #publication_xnl.halfcode_compiler_xnl {
+  kind = "module"
+  visibility = "public"
+  depends_on = [
+    "modeling://domain/resource_core/layered_registry"
+    "modeling://domain/resource_core/dependency_snapshot"
+  ]
+  behaviors = [
+    "behavior://package-distribution/requirements/xnl-public-package"
+    "behavior://resource-loading/requirements/layered-effective-registry"
+    "behavior://resource-loading/requirements/resource-dependency-snapshot"
+  ]
+} [
+  <desc ?01KZVGC9Q1DKJBQA6CYVV3NCM6>
+  halfcode-compiler.xnl 是 XNL 编译器唯一公开 npm capsule，拥有 package identity、exports、类型声明与 tarball 边界。
+  </?01KZVGC9Q1DKJBQA6CYVV3NCM6>
+  <capsule-tree ?01KZVGC9Q1DKJBQA6CYVV3NCM7>
+  packages/distribution/package.json # 公开 identity 与 exports
+  packages/distribution/src/*.ts # 能力入口投影
+  packages/distribution/tools/verify-package.ts # tarball runtime/type consumer smoke
+  packages/compiler-skill/src/index.ts # 生成 halfcode-compiler.xnl/authoring-runtime import
+  </?01KZVGC9Q1DKJBQA6CYVV3NCM7>
+]>

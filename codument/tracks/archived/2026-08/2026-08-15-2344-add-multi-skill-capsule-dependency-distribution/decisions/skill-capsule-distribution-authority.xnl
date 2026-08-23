@@ -1,0 +1,67 @@
+<decision #track.add_multi_skill_capsule_dependency_distribution.version_authority apiVersion="codument.tech/v1alpha1" {
+  priority = "P0"
+  status = "accepted"
+  durable_candidate = true
+  confidence = 1
+  reversibility = "medium"
+  blocks = ["implementation" "tests"]
+} (
+  <question ?>SkillCapsule 的发布版本由 XNL 还是 SKILL.metadata.yaml 拥有？</?>
+  <answer { } (
+    <raw-answer ?>资源标准仍然通过 halfcode-compiler.xnl 实现。</?>
+    <decision-text ?>XNL SkillCapsule root metadata version 是唯一 authority；YAML version 可省略，存在时必须相等且只能作为投影。</?>
+    <rationale ?>资源 identity/version 属于 XNL authority；允许 YAML 独立覆盖会使 dependency binding 与 digest 不可确定。</?>
+    <evidence ?>当前 demo XNL version 为 1.0.0，而 SKILL.metadata.yaml version 为 0.0.0，已出现实际漂移。</?>
+  )>
+)>
+
+<decision #track.add_multi_skill_capsule_dependency_distribution.dependency_relation apiVersion="codument.tech/v1alpha1" {
+  priority = "P0"
+  status = "accepted"
+  durable_candidate = true
+  confidence = 0.98
+  reversibility = "medium"
+  blocks = ["implementation" "tests" "docs"]
+} (
+  <question ?>Sibling SkillCapsule dependency 是否复用 Includes？</?>
+  <answer { } (
+    <raw-answer ?>需要显式 sibling Skill dependency、拓扑、环、缺失和 version 校验。</?>
+    <decision-text ?>新增 SkillDependencies/SkillDependency typed relation；每条 dependency 使用 resource ref 与 exact version，不把 Includes 模糊解释为 Skill dependency。</?>
+    <rationale ?>Includes 表达编入当前 Skill 的普通资源，dependency 表达多个独立可安装 Skill 的生命周期关系，两者必须分离。</?>
+    <evidence ?>当前 selectSkillResources 仅选择普通资源，assembly SkillCapsuleResource 没有 dependencies 字段。</?>
+  )>
+)>
+
+<decision #track.add_multi_skill_capsule_dependency_distribution.plan_apply_boundary apiVersion="codument.tech/v1alpha1" {
+  priority = "P0"
+  status = "accepted"
+  durable_candidate = true
+  confidence = 0.99
+  reversibility = "medium"
+  blocks = ["implementation" "tests"]
+} (
+  <question ?>多 Skill 分发如何保证 deterministic preflight 与原子应用？</?>
+  <answer { } (
+    <raw-answer ?>完整 deterministic compile plan 与 apply 分离，全 closure collision preflight，原子成组 apply。</?>
+    <decision-text ?>Planner 冻结完整 closure 的 bytes/relative targets/digests 且零写入；Applier 只消费已验证 plan，在 caller-provided root staging、readback、原子切换并可回滚。</?>
+    <rationale ?>若 plan 保存 source path 并在 apply 时重读，两个阶段之间 source 可漂移；若逐 capsule commit，失败会产生混合版本。</?>
+    <evidence ?>当前 compileResourceSkillCapsule 在同一函数中先 rm outputDir 再逐文件写入，只具备单 capsule preflight。</?>
+  )>
+)>
+
+<decision #track.add_multi_skill_capsule_dependency_distribution.host_and_compatibility_boundary apiVersion="codument.tech/v1alpha1" {
+  priority = "P0"
+  status = "accepted"
+  durable_candidate = true
+  confidence = 1
+  reversibility = "high"
+  blocks = ["implementation" "package-smoke"]
+} (
+  <question ?>Halfcode 是否拥有 Eidolon 安装路径/policy，以及现有单 capsule API 是否可破坏？</?>
+  <answer { } (
+    <raw-answer ?>Halfcode 只实现资源标准；Eidolon 另行消费，保持当前 public API compatibility。</?>
+    <decision-text ?>Halfcode 只对 caller-provided generic output root 提供 plan/apply；不出现 Eidolon path/policy。现有单 capsule API 保持签名和结果，以单 root compatibility wrapper 复用新机制。</?>
+    <rationale ?>host policy 与通用 compiler authority 分离，同时避免已发布 0.2.1 consumer 被无关破坏。</?>
+    <evidence ?>halfcode-compiler.xnl 已公开 root/skill-capsule subpath；Eidolon 安装属于 host mission 的独立职责。</?>
+  )>
+)>

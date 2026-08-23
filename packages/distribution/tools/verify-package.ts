@@ -4,7 +4,7 @@ import { join } from "node:path"
 
 const packageRoot = join(import.meta.dir, "..")
 const distRoot = join(packageRoot, "dist")
-const candidateVersion = "0.2.2"
+const candidateVersion = "0.2.3"
 const publicSpecifiers = [
   "halfcode-compiler.xnl",
   "halfcode-compiler.xnl/application-assembly",
@@ -29,6 +29,7 @@ interface NpmPackResult {
 }
 
 await assertNoInternalSpecifiers()
+await assertPackagedResourceTree()
 
 const verificationRoot = await mkdtemp(join(tmpdir(), "halfcode-compiler-xml-"))
 try {
@@ -82,6 +83,27 @@ async function assertNoInternalSpecifiers(): Promise<void> {
   }
 }
 
+async function assertPackagedResourceTree(): Promise<void> {
+  const canonicalRoot = join(packageRoot, "../../docs/resource-dsl")
+  const packagedRoot = join(distRoot, "system-skills/resource-dsl")
+  const canonicalFiles = (await listFiles(canonicalRoot))
+    .map((file) => file.slice(canonicalRoot.length + 1))
+    .sort(compareStrings)
+  const packagedFiles = (await listFiles(packagedRoot))
+    .map((file) => file.slice(packagedRoot.length + 1))
+    .sort(compareStrings)
+  if (JSON.stringify(packagedFiles) !== JSON.stringify(canonicalFiles)) {
+    throw new Error("Package-contained Resource DSL file set differs from canonical source")
+  }
+  for (const relativePath of canonicalFiles) {
+    const canonical = Buffer.from(await readFile(join(canonicalRoot, relativePath)))
+    const packaged = Buffer.from(await readFile(join(packagedRoot, relativePath)))
+    if (!canonical.equals(packaged)) {
+      throw new Error(`Package-contained Resource DSL bytes differ: ${relativePath}`)
+    }
+  }
+}
+
 function assertTarballBoundaries(listing: string): void {
   const entries = listing.trim().split("\n")
   const forbidden = entries.filter((entry) =>
@@ -98,6 +120,7 @@ function assertTarballBoundaries(listing: string): void {
 
   const required = ["package/package.json", "package/README.md", "package/dist/index.js", "package/dist/index.d.ts"]
   required.push("package/dist/system-skills/sys-halfcode-resource-dsl.plan.js")
+  required.push("package/dist/system-skills/resource-dsl/manifest.xnl")
   for (const entry of required) {
     if (!entries.includes(entry)) throw new Error(`Required tarball entry is missing: ${entry}`)
   }
@@ -269,11 +292,31 @@ async function verifyConsumer(tarball: string, consumerRoot: string): Promise<vo
     'if (!loadedSnapshot.snapshotRevision.startsWith("sha256:")) throw new Error("Real loader snapshot revision is missing")',
     "",
     "const bundledSkillPlan = await rootModule.loadHalfcodeResourceDslSystemSkillPlan()",
+    "const bundledSkillModule = rootModule.loadHalfcodeResourceDslSystemSkillModule()",
+    'if (!Object.isFrozen(bundledSkillModule) || bundledSkillModule === rootModule.loadHalfcodeResourceDslSystemSkillModule()) {',
+    '  throw new Error("Package-contained Resource DSL module must be an immutable fresh descriptor")',
+    "}",
+    'if (bundledSkillModule.id !== "ResourceDsl" || bundledSkillModule.packageName !== "halfcode-resource-dsl-system-skill") {',
+    '  throw new Error("Package-contained Resource DSL module identity changed")',
+    "}",
+    'const packagedManifest = await readFile(join(bundledSkillModule.resourceRootDir, "manifest.xnl"), "utf8")',
+    'if (!packagedManifest.includes("Halfcode.ResourceDsl.Package")) throw new Error("Package-contained Resource DSL manifest is missing")',
+    "const packagedAssembly = await rootModule.resolveApplicationAssembly({ modules: [bundledSkillModule], portBindings: [] })",
+    "const replannedSkill = await rootModule.planSkillCapsuleDistribution({",
+    "  assembly: packagedAssembly,",
+    '  rootSkillFqns: ["Halfcode.ResourceDsl.Skill.System"],',
+    "})",
+    "if (JSON.stringify(rootModule.skillCapsuleDistributionProjection(replannedSkill)) !== JSON.stringify(rootModule.skillCapsuleDistributionProjection(bundledSkillPlan))) {",
+    '  throw new Error("Package-contained Resource DSL module and bundled plan projections differ")',
+    "}",
     'if ("halfcodeResourceDslSystemSkillIdentity" in rootModule) {',
     '  throw new Error("Bundled Resource DSL Skill identity must be derived from the generated plan")',
     "}",
     'if (JSON.stringify(bundledSkillPlan.roots) !== JSON.stringify([{ fqn: "Halfcode.ResourceDsl.Skill.System", name: "sys-halfcode-resource-dsl", apiVersion: "halfcode.resources/v1", version: "1.0.0" }])) {',
     '  throw new Error("Bundled Resource DSL Skill identity changed")',
+    "}",
+    'if (bundledSkillPlan.closureDigest !== "sha256:d393bdadf05cfa13ba0a497495136aaec8eed7499e3fbbd087985f360045bafc") {',
+    '  throw new Error("Bundled Resource DSL Skill closure identity changed")',
     "}",
     'const bundledOutputRoot = join(process.cwd(), "installed-system-skills")',
     "await rootModule.applySkillCapsuleDistributionPlan(bundledSkillPlan, { outputRoot: bundledOutputRoot })",
@@ -289,6 +332,7 @@ async function verifyConsumer(tarball: string, consumerRoot: string): Promise<vo
     ...publicSpecifiers.map((specifier, index) => `import * as entry${index} from ${JSON.stringify(specifier)}`),
     "import type {",
     "  ApplySkillCapsuleDistributionOptions as RootApplySkillCapsuleDistributionOptions,",
+    "  AuthoringModuleDescriptor,",
     "  CompileResourceSkillCapsuleInput as RootCompileResourceSkillCapsuleInput,",
     "  CompileSkillCapsuleInput as RootCompileSkillCapsuleInput,",
     "  PageObjectResource,",
@@ -304,6 +348,7 @@ async function verifyConsumer(tarball: string, consumerRoot: string): Promise<vo
     "  ResolveEffectiveResourceContentIdentitiesInput as RootResolveEffectiveResourceContentIdentitiesInput,",
     "  ResourceTreeBuildResult as RootResourceTreeBuildResult,",
     '} from "halfcode-compiler.xnl"',
+    'import { loadHalfcodeResourceDslSystemSkillModule } from "halfcode-compiler.xnl"',
     "import {",
     "  applySkillCapsuleDistributionPlan,",
     "  compileResourceSkillCapsule,",
@@ -369,6 +414,8 @@ async function verifyConsumer(tarball: string, consumerRoot: string): Promise<vo
     'type RootProvenanceDigest = RootSkillCapsuleProvenanceManifest["payloadFiles"][number]["contentDigest"]',
     'const rootProvenanceDigest: `sha256:${string}` = null as unknown as RootProvenanceDigest',
     "void rootProvenanceDigest",
+    "const resourceDslModule: AuthoringModuleDescriptor = loadHalfcodeResourceDslSystemSkillModule()",
+    "void resourceDslModule",
     "const distributionPlan: SkillCapsuleDistributionPlan = {",
     '  format: "halfcode.skill-distribution/v1",',
     "  roots: [],",
@@ -379,6 +426,7 @@ async function verifyConsumer(tarball: string, consumerRoot: string): Promise<vo
     "}",
     "const rootDistributionPlan: RootSkillCapsuleDistributionPlan = distributionPlan",
     "declare const rootTypes: readonly [",
+    "  AuthoringModuleDescriptor,",
     "  RootCompileSkillCapsuleInput,",
     "  RootCompileResourceSkillCapsuleInput,",
     "  RootSkillCapsulePlan,",
@@ -501,4 +549,8 @@ function run(command: string[], cwd: string): string {
     throw new Error(`${command.join(" ")} failed (${result.exitCode})\n${stdout}${stderr}`)
   }
   return stdout
+}
+
+function compareStrings(left: string, right: string): number {
+  return left < right ? -1 : left > right ? 1 : 0
 }

@@ -1,0 +1,139 @@
+<Track #expose-loader-content-identities-and-prepare-0-2-2 apiVersion="codument.tech/v1alpha1" version="1" {
+  status = "completed"
+  goal = "让 Halfcode loader 公开 snapshot-ready content identities，并把 additive resource API 准备为不可变 0.2.2 candidate。"
+  description = "单次 raw-byte identity、authentic effective identity projection、legacy compatibility 与 packed 0.2.2 consumer verification；不执行外部发布。"
+  question_mode = "decision-tree"
+  question_severity = "auto"
+  commit_mode = "manual"
+  created_at = "2026-08-15T20:44:04Z"
+  updated_at = "2026-08-15T21:30:29Z"
+  modeling_base_commit = "056ec4c29cb181db8b733f8b180995b326317c34"
+} (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #modeling_deltas { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle #resource_core { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle #resource_docs { role = "output" name = "resource-dsl-docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle #behavior { role = "output" name = "behavior" domain = "behavior" path = "vfs://@/codument/behaviors/" }>
+    <MaterialBundle #modeling { role = "output" name = "modeling" domain = "modeling" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_expose-loader-content-identities-and-prepare-0-2-2 {
+    name = "expose-loader-content-identities-and-prepare-0-2-2"
+    version = "1"
+    child_mode = "dag"
+  } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "兼容基线与 identity RED contracts" status = "DONE" order = 0 } (
+        <Description ?>先锁定 0.2.1 structural ResourceTree 和 public package 行为，再用真实 XNL bytes 建立 loaded/effective identity 失败基线。</?>
+        <SubNodes [
+          <Task #P1-T1 { name = "冻结 loader、layered、snapshot 与 package compatibility" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?>characterization 覆盖旧 ResourceTree fields、manual structural tree composition、validate diagnostics 与十个 public specifiers。</?>
+              <Criterion #P1-T1-AC2 { checked = true } ?>开始时记录 npm 0.2.1 immutable registry facts、public package version authority 与 dirty working tree scope。</?>
+              <Criterion #P1-T1-AC3 { checked = true } ?>现有 layered registry/dependency snapshot tests 保持绿，不修改其 authority/revision 语义。</?>
+            ]>
+          )>
+          <Task #P1-T2 { name = "添加 loaded-tree raw-byte identity RED tests" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?>真实 XNL 修改改变 authority/content digest；相同 bytes 与枚举顺序变化保持稳定。</?>
+              <Criterion #P1-T2-AC2 { checked = true } ?>multi-root forest roots 共享 authorityDigest 但 resourceId/contentDigest 不同。</?>
+              <Criterion #P1-T2-AC3 { checked = true } ?>非法 UTF-8、缺失/重复 identity 与调用方 mutation 以稳定结果 fail closed。</?>
+            ]>
+          )>
+          <Task #P1-T3 { name = "添加 effective identity projector RED tests" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P1-T3-AC1 { checked = true } ?>覆盖 shadow、tombstone、exact effective layer origin 与所有 present resource identity。</?>
+              <Criterion #P1-T3-AC2 { checked = true } ?>覆盖 explicit contributions、UTF-16 ordering、missing/extra/conflict 与 snapshot 直连。</?>
+              <Criterion #P1-T3-AC3 { checked = true } ?>结构仿制 registry/tree、layer/package/order mismatch 均稳定拒绝且无 partial output。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Loader 与 effective content identity 实现" status = "DONE" order = 1 } (
+        <Description ?>在 resource-core 内实现单次 byte read、authentic LoadedResourceTree 与纯 effective identity projector，不引入 host policy 或领域推断。</?>
+        <SubNodes [
+          <Task #P2-T1 { name = "实现单次 raw-byte loader identities" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?>loader 每个 authority file 只读一次 bytes，fatal UTF-8 decode 后解析，并对原 bytes 计算 SHA-256。</?>
+              <Criterion #P2-T1-AC2 { checked = true } ?>LoadedResourceTree identities 精确覆盖 registry business resources、稳定排序并冻结。</?>
+              <Criterion #P2-T1-AC3 { checked = true } ?>ResourceTree 保持 structural compatibility，load 返回 subtype 且 validate 行为不变。</?>
+            ]>
+          )>
+          <Task #P2-T2 { name = "实现 authentic effective identity projector" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?>只接受 authentic registry/loaded trees并 exact 核对 layer、package、origin。</?>
+              <Criterion #P2-T2-AC2 { checked = true } ?>全部 present effective resources 获得正确 authority identity，tombstoned/shadowed non-effective facts 不进入结果。</?>
+              <Criterion #P2-T2-AC3 { checked = true } ?>只合并显式 contributions，复用 createResourceContentIdentity，无任意字符串或自然语言推断。</?>
+            ]>
+          )>
+          <Task #P2-T3 { name = "更新 Resource DSL identity authority 文档" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P2-T3-AC1 { checked = true } ?>文档解释 raw bytes、LoadedResourceTree、effective projector 与 snapshot 的分层职责。</?>
+              <Criterion #P2-T3-AC2 { checked = true } ?>示例不读取机器绝对路径、不复制 host digest 逻辑、不改变 typed edge authority。</?>
+              <Criterion #P2-T3-AC3 { checked = true } ?>docs XNL examples 继续零 warning 解析。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "0.2.2 candidate 与 tarball consumer" status = "DONE" order = 2 } (
+        <Description ?>提升唯一公开 distribution version，扩展真实 tarball consumer 与 candidate evidence，但不执行 registry publication。</?>
+        <SubNodes [
+          <Task #P3-T1 { name = "准备 public 0.2.2 additive package" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P3-T1-AC1 { checked = true } ?>packages/distribution/package.json version 精确为 0.2.2，name/private/十个 exports 不变。</?>
+              <Criterion #P3-T1-AC2 { checked = true } ?>root 与 resource-core types/runtime additive 暴露 loaded/effective identity API。</?>
+              <Criterion #P3-T1-AC3 { checked = true } ?>private workspace package versions不被误当公开 version authority，lockfile 只发生必要变化。</?>
+            ]>
+          )>
+          <Task #P3-T2 { name = "扩展 packed real-loader consumer smoke" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P3-T2-AC1 { checked = true } ?>只安装 tarball 的 consumer 从真实 ResourcePackage 执行 loader→layers→identities→snapshot。</?>
+              <Criterion #P3-T2-AC2 { checked = true } ?>legacy runtime/type imports与 structural ResourceTree consumer继续通过。</?>
+              <Criterion #P3-T2-AC3 { checked = true } ?>tarball 无 private workspace specifier、源码/Codument/host policy 泄漏。</?>
+            ]>
+          )>
+          <Task #P3-T3 { name = "生成 release-candidate evidence" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P3-T3-AC1 { checked = true } ?>报告记录 candidate version、pack file boundary、shasum/integrity 与全部验证命令。</?>
+              <Criterion #P3-T3-AC2 { checked = true } ?>本 track 未运行 npm publish，未创建 registry release 或修改凭据。</?>
+              <Criterion #P3-T3-AC3 { checked = true } ?>candidate tarball/temp/staging 在验证后清理，无新残留。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P4 { name = "完整验证与方向收口" status = "DONE" order = 3 } (
+        <Description ?>运行 focused/full/package/docs/authority gates，审计 dirty base 与发布边界，再执行 fresh coding AttractorCheck。</?>
+        <SubNodes [
+          <Task #P4-T1 { name = "运行 focused、full、typecheck 与 package gates" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P4-T1-AC1 { checked = true } ?>resource-core focused、bun test、typecheck、generate:check 与 verify 全通过。</?>
+              <Criterion #P4-T1-AC2 { checked = true } ?>package:check 与 0.2.2 tarball runtime/type consumer 全通过。</?>
+              <Criterion #P4-T1-AC3 { checked = true } ?>track/modeling XNL、behavior XML、docs examples、diff 与 whitespace 全通过。</?>
+            ]>
+          )>
+          <Task #P4-T2 { name = "审计 authority、compatibility、dirty base 与禁止项" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P4-T2-AC1 { checked = true } ?>无第二 loader/scanner、host file re-read、任意字符串/自然语言 dependency 或 material 推断。</?>
+              <Criterion #P4-T2-AC2 { checked = true } ?>无 Eidolon/global/workspace path policy，0.2.1 immutable facts 与 legacy public surface 保持。</?>
+              <Criterion #P4-T2-AC3 { checked = true } ?>unrelated dirty changes 保持，diff 只含本 track scope，外部 publication 明确未执行。</?>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_expose-loader-content-identities-and-prepare-0-2-2" } [
+      <Node #P2 [<After { ref = "P1" }>]>
+      <Node #P3 [<After { ref = "P2" }>]>
+      <Node #P4 [<After { ref = "P3" }>]>
+    ]>
+  ]>
+  <Hooks []>
+)>

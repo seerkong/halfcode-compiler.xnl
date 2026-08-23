@@ -1,0 +1,138 @@
+<Track #publish-halfcode-resource-dsl-system-skill apiVersion="codument.tech/v1alpha1" version="1" {
+  status = "completed"
+  goal = "从 canonical Resource DSL 文档生成带通用 provenance 的 sys-halfcode-resource-dsl@1.0.0 consumer SkillCapsule。"
+  description = "补齐 SkillCapsule apiVersion/provenance contract，建立 docs ResourcePackage 与渐进加载 Skill；不执行 registry publication 或 host installation。"
+  question_mode = "decision-tree"
+  question_severity = "auto"
+  commit_mode = "manual"
+  created_at = "2026-08-15T21:30:29Z"
+  updated_at = "2026-08-15T22:30:05Z"
+  modeling_base_commit = "056ec4c29cb181db8b733f8b180995b326317c34"
+} (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #modeling_deltas { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle #application_assembly { role = "output" name = "application-assembly" domain = "code" path = "vfs://@/packages/application-assembly/" }>
+    <MaterialBundle #compiler_skill { role = "output" name = "compiler-skill" domain = "code" path = "vfs://@/packages/compiler-skill/" }>
+    <MaterialBundle #resource_dsl { role = "output" name = "resource-dsl" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+  ]>
+  <TaskSpace #space_publish-halfcode-resource-dsl-system-skill {
+    name = "publish-halfcode-resource-dsl-system-skill"
+    version = "1"
+    child_mode = "dag"
+  } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "兼容基线与 provenance RED contracts" status = "DONE" order = 0 } (
+        <Description ?>冻结 canonical docs、multi-Skill public surface 与 0.2.2 candidate，再建立 apiVersion/provenance 和 consumer Skill 失败基线。</?>
+        <SubNodes [
+          <Task #P1-T1 { name = "冻结 canonical docs、legacy API 与 candidate 基线" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?>记录 canonical Resource DSL 文件集合与 bytes，证明无第二份正文。</?>
+              <Criterion #P1-T1-AC2 { checked = true } ?>characterization 覆盖 legacy single-capsule、十个 specifiers 与当前 0.2.2 candidate。</?>
+              <Criterion #P1-T1-AC3 { checked = true } ?>记录 dirty working tree scope并保留无关用户改动。</?>
+            ]>
+          )>
+          <Task #P1-T2 { name = "添加通用 Skill provenance RED tests" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?>RED 覆盖 XNL apiVersion进入 identity、canonical provenance bytes 与 enumeration invariance。</?>
+              <Criterion #P1-T2-AC2 { checked = true } ?>RED 覆盖 missing/duplicate/malformed/source/file/digest mismatch 和 pre-write failure。</?>
+              <Criterion #P1-T2-AC3 { checked = true } ?>RED 证明 provenance path参与全 closure collision preflight。</?>
+            ]>
+          )>
+          <Task #P1-T3 { name = "添加 Resource DSL consumer Skill RED tests" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P1-T3-AC1 { checked = true } ?>RED 覆盖 canonical docs ResourcePackage/WikiPages 与 exact Skill identity 1.0.0。</?>
+              <Criterion #P1-T3-AC2 { checked = true } ?>RED 覆盖渐进加载 links、examples 与 provenance。</?>
+              <Criterion #P1-T3-AC3 { checked = true } ?>RED 覆盖无 repo-maintainer commands、无 host paths/operations、无正文副本。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "通用 SkillCapsule provenance" status = "DONE" order = 1 } (
+        <Description ?>把 source apiVersion 与 deterministic provenance manifest 纳入通用 planner/applier authority，不在具体 Skill 模板硬编码。</?>
+        <SubNodes [
+          <Task #P2-T1 { name = "投影 SkillCapsule apiVersion 与 identity" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?>application assembly 从 XNL metadata exact 投影 apiVersion，不读取 YAML替代。</?>
+              <Criterion #P2-T1-AC2 { checked = true } ?>SkillCapsuleIdentity、capsule/closure digest绑定 apiVersion。</?>
+              <Criterion #P2-T1-AC3 { checked = true } ?>legacy compile API 与既有资源 projection保持兼容。</?>
+            ]>
+          )>
+          <Task #P2-T2 { name = "生成并校验 canonical provenance manifest" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?>每 capsule恰有一个固定路径 manifest，source/generator/payload facts完整且稳定排序。</?>
+              <Criterion #P2-T2-AC2 { checked = true } ?>manifest作为普通 planned file绑定 capsule/closure digest且不自引用。</?>
+              <Criterion #P2-T2-AC3 { checked = true } ?>applier在任何目标 mutation前 exact重建并校验，错误码稳定。</?>
+            ]>
+          )>
+          <Task #P2-T3 { name = "同步 public docs、modeling 与 package smoke" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P2-T3-AC1 { checked = true } ?>Resource DSL/SkillCapsule docs解释 provenance authority与读取方式。</?>
+              <Criterion #P2-T3-AC2 { checked = true } ?>target modeling 与真实 public types/validation一致。</?>
+              <Criterion #P2-T3-AC3 { checked = true } ?>packed root和skill-capsule types/runtime验证新旧 API。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "Resource DSL consumer SkillCapsule" status = "DONE" order = 2 } (
+        <Description ?>将 canonical docs注册为 resources并生成最小渐进加载 Skill，不复制正文、不包含 host操作。</?>
+        <SubNodes [
+          <Task #P3-T1 { name = "建立 canonical docs ResourcePackage" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P3-T1-AC1 { checked = true } ?>manifest/catalog/KindDefinitions只登记原有 Markdown与XNL examples，不复制正文。</?>
+              <Criterion #P3-T1-AC2 { checked = true } ?>WikiPage identity与输出相对链接保持可解析，loader零 diagnostic。</?>
+              <Criterion #P3-T1-AC3 { checked = true } ?>ResourcePackage中无 Eidolon/global/workspace policy。</?>
+            ]>
+          )>
+          <Task #P3-T2 { name = "实现 sys-halfcode-resource-dsl@1.0.0" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P3-T2-AC1 { checked = true } ?>XNL是name/apiVersion/version唯一 authority；YAML不重复version。</?>
+              <Criterion #P3-T2-AC2 { checked = true } ?>SKILL.md只含触发边界、渐进加载顺序与references导航。</?>
+              <Criterion #P3-T2-AC3 { checked = true } ?>输出含canonical docs、examples与可读provenance，不含维护者命令。</?>
+            ]>
+          )>
+          <Task #P3-T3 { name = "验证 deterministic plan 与可分发 capsule" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P3-T3-AC1 { checked = true } ?>两次plan与不同resource枚举生成byte-identical files/digests。</?>
+              <Criterion #P3-T3-AC2 { checked = true } ?>canonical doc或source identity变化改变对应provenance/capsule/closure digest。</?>
+              <Criterion #P3-T3-AC3 { checked = true } ?>apply到temporary root后links/provenance/readback完整且清理残留。</?>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P4 { name = "完整验证与方向收口" status = "DONE" order = 3 } (
+        <Description ?>运行focused/full/package/docs/authority gates，刷新0.2.2 candidate证据，再执行fresh coding AttractorCheck。</?>
+        <SubNodes [
+          <Task #P4-T1 { name = "运行完整工程与package gates" status = "DONE" order = 0 } (
+            <Acceptance [
+              <Criterion #P4-T1-AC1 { checked = true } ?>focused/full/typecheck/generate/verify全部通过。</?>
+              <Criterion #P4-T1-AC2 { checked = true } ?>package:check与真实0.2.2 tarball consumer通过并刷新candidate metadata。</?>
+              <Criterion #P4-T1-AC3 { checked = true } ?>Resource DSL与track XNL、behavior XML、diff/whitespace通过。</?>
+            ]>
+          )>
+          <Task #P4-T2 { name = "审计authority、consumer与禁止项" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P4-T2-AC1 { checked = true } ?>无正文镜像、第二scanner/catalog/dependency resolver或host-specific operation。</?>
+              <Criterion #P4-T2-AC2 { checked = true } ?>Skill版本仅1.0.x，provenance来源/version/digest/generated-by完整。</?>
+              <Criterion #P4-T2-AC3 { checked = true } ?>外部registry未修改、dirty base保持、无tarball/staging残留。</?>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_publish-halfcode-resource-dsl-system-skill" } [
+      <Node #P2 [<After { ref = "P1" }>]>
+      <Node #P3 [<After { ref = "P2" }>]>
+      <Node #P4 [<After { ref = "P3" }>]>
+    ]>
+  ]>
+  <Hooks []>
+)>

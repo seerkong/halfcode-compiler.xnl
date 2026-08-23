@@ -158,8 +158,7 @@
   )>
 )>
 
-<decisions apiVersion="codument.tech/v1alpha1" [
-  <decision #track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+<decision #track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
     <question ?01KZWEXM92MG06RXAXXF6Q7BJ6>
     谁拥有 object-operation definition 与 target kinds？
     </?01KZWEXM92MG06RXAXXF6Q7BJ6>
@@ -178,7 +177,7 @@
       </?01KZWEXM92MG06RXAXXF6Q7BJA>
     )>
   )>
-  <decision #track.migrate_businessobject_pageobject_to_xnl.four_dimensions { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
+  <decision #track.migrate_businessobject_pageobject_to_xnl.four_dimensions apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
     <question ?01KZWEXM92MG06RXAXXF6Q7BJB>
     对象 operation handler 的稳定调用形状是什么？
     </?01KZWEXM92MG06RXAXXF6Q7BJB>
@@ -197,7 +196,7 @@
       </?01KZWEXM92MG06RXAXXF6Q7BJF>
     )>
   )>
-  <decision #track.migrate_businessobject_pageobject_to_xnl.private_binding { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority"] } (
+  <decision #track.migrate_businessobject_pageobject_to_xnl.private_binding apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority"] } (
     <question ?01KZWEXM92MG06RXAXXF6Q7BJG>
     PageObject export 与 BusinessObject resource binding 是否进入 public catalog？
     </?01KZWEXM92MG06RXAXXF6Q7BJG>
@@ -216,7 +215,7 @@
       </?01KZWEXM92MG06RXAXXF6Q7BJM>
     )>
   )>
-  <decision #track.migrate_businessobject_pageobject_to_xnl.separate_object_entry { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+  <decision #track.migrate_businessobject_pageobject_to_xnl.separate_object_entry apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
     <question ?01KZWEXM92MG06RXAXXF6Q7BJN>
     对象操作是否复用 generic callable entry？
     </?01KZWEXM92MG06RXAXXF6Q7BJN>
@@ -235,10 +234,8 @@
       </?01KZWEXM92MG06RXAXXF6Q7BJS>
     )>
   )>
-]>
 
-<decisions apiVersion="codument.tech/v1alpha1" [
-  <decision #mission.halfcode-compiler-xnl-migration.scope-boundary { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+<decision #mission.halfcode-compiler-xnl-migration.scope-boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
     <question ?01M02KBYGP757KAFFEE4ENTVFZ>
     哪些 XML 属于本次 XNL 迁移边界？
     </?01M02KBYGP757KAFFEE4ENTVFZ>
@@ -257,7 +254,7 @@
       </?01M02KBYGP757KAFFEE4ENTVG3>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.semantic-migration { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+  <decision #mission.halfcode-compiler-xnl-migration.semantic-migration apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
     <question ?01M02KBYGP757KAFFEE4ENTVG4>
     迁移应是 XML 语法转写还是重新建立 XNL-native DSL？
     </?01M02KBYGP757KAFFEE4ENTVG4>
@@ -276,7 +273,7 @@
       </?01M02KBYGP757KAFFEE4ENTVG8>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.entry-and-identity { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.97 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+  <decision #mission.halfcode-compiler-xnl-migration.entry-and-identity apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.97 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
     <question ?01M02KBYGP757KAFFEE4ENTVG9>
     资源 kind、identity 与目录入口由什么决定？
     </?01M02KBYGP757KAFFEE4ENTVG9>
@@ -295,7 +292,7 @@
       </?01M02KBYGP757KAFFEE4ENTVGD>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.publication-identity { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+  <decision #mission.halfcode-compiler-xnl-migration.publication-identity apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
     <question ?01M02KBYGP757KAFFEE4ENTVGE>
     迁移后的唯一公开 npm identity 是什么？
     </?01M02KBYGP757KAFFEE4ENTVGE>
@@ -314,7 +311,7 @@
       </?01M02KBYGP757KAFFEE4ENTVGJ>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.parser-authority { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+  <decision #mission.halfcode-compiler-xnl-migration.parser-authority apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
     <question ?01M02KBYGP757KAFFEE4ENTVGK>
     产品使用哪一个 XNL parsing authority？
     </?01M02KBYGP757KAFFEE4ENTVGK>
@@ -333,7 +330,7 @@
       </?01M02KBYGP757KAFFEE4ENTVGQ>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.single-authority { priority = "P1" status = "accepted" durable_candidate = true confidence = 0.96 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.parser-authority"] } (
+  <decision #mission.halfcode-compiler-xnl-migration.single-authority apiVersion="codument.tech/v1alpha1" { priority = "P1" status = "accepted" durable_candidate = true confidence = 0.96 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.parser-authority"] } (
     <question ?01M02KBYGP757KAFFEE4ENTVGR>
     最终是否长期同时支持 XML 与 XNL authoring？
     </?01M02KBYGP757KAFFEE4ENTVGR>
@@ -352,7 +349,7 @@
       </?01M02KBYGP757KAFFEE4ENTVGW>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.defer-businessobject-pageobject { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+  <decision #mission.halfcode-compiler-xnl-migration.defer-businessobject-pageobject apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
     <question ?01M02KBYGP757KAFFEE4ENTVGX>
     BusinessObject 与 PageObject 应在何时迁移？
     </?01M02KBYGP757KAFFEE4ENTVGX>
@@ -371,7 +368,7 @@
       </?01M02KBYGP757KAFFEE4ENTVH1>
     )>
   )>
-  <decision #track.remove_global_resource_field_requirements.kind_owned_fields { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
+  <decision #track.remove_global_resource_field_requirements.kind_owned_fields apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
     <question ?01M02KBYGP757KAFFEE4ENTVH2>
     lifecycle 与 description 的约束由谁拥有？
     </?01M02KBYGP757KAFFEE4ENTVH2>
@@ -390,4 +387,3 @@
       </?01M02KBYGP757KAFFEE4ENTVH6>
     )>
   )>
-]>

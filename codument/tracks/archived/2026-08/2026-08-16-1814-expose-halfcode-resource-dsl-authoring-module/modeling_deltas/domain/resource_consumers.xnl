@@ -1,0 +1,51 @@
+<component #resource_consumers.application_assembly apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://application-assembly/requirements/xnl-generic-consumers" "behavior://object-operation-contract/requirements/shared-definition"] } [
+  <desc ?01KZWEXM8PNJ9MTVSFBTZ0X5DS>
+  把 normalized ResourceNode 投影为通用 assembly 资源与统一对象 operation catalog，不暴露 parser-private 或 XML object shape。
+  </?01KZWEXM8PNJ9MTVSFBTZ0X5DS>
+  <runtime ?r>type Runtime = { readFile: ReadFile }</?r>
+  <input ?i>type Input = readonly ResourceRecord[]</?i>
+  <config ?c>type Config = readonly AuthoringModuleDescriptor[]</?c>
+  <output ?o>type Output = ApplicationAssembly & ObjectOperationCatalog</?o>
+  <pseudo { kind = "ctrl" } ?p>按 kind 选择 ResourceNode reader → 解析 contracts/materials/bindings/operations → 校验唯一 FQN 与 object binding closure → 组合 provenance</?p>
+]>
+
+<component #resource_consumers.resource_mapping apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-mapping/requirements/xnl-mappings"] } [
+  <desc ?01KZWEXM8PNJ9MTVSFBTZ0X5DT>解析 XNL mapping authority 并在任何写入前生成 collision-safe copy plan。</?01KZWEXM8PNJ9MTVSFBTZ0X5DT>
+  <runtime ?r>type Runtime = { fs: FileSystem; xnlParser: XnlParser }</?r>
+  <input ?i>type Input = string</?i>
+  <config ?c>type Config = PlanResourceMappingsOptions</?c>
+  <output ?o>type Output = ResourceMappings | ResourceMappingPlan</?o>
+  <pseudo { kind = "ctrl" } ?p>解析 XNL → normalize mappings → 校验 roots/operations → preflight collisions → apply plan</?p>
+]>
+
+<component #resource_consumers.resource_dsl_authoring_module apiVersion="codument.tech/v1alpha1" {
+  kind = "component"
+  behaviors = [
+    "behavior://skill-capsule-distribution/requirements/composable-resource-dsl-authoring-module"
+  ]
+} [
+  <desc ?>发布包内可组合的 Resource DSL authoring module；把 canonical ResourcePackage source 交给 application assembly，而不是让 host 合并已编译 plan。</?>
+  <runtime ?runtime>type Runtime = Readonly&lt;Record&lt;never, never&gt;&gt;</?runtime>
+  <input ?authority>canonical docs/resource-dsl ResourcePackage 与 SkillCapsule/WikiPage descriptors。</?authority>
+  <config ?config>type Config = { packageVersion: "0.2.3"; skillVersion: "1.0.0" }</?config>
+  <output ?public_module>loadHalfcodeResourceDslSystemSkillModule(): AuthoringModuleDescriptor，resourceRootDir 指向 package-contained physical source tree。</?public_module>
+  <output ?ready_plan>loadHalfcodeResourceDslSystemSkillPlan(): SkillCapsuleDistributionPlan，保持现有 ready-plan consumer。</?ready_plan>
+  <pseudo { kind = "dataflow" } ?dataflow>复制 canonical ResourcePackage → 从 package-contained copy 解析 application assembly → 规划 bundled Skill closure → 对比 module 与 ready-plan projection。</?dataflow>
+  <constraint ?equivalence>package-contained module 重新规划所得 projection 必须与 bundled ready plan byte-equivalent。</?equivalence>
+  <not-owned-here ?>host install root、global/workspace policy、Eidolon operation 与下游 product routing。</?>
+]>
+
+<policy #resource_consumers.resource_dsl_module_release apiVersion="codument.tech/v1alpha1" {
+  kind = "policy"
+  behaviors = [
+    "behavior://skill-capsule-distribution/requirements/resource-dsl-module-patch-compatibility"
+  ]
+} [
+  <pseudo { kind = "rule" } ?release_rule>
+  canonical ResourcePackage -> package-contained generated source tree
+  package-contained module -> application assembly -> distribution plan
+  source plan projection == bundled plan projection
+  all gates pass -> publish exact smallest patch 0.2.3
+  host-specific paths or policy -> reject from Halfcode source module
+  </?release_rule>
+]>

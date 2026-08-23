@@ -1,4 +1,19 @@
-<module #publication_xnl.halfcode_compiler_xnl apiVersion="codument.tech/v1alpha1" { kind = "module" visibility = "public" depends_on = ["modeling://domain/resource_core/loader" "modeling://domain/resource_core/layered_registry" "modeling://domain/resource_core/effective_content_identity_projector" "modeling://domain/resource_core/dependency_snapshot"] behaviors = ["behavior://package-distribution/requirements/xnl-public-package" "behavior://package-distribution/requirements/immutable-0-2-2-candidate" "behavior://resource-loading/requirements/layered-effective-registry" "behavior://resource-loading/requirements/resource-dependency-snapshot"] } [
+<module #publication_xnl.halfcode_compiler_xnl apiVersion="codument.tech/v1alpha1" {
+  kind = "module"
+  visibility = "public"
+  depends_on = [
+    "modeling://domain/resource_core/loader"
+    "modeling://domain/resource_core/layered_registry"
+    "modeling://domain/resource_core/effective_content_identity_projector"
+    "modeling://domain/resource_core/dependency_snapshot"
+  ]
+  behaviors = [
+    "behavior://package-distribution/requirements/xnl-public-package"
+    "behavior://package-distribution/requirements/immutable-0-2-2-candidate"
+    "behavior://resource-loading/requirements/layered-effective-registry"
+    "behavior://resource-loading/requirements/resource-dependency-snapshot"
+  ]
+} [
   <desc ?01KZVGC9Q1DKJBQA6CYVV3NCM6>
   halfcode-compiler.xnl 的唯一公开 npm capsule；0.2.2 candidate 保留十个既有 specifiers，并从 resource-core additive 暴露 loaded identities、effective identity projector、layered registry 与 dependency snapshot。
   </?01KZVGC9Q1DKJBQA6CYVV3NCM6>
