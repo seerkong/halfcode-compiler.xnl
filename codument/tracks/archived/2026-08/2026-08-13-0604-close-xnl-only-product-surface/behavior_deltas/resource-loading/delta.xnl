@@ -1,0 +1,50 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_3_-_0_6_0_4_-_c_l_o_s_e_-_x_n_l_-_o_n_l_y_-_p_r_o_d_u_c_t_-_s_u_r_f_a_c_e.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/xnl-resource-tree" } (
+      <Requirement #xnl-resource-tree (
+        <Statement ?01M0TB1VFJXK8WJP9N2JF8Z5FP>
+        系统 SHALL 仅使用 xnl-core 加载 manifest.xnl resource package，并把 parser tree 规范化为带 identity、logical path、document URI 与语义通道的 XNL ResourceRecord registry。
+        </?01M0TB1VFJXK8WJP9N2JF8Z5FP>
+        <Suites [
+          <Suite #xnl-loading { name = "XNL resource tree" } (
+            <Cases [
+              <Case #load-and-normalize (
+                <Given ?01M0TB1VFJXK8WJP9N2JF8Z5FQ>
+                package 包含 manifest.xnl、KindDefinition catalogs 与多种 source shape resources
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FQ>
+                <When ?01M0TB1VFJXK8WJP9N2JF8Z5FR>
+                resource-core 加载 package
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FR>
+                <Then ?01M0TB1VFJXK8WJP9N2JF8Z5FS>
+                registry SHALL 按根 tag 分区、按 #id 唯一寻址，并保留语义通道与 provenance
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FS>
+              )>
+              <Case #reject-invalid-authority (
+                <Given ?01M0TB1VFJXK8WJP9N2JF8Z5FT>
+                XNL authority 含语法错误、越界 URI、未知 kind 或重复 #id
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FT>
+                <When ?01M0TB1VFJXK8WJP9N2JF8Z5FV>
+                resource-core 验证或加载 package
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FV>
+                <Then ?01M0TB1VFJXK8WJP9N2JF8Z5FW>
+                验证 SHALL 返回稳定 diagnostics 且拒绝产生 registry
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FW>
+              )>
+              <Case #reject-xml-authority (
+                <Given ?01M0TB1VFJXK8WJP9N2JF8Z5FX>
+                调用方提供 XML manifest 或产品路径无 manifest.xnl
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FX>
+                <When ?01M0TB1VFJXK8WJP9N2JF8Z5FY>
+                resource-core 加载 package
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FY>
+                <Then ?01M0TB1VFJXK8WJP9N2JF8Z5FZ>
+                系统 SHALL 不解析 XML 且不得回退 legacy adapter
+                </?01M0TB1VFJXK8WJP9N2JF8Z5FZ>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

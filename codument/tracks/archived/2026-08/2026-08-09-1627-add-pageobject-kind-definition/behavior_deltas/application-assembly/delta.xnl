@@ -1,0 +1,50 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_0_9_-_1_6_2_7_-_a_d_d_-_p_a_g_e_o_b_j_e_c_t_-_k_i_n_d_-_d_e_f_i_n_i_t_i_o_n.behavior_patch.halfcode.application-assembly apiVersion="codument.tech/v1alpha1" version="1" { capability = "halfcode.application-assembly" } (
+  <Mutations [
+    <Upsert { selector = "behavior://halfcode.application-assembly/requirements/pageobject-resource" } (
+      <Requirement #pageobject-resource (
+        <Statement ?01M0TB1VEXT7G9T1Z75RPP144F>
+        Halfcode SHALL validate directory-shaped PageObject resources and normalize their code binding and named operations into ApplicationAssembly without target-specific browser policy.
+        </?01M0TB1VEXT7G9T1Z75RPP144F>
+        <Suites [
+          <Suite #assembly { name = "PageObject assembly" } (
+            <Cases [
+              <Case #valid (
+                <Given ?01M0TB1VEXT7G9T1Z75RPP144G>
+                a valid PageObject descriptor
+                </?01M0TB1VEXT7G9T1Z75RPP144G>
+                <When ?01M0TB1VEXT7G9T1Z75RPP144H>
+                the application assembly is resolved
+                </?01M0TB1VEXT7G9T1Z75RPP144H>
+                <Then ?01M0TB1VEXT7G9T1Z75RPP144J>
+                the PageObject SHALL appear in pageObjects and byFqn
+                </?01M0TB1VEXT7G9T1Z75RPP144J>
+              )>
+              <Case #invalid (
+                <Given ?01M0TB1VEXT7G9T1Z75RPP144K>
+                duplicate primitive ids or missing required operations
+                </?01M0TB1VEXT7G9T1Z75RPP144K>
+                <When ?01M0TB1VEXT7G9T1Z75RPP144M>
+                the assembly is resolved
+                </?01M0TB1VEXT7G9T1Z75RPP144M>
+                <Then ?01M0TB1VEXT7G9T1Z75RPP144N>
+                resolution SHALL fail before projection
+                </?01M0TB1VEXT7G9T1Z75RPP144N>
+              )>
+              <Case #root-export (
+                <Given ?01M0TB1VEXT7G9T1Z75RPP144P>
+                the distribution package is built
+                </?01M0TB1VEXT7G9T1Z75RPP144P>
+                <When ?01M0TB1VEXT7G9T1Z75RPP144Q>
+                a consumer imports its root
+                </?01M0TB1VEXT7G9T1Z75RPP144Q>
+                <Then ?01M0TB1VEXT7G9T1Z75RPP144R>
+                PageObject assembly APIs SHALL be available without internal or subpath imports
+                </?01M0TB1VEXT7G9T1Z75RPP144R>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

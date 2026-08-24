@@ -26,7 +26,7 @@ modeling 节点的常规属性一律写进 `{}` 属性块：`kind`、`fact_grade
 | | `port` | `command\|message` 标注（**CLI 强制**）+ 入口签名（评审项） | Actor/Processor；泛化 HttpEndpoint/Kafka |
 | | `actor` | 单写边界 + 偏重(data-owner/执行/组合) + 解环决策（**评审项**；CLI 仅校验 kind 合法） | DEPA actor-paradigm |
 | | `policy` | rule `pseudo`(datalog/switch) 或引用 `behavior://`（**CLI 强制**） | 跨对象； `policies` |
-| shell（命名空间，领域定） | `surface:route` `backend:endpoint` `cli:command` `agent:tool` … | 各 plane 自定义 | route/command/action 本就跨领域 |
+| shell（命名空间，领域定） | `surface:route` `backend:endpoint` `cli:command` `agent:tool` … | 各 plane 自定义 | route/command/operation 本就跨领域 |
 
 > kind 词汇的“内核裸名 vs 命名空间领域”区分 Layer-1 的 Extension kind 谱系：通用概念裸名共用，领域概念加命名空间前缀。
 
@@ -73,6 +73,8 @@ orders/
 > - ✅ canonical：`<runtime ?r>…</?r>` / `<input ?i>…</?i>` / `<config ?c>…</?c>` / `<output ?o>…</?o>`
 > - ⚠️ 兼容：`validate` 也接受 `<types { role = "runtime" }>`（及 `role = "input"`/`"config"`/`"output"`）这类 role 写法作兼容（accepted-but-discouraged），但**裸标签为推荐形式**，新建模请用裸标签。
 > 完整 Good 示例见 §7。
+>
+> **TextElement marker 一致性（硬约束）**：`?marker` 只是免转义 id，**不承载语义角色**；opening `?marker` 与 closing `</?marker>` 必须逐字相同。未使用自定义 marker 时闭合必须是 `</?>`；禁止 XML 风格 `</tagname>`，也禁止 `<desc ?foo>...</desc>` 这类“开头有 marker、结尾回退 XML 标签名”的混合写法。
 
 ## 4. 事实源（DEPA，entity 必备）
 
@@ -117,28 +119,28 @@ Good（entity，最小必备齐）：
   kind = "entity"
   fact_grade = "authoritative_fact"
   single_writer = "resource.store"
-} [
+} (
   <desc ?>聚合型资源…</?>
   <types ?t>interface SkillTool { key: string; status: SkillToolStatus }
   enum SkillToolStatus { Draft="draft", Online="online" }</?t>
-  <state-machine #resource.skill_tool_status [ <mermaid ?m>
+  <state-machine #resource.skill_tool_status ( <mermaid ?m>
   stateDiagram-v2
     draft --> online: publish
-  </?m> ]>
+  </?m> )>
   <fact-source ?>唯一写入者 resource.store；file_contents 只读投影不反写。</?>
-]>
+)>
 ```
 
 Good（component，四块裸标签 — canonical）：
 ```xnl
-<component #orders.place_order_proc { kind = "component" } [
+<component #orders.place_order_proc { kind = "component" } (
   <desc ?>下单组件：校验库存、落账、投递通知。</?>
   <runtime ?r>type Runtime = { clock: Clock; orderStore: OrderStore }</?r>
   <input ?i>interface PlaceOrderInput { cartId: string; userId: string }</?i>
   <config ?c>interface PlaceOrderConfig { maxLines: number }</?c>
   <output ?o>interface PlaceOrderOutput { orderId: string; total: number }</?o>
   <pseudo { kind = "ctrl" } ?p>validate(input) -> reserve(stock) -> append(order) -> notify</?p>
-]>
+)>
 ```
 
 Good（shell kind 节点 — 普通标签 + `kind` 属性）：
@@ -174,7 +176,7 @@ modeling 节点的**描述性内容一律用中文**，**代码标识符保持�
 
 Good（注释/描述中文，标识符英文）：
 ```xnl
-<component #orders.place_order { kind = "component" } [
+<component #orders.place_order { kind = "component" } (
   <desc ?>下单组件：校验购物车、预留库存、落账。</?>
   <runtime ?r>
   interface PlaceOrderRuntime {
@@ -183,7 +185,7 @@ Good（注释/描述中文，标识符英文）：
   }
   </?r>
   <pseudo { kind = "ctrl" } ?p>校验 input → 经 message 预留库存 → 落账 → 发布事件</?p>
-]>
+)>
 ```
 
 Bad：

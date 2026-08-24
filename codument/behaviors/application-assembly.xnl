@@ -1,0 +1,37 @@
+<Behavior #application-assembly apiVersion="codument.tech/v1alpha1" version="1" (
+  <Requirements [
+    <Requirement #xnl-generic-consumers (
+      <Statement ?01M0TB1VDNKRYQ5B6F7MEP6P91>
+      系统 SHALL 从 normalized ResourceNode 的 properties/body/subdomains 组装所有 XNL 资源，且 public assembly 不依赖 XmlObject/@attribute 私有形状。
+      </?01M0TB1VDNKRYQ5B6F7MEP6P91>
+      <Suites [
+        <Suite #xnl-consumers (
+          <Cases [
+            <Case #assemble-callable-text-skill (
+              <Given ?01M0TB1VDNKRYQ5B6F7MEP6P92>
+              XNL package 含 callable、text 与 SkillCapsule resources
+              </?01M0TB1VDNKRYQ5B6F7MEP6P92>
+              <When ?01M0TB1VDNKRYQ5B6F7MEP6P93>
+              application assembly 加载 package
+              </?01M0TB1VDNKRYQ5B6F7MEP6P93>
+              <Then ?01M0TB1VDNKRYQ5B6F7MEP6P94>
+              contracts、code binding、materials、includes 与 provenance SHALL 正确投影
+              </?01M0TB1VDNKRYQ5B6F7MEP6P94>
+            )>
+            <Case #assemble-object-owners (
+              <Given ?01M0TB1VDNKRYQ5B6F7MEP6P95>
+              XNL package 含 BusinessObject、PageObject 与 operation handler resources
+              </?01M0TB1VDNKRYQ5B6F7MEP6P95>
+              <When ?01M0TB1VDNKRYQ5B6F7MEP6P96>
+              application assembly 加载 package
+              </?01M0TB1VDNKRYQ5B6F7MEP6P96>
+              <Then ?01M0TB1VDNKRYQ5B6F7MEP6P97>
+              系统 SHALL 投影统一 target/operation catalog 并验证 private binding closure
+              </?01M0TB1VDNKRYQ5B6F7MEP6P97>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+  ]>
+)>

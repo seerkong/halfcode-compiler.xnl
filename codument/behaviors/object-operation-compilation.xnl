@@ -1,0 +1,59 @@
+<Behavior #object-operation-compilation apiVersion="codument.tech/v1alpha1" version="1" (
+  <Requirements [
+    <Requirement #generated-object-entry (
+      <Statement ?01M0TB1VDSXANCT15VHQ97ZW7B>
+      Compiler SHALL 从 PageObject/BusinessObject assembly catalog 生成独立对象 registry 与 run_object_operation(call)，并以 host 初始化的 runtime 执行四维 handler。
+      </?01M0TB1VDSXANCT15VHQ97ZW7B>
+      <Suites [
+        <Suite #bundle { name = "对象 bundle" } (
+          <Cases [
+            <Case #execute-four-dimensional-handler (
+              <Given ?01M0TB1VDSXANCT15VHQ97ZW7C>
+              合法 action 或 mutation call 且 host 已初始化 runtime
+              </?01M0TB1VDSXANCT15VHQ97ZW7C>
+              <When ?01M0TB1VDSXANCT15VHQ97ZW7D>
+              调用 run_object_operation
+              </?01M0TB1VDSXANCT15VHQ97ZW7D>
+              <Then ?01M0TB1VDSXANCT15VHQ97ZW7E>
+              handler SHALL 收到 runtime、targets、invocation、config 四个独立参数
+              </?01M0TB1VDSXANCT15VHQ97ZW7E>
+            )>
+            <Case #fail-closed (
+              <Given ?01M0TB1VDSXANCT15VHQ97ZW7F>
+              runtime 未初始化、operationRef 未知或 call 与 definition 不匹配
+              </?01M0TB1VDSXANCT15VHQ97ZW7F>
+              <When ?01M0TB1VDSXANCT15VHQ97ZW7G>
+              调用 run_object_operation
+              </?01M0TB1VDSXANCT15VHQ97ZW7G>
+              <Then ?01M0TB1VDSXANCT15VHQ97ZW7H>
+              bundle MUST fail closed 且不执行 handler
+              </?01M0TB1VDSXANCT15VHQ97ZW7H>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #no-double-authority (
+      <Statement ?01M0TB1VDSXANCT15VHQ97ZW7J>
+      BusinessAction/BusinessMutation SHALL 仅作为 BusinessObject operation binding 被编译，不得作为 generic callable 或独立 AI reference 暴露；runtime definition SHALL 只来自生成 registry，registry 不得发布 binding 字段。
+      </?01M0TB1VDSXANCT15VHQ97ZW7J>
+      <Suites [
+        <Suite #registry { name = "registry closure" } (
+          <Cases [
+            <Case #separate-registries (
+              <Given ?01M0TB1VDSXANCT15VHQ97ZW7K>
+              Skill 同时包含普通 functions 与 object owners
+              </?01M0TB1VDSXANCT15VHQ97ZW7K>
+              <When ?01M0TB1VDSXANCT15VHQ97ZW7M>
+              编译 Skill capsule
+              </?01M0TB1VDSXANCT15VHQ97ZW7M>
+              <Then ?01M0TB1VDSXANCT15VHQ97ZW7N>
+              callable registry SHALL 只包含 Function/ComposedFunction，object registry SHALL 包含 PageObject/BusinessObject operations
+              </?01M0TB1VDSXANCT15VHQ97ZW7N>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+  ]>
+)>

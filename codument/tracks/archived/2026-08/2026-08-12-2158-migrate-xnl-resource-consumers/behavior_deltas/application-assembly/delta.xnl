@@ -1,0 +1,39 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_2_-_2_1_5_8_-_m_i_g_r_a_t_e_-_x_n_l_-_r_e_s_o_u_r_c_e_-_c_o_n_s_u_m_e_r_s.behavior_patch.application-assembly apiVersion="codument.tech/v1alpha1" version="1" { capability = "application-assembly" } (
+  <Mutations [
+    <Upsert { selector = "behavior://application-assembly/requirements/xnl-generic-consumers" } (
+      <Requirement #xnl-generic-consumers (
+        <Statement ?01M0TB1VF6GSMT9BNKY07NE1J7>
+        系统 SHALL 从 normalized ResourceNode 的 properties/body/subdomains 组装通用资源，且 public assembly 不依赖 XmlObject/@attribute 私有形状。
+        </?01M0TB1VF6GSMT9BNKY07NE1J7>
+        <Suites [
+          <Suite #xnl-generic (
+            <Cases [
+              <Case #assemble-callable-text-skill (
+                <Given ?01M0TB1VF6GSMT9BNKY07NE1J8>
+                XNL package 含 callable、text 与 SkillCapsule resources
+                </?01M0TB1VF6GSMT9BNKY07NE1J8>
+                <When ?01M0TB1VF6GSMT9BNKY07NE1J9>
+                application assembly 加载 package
+                </?01M0TB1VF6GSMT9BNKY07NE1J9>
+                <Then ?01M0TB1VF6GSMT9BNKY07NE1JA>
+                contracts、code binding、materials、includes 与 provenance SHALL 正确投影
+                </?01M0TB1VF6GSMT9BNKY07NE1JA>
+              )>
+              <Case #defer-bo-po (
+                <Given ?01M0TB1VF6GSMT9BNKY07NE1JB>
+                BO/PO API 尚在重构
+                </?01M0TB1VF6GSMT9BNKY07NE1JB>
+                <When ?01M0TB1VF6GSMT9BNKY07NE1JC>
+                本阶段加载 generic resources
+                </?01M0TB1VF6GSMT9BNKY07NE1JC>
+                <Then ?01M0TB1VF6GSMT9BNKY07NE1JD>
+                不得新增 BO/PO 专用 XNL schema 或 public API
+                </?01M0TB1VF6GSMT9BNKY07NE1JD>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

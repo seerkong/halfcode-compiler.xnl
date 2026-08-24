@@ -1,0 +1,74 @@
+<Behavior #resource-authoring apiVersion="codument.tech/v1alpha1" version="1" (
+  <Requirements [
+    <Requirement #xnl-resource-language (
+      <Statement ?01M0TB1VDY5F7XE6XSD81BCV44>
+      系统 SHALL 以 XNL-native DSL 表达资源 package、catalog、KindDefinition、descriptor 与 mapping，并按 tag、#id、properties、body、extension 的固定语义解释文档；通用 loader SHALL 不把 lifecycle 或 description 强制为所有 Kind 的共同字段。
+      </?01M0TB1VDY5F7XE6XSD81BCV44>
+      <Suites [
+        <Suite #language-channels { name = "XNL 通道语义" } (
+          <Cases [
+            <Case #parse-representative-documents (
+              <Given ?01M0TB1VDY5F7XE6XSD81BCV45>
+              作者提供符合规范的 package、KindDefinition、generic descriptor、BO/PO owner 与 ResourceMappings XNL 文档
+              </?01M0TB1VDY5F7XE6XSD81BCV45>
+              <When ?01M0TB1VDY5F7XE6XSD81BCV46>
+              使用当前 xnl-core parser 解析文档
+              </?01M0TB1VDY5F7XE6XSD81BCV46>
+              <Then ?01M0TB1VDY5F7XE6XSD81BCV47>
+              所有文档 SHALL 可解析，且身份、属性、重复成员和唯一子域保持可区分
+              </?01M0TB1VDY5F7XE6XSD81BCV47>
+            )>
+            <Case #canonical-references (
+              <Given ?01M0TB1VDY5F7XE6XSD81BCV48>
+              descriptor 引用相对物料、workspace 物料、资源或 TypeScript 导出
+              </?01M0TB1VDY5F7XE6XSD81BCV48>
+              <When ?01M0TB1VDY5F7XE6XSD81BCV49>
+              作者写入引用
+              </?01M0TB1VDY5F7XE6XSD81BCV49>
+              <Then ?01M0TB1VDY5F7XE6XSD81BCV4A>
+              引用 SHALL 使用 vfs://./、vfs://@/、resource:// 与 code binding properties，不得发明 XML 路径前缀
+              </?01M0TB1VDY5F7XE6XSD81BCV4A>
+            )>
+            <Case #kind-owned-optional-properties (
+              <Given ?01M0TB1VDY5F7XE6XSD81BCV4B>
+              已注册 Kind 的资源只声明 #id、apiVersion 及该 Kind 自己需要的字段
+              </?01M0TB1VDY5F7XE6XSD81BCV4B>
+              <When ?01M0TB1VDY5F7XE6XSD81BCV4C>
+              资源不含 lifecycle 和 description
+              </?01M0TB1VDY5F7XE6XSD81BCV4C>
+              <Then ?01M0TB1VDY5F7XE6XSD81BCV4D>
+              通用 loader SHALL 接受该资源并在 normalized record 中保持字段缺失，具体 Kind consumer MAY 另行要求它们
+              </?01M0TB1VDY5F7XE6XSD81BCV4D>
+            )>
+          ]>
+        )>
+        <Suite #normalized-boundary { name = "规范化边界" } (
+          <Cases [
+            <Case #no-xml-private-shape (
+              <Given ?01M0TB1VDY5F7XE6XSD81BCV4E>
+              下游 loader 将 XNL 文档规范化
+              </?01M0TB1VDY5F7XE6XSD81BCV4E>
+              <When ?01M0TB1VDY5F7XE6XSD81BCV4F>
+              consumer 读取 normalized descriptor
+              </?01M0TB1VDY5F7XE6XSD81BCV4F>
+              <Then ?01M0TB1VDY5F7XE6XSD81BCV4G>
+              consumer SHALL 不依赖 XML attribute-prefix 或 parser-private XmlObject 形状
+              </?01M0TB1VDY5F7XE6XSD81BCV4G>
+            )>
+            <Case #object-operation-channels (
+              <Given ?01M0TB1VDY5F7XE6XSD81BCV4H>
+              BusinessObject 或 PageObject 声明 targets 与 operations
+              </?01M0TB1VDY5F7XE6XSD81BCV4H>
+              <When ?01M0TB1VDY5F7XE6XSD81BCV4J>
+              作者分配 XNL channels
+              </?01M0TB1VDY5F7XE6XSD81BCV4J>
+              <Then ?01M0TB1VDY5F7XE6XSD81BCV4K>
+              唯一 owner/binding 使用 properties/subdomains，重复 target kinds/actions/mutations 使用 body members
+              </?01M0TB1VDY5F7XE6XSD81BCV4K>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+  ]>
+)>

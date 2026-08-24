@@ -1,0 +1,50 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_3_-_0_5_2_2_-_m_i_g_r_a_t_e_-_b_u_s_i_n_e_s_s_o_b_j_e_c_t_-_p_a_g_e_o_b_j_e_c_t_-_t_o_-_x_n_l.behavior_patch.authoring-trees apiVersion="codument.tech/v1alpha1" version="1" { capability = "authoring-trees" } (
+  <Mutations [
+    <Upsert { selector = "behavior://authoring-trees/requirements/xnl-generic-authority" } (
+      <Requirement #xnl-generic-authority (
+        <Statement ?01M0TB1VFCK9GRQVB1WFWC0Z5K>
+        系统 SHALL 提供不含 XML 的完整 XNL authoring trees，并保持 callable、knowledge、SkillCapsule、BusinessObject、PageObject、operation binding、material、include 与 mapping 语义。
+        </?01M0TB1VFCK9GRQVB1WFWC0Z5K>
+        <Suites [
+          <Suite #xnl-authoring (
+            <Cases [
+              <Case #load-domain-and-shared (
+                <Given ?01M0TB1VFCK9GRQVB1WFWC0Z5M>
+                domain 与 shared resources-xnl package
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5M>
+                <When ?01M0TB1VFCK9GRQVB1WFWC0Z5N>
+                resource loader 与 application assembly 加载
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5N>
+                <Then ?01M0TB1VFCK9GRQVB1WFWC0Z5P>
+                所有产品 resources SHALL 以 format=xnl 被发现并正确投影
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5P>
+              )>
+              <Case #object-operation-authority (
+                <Given ?01M0TB1VFCK9GRQVB1WFWC0Z5Q>
+                BO/PO owner XNL 声明 target kinds 与 operations
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5Q>
+                <When ?01M0TB1VFCK9GRQVB1WFWC0Z5R>
+                加载并编译 Skill capsule
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5R>
+                <Then ?01M0TB1VFCK9GRQVB1WFWC0Z5S>
+                owner catalog、private binding、generated registry 与实际 handler 执行 SHALL 闭合
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5S>
+              )>
+              <Case #xnl-guidance (
+                <Given ?01M0TB1VFCK9GRQVB1WFWC0Z5T>
+                作者阅读项目 skills 与 docs
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5T>
+                <When ?01M0TB1VFCK9GRQVB1WFWC0Z5V>
+                创建资源 package
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5V>
+                <Then ?01M0TB1VFCK9GRQVB1WFWC0Z5W>
+                规范 SHALL 以 manifest.xnl、semantic channels 与 resource-mappings.xnl 为唯一新 authoring 路径
+                </?01M0TB1VFCK9GRQVB1WFWC0Z5W>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

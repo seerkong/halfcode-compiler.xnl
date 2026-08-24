@@ -1,0 +1,61 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_2_-_2_2_4_3_-_m_i_g_r_a_t_e_-_a_u_t_h_o_r_i_n_g_-_t_r_e_e_s_-_t_o_-_x_n_l.behavior_patch.authoring-trees apiVersion="codument.tech/v1alpha1" version="1" { capability = "authoring-trees" } (
+  <Mutations [
+    <Upsert { selector = "behavior://authoring-trees/requirements/xnl-generic-authority" } (
+      <Requirement #xnl-generic-authority (
+        <Statement ?01M0TB1VF92AJE6JRHCA3NSG9N>
+        系统 SHALL 提供不含 XML 的 XNL generic authoring trees，并保持 callable、knowledge、SkillCapsule、material、include 与 mapping 语义。
+        </?01M0TB1VF92AJE6JRHCA3NSG9N>
+        <Suites [
+          <Suite #xnl-authoring (
+            <Cases [
+              <Case #load-domain-and-shared (
+                <Given ?01M0TB1VF92AJE6JRHCA3NSG9P>
+                domain 与 shared resources-xnl package
+                </?01M0TB1VF92AJE6JRHCA3NSG9P>
+                <When ?01M0TB1VF92AJE6JRHCA3NSG9Q>
+                resource loader 与 application assembly 显式加载
+                </?01M0TB1VF92AJE6JRHCA3NSG9Q>
+                <Then ?01M0TB1VF92AJE6JRHCA3NSG9R>
+                所有 generic resources SHALL 以 format=xnl 被发现并正确投影
+                </?01M0TB1VF92AJE6JRHCA3NSG9R>
+              )>
+              <Case #legacy-parity (
+                <Given ?01M0TB1VF92AJE6JRHCA3NSG9S>
+                现有 XML authoring trees
+                </?01M0TB1VF92AJE6JRHCA3NSG9S>
+                <When ?01M0TB1VF92AJE6JRHCA3NSG9T>
+                比较 generic assembly projections
+                </?01M0TB1VF92AJE6JRHCA3NSG9T>
+                <Then ?01M0TB1VF92AJE6JRHCA3NSG9V>
+                FQN、description、contracts、bindings、materials 与 includes SHALL 保持等价
+                </?01M0TB1VF92AJE6JRHCA3NSG9V>
+              )>
+              <Case #defer-aggregate-apis (
+                <Given ?01M0TB1VF92AJE6JRHCA3NSG9W>
+                BusinessObject/PageObject API 仍在重构
+                </?01M0TB1VF92AJE6JRHCA3NSG9W>
+                <When ?01M0TB1VF92AJE6JRHCA3NSG9X>
+                扫描 staged XNL trees 与本 track 的实现
+                </?01M0TB1VF92AJE6JRHCA3NSG9X>
+                <Then ?01M0TB1VF92AJE6JRHCA3NSG9Y>
+                不得包含 BO/PO 或其 aggregate-associated schema、reader 与 public type 变更
+                </?01M0TB1VF92AJE6JRHCA3NSG9Y>
+              )>
+              <Case #xnl-guidance (
+                <Given ?01M0TB1VF92AJE6JRHCA3NSG9Z>
+                作者阅读项目 skills 与 docs
+                </?01M0TB1VF92AJE6JRHCA3NSG9Z>
+                <When ?01M0TB1VF92AJE6JRHCA3NSGA0>
+                创建 generic resource package
+                </?01M0TB1VF92AJE6JRHCA3NSGA0>
+                <Then ?01M0TB1VF92AJE6JRHCA3NSGA1>
+                规范 SHALL 以 manifest.xnl、semantic channels 与 resource-mappings.xnl 为主路径
+                </?01M0TB1VF92AJE6JRHCA3NSGA1>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

@@ -1,0 +1,92 @@
+<Behavior #package-distribution apiVersion="codument.tech/v1alpha1" version="1" (
+  <Requirements [
+    <Requirement #xnl-public-package (
+      <Statement ?01M0TB1VDWV0GMXK85MHMW59DP>
+      系统 SHALL 只以 halfcode-compiler.xnl 作为 XNL compiler 的公开 npm identity，并保证根入口、所有声明子路径、生成 runtime import 与 tarball consumer 一致。
+      </?01M0TB1VDWV0GMXK85MHMW59DP>
+      <Suites [
+        <Suite #xnl-package (
+          <Cases [
+            <Case #public-imports (
+              <Given ?01M0TB1VDWV0GMXK85MHMW59DQ>
+              消费者只安装 halfcode-compiler.xnl tarball
+              </?01M0TB1VDWV0GMXK85MHMW59DQ>
+              <When ?01M0TB1VDWV0GMXK85MHMW59DR>
+              导入根入口与全部公开子路径并执行 TypeScript 检查
+              </?01M0TB1VDWV0GMXK85MHMW59DR>
+              <Then ?01M0TB1VDWV0GMXK85MHMW59DS>
+              runtime 与 type imports SHALL 成功且制品不引用私有 workspace 包
+              </?01M0TB1VDWV0GMXK85MHMW59DS>
+            )>
+            <Case #generated-runtime (
+              <Given ?01M0TB1VDWV0GMXK85MHMW59DT>
+              compiler 生成 callable bundle
+              </?01M0TB1VDWV0GMXK85MHMW59DT>
+              <When ?01M0TB1VDWV0GMXK85MHMW59DV>
+              检查其 runtime import
+              </?01M0TB1VDWV0GMXK85MHMW59DV>
+              <Then ?01M0TB1VDWV0GMXK85MHMW59DW>
+              specifier SHALL 为 halfcode-compiler.xnl/authoring-runtime
+              </?01M0TB1VDWV0GMXK85MHMW59DW>
+            )>
+            <Case #no-xml-public-identity (
+              <Given ?01M0TB1VDWV0GMXK85MHMW59DX>
+              公开源码、文档与 package metadata
+              </?01M0TB1VDWV0GMXK85MHMW59DX>
+              <When ?01M0TB1VDWV0GMXK85MHMW59DY>
+              扫描产品 identity
+              </?01M0TB1VDWV0GMXK85MHMW59DY>
+              <Then ?01M0TB1VDWV0GMXK85MHMW59DZ>
+              不得残留 halfcode-compiler.xml；历史 Codument provenance 除外
+              </?01M0TB1VDWV0GMXK85MHMW59DZ>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #immutable-0-2-2-candidate (
+      <Statement ?01M0TB1VDWV0GMXK85MHMW59E0>
+      系统 SHALL 把 additive layered registry、loader content identities、effective identity projector 与 typed dependency snapshot 准备为新的 halfcode-compiler.xnl@0.2.2 candidate，并保持已发布 0.2.1 与既有 public specifiers 不变。
+      </?01M0TB1VDWV0GMXK85MHMW59E0>
+      <Suites [
+        <Suite #patch-candidate { name = "0.2.2 release candidate" } (
+          <Cases [
+            <Case #packed-runtime-types (
+              <Given ?01M0TB1VDX5BNSFR0SX3A9ERCS>
+              consumer 只安装本地 0.2.2 tarball
+              </?01M0TB1VDX5BNSFR0SX3A9ERCS>
+              <When ?01M0TB1VDX5BNSFR0SX3A9ERCT>
+              导入全部十个 public specifiers，并从 resource-core 执行真实 loader、layers、identity projector 与 snapshot
+              </?01M0TB1VDX5BNSFR0SX3A9ERCT>
+              <Then ?01M0TB1VDX5BNSFR0SX3A9ERCV>
+              runtime 与 TypeScript consumer SHALL 通过且制品不得引用 private workspace packages
+              </?01M0TB1VDX5BNSFR0SX3A9ERCV>
+            )>
+            <Case #preserve-public-compatibility (
+              <Given ?01M0TB1VDX5BNSFR0SX3A9ERCW>
+              0.2.1 consumer 使用旧 root/subpath API 和 structural ResourceTree
+              </?01M0TB1VDX5BNSFR0SX3A9ERCW>
+              <When ?01M0TB1VDX5BNSFR0SX3A9ERCX>
+              切换到 0.2.2 candidate
+              </?01M0TB1VDX5BNSFR0SX3A9ERCX>
+              <Then ?01M0TB1VDX5BNSFR0SX3A9ERCY>
+              旧行为 SHALL 保持，新增 API 仅为 additive
+              </?01M0TB1VDX5BNSFR0SX3A9ERCY>
+            )>
+            <Case #prepare-without-publication (
+              <Given ?01M0TB1VDX5BNSFR0SX3A9ERCZ>
+              尚未取得外部 registry 发布授权
+              </?01M0TB1VDX5BNSFR0SX3A9ERCZ>
+              <When ?01M0TB1VDX5BNSFR0SX3A9ERD0>
+              本 track 完成 candidate build、pack 与校验
+              </?01M0TB1VDX5BNSFR0SX3A9ERD0>
+              <Then ?01M0TB1VDX5BNSFR0SX3A9ERD1>
+              系统 SHALL 记录 candidate evidence 但不得执行 npm publish 或替换任何已发布版本
+              </?01M0TB1VDX5BNSFR0SX3A9ERD1>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+  ]>
+)>

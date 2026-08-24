@@ -1,0 +1,72 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_6_-_0_0_3_0_-_e_x_p_o_s_e_-_l_o_a_d_e_r_-_c_o_n_t_e_n_t_-_i_d_e_n_t_i_t_i_e_s_-_a_n_d_-_p_r_e_p_a_r_e_-_0_-_2_-_2.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/loader-content-identities" } (
+      <Requirement #loader-content-identities (
+        <Statement ?01M0TB1VG13RZ0ZKJGP083ZX90>
+        resource-core loader SHALL 在同一次 XNL authority byte read 中产生可验证的 per-resource content identities，并由 Halfcode projector 按 exact effective layer provenance 形成 snapshot-ready identity map。
+        </?01M0TB1VG13RZ0ZKJGP083ZX90>
+        <Suites [
+          <Suite #loaded-authority-identities { name = "Loader authority identity projection" } (
+            <Cases [
+              <Case #digest-raw-authority-bytes (
+                <Given ?01M0TB1VG13RZ0ZKJGP083ZX91>
+                一个已验证 XNL package 含 single-root 与 multi-root authority 文件
+                </?01M0TB1VG13RZ0ZKJGP083ZX91>
+                <When ?01M0TB1VG13RZ0ZKJGP083ZX92>
+                loadResourceTree 返回 LoadedResourceTree
+                </?01M0TB1VG13RZ0ZKJGP083ZX92>
+                <Then ?01M0TB1VG13RZ0ZKJGP083ZX93>
+                每个 registry business resource SHALL 有 SHA-256 authority identity；同文件 roots 共享 authorityDigest 但保持不同 resourceId/contentDigest
+                </?01M0TB1VG13RZ0ZKJGP083ZX93>
+              )>
+              <Case #preserve-legacy-tree-contract (
+                <Given ?01M0TB1VG13RZ0ZKJGP083ZX94>
+                旧 consumer 只读取 ResourceTree manifest/registry/diagnostics 或手工构造 structural ResourceTree
+                </?01M0TB1VG13RZ0ZKJGP083ZX94>
+                <When ?01M0TB1VG13RZ0ZKJGP083ZX95>
+                使用单树 API 或 composeLayeredResourceRegistry
+                </?01M0TB1VG13RZ0ZKJGP083ZX95>
+                <Then ?01M0TB1VG13RZ0ZKJGP083ZX96>
+                现有字段、函数与行为 SHALL 保持兼容且不要求调用方补 contentIdentities
+                </?01M0TB1VG13RZ0ZKJGP083ZX96>
+              )>
+              <Case #resolve-effective-identities (
+                <Given ?01M0TB1VG13RZ0ZKJGP083ZX97>
+                authentic loaded trees 按显式 layers 组合出 authentic effective registry，并可选提供 typed contributions
+                </?01M0TB1VG13RZ0ZKJGP083ZX97>
+                <When ?01M0TB1VG13RZ0ZKJGP083ZX98>
+                调用 effective content identity projector
+                </?01M0TB1VG13RZ0ZKJGP083ZX98>
+                <Then ?01M0TB1VG13RZ0ZKJGP083ZX99>
+                结果 SHALL 精确覆盖全部 present effective resources、选择 effective origin 对应 authority digest、canonicalize contributions 并冻结输出
+                </?01M0TB1VG13RZ0ZKJGP083ZX99>
+              )>
+              <Case #reject-inconsistent-identity-input (
+                <Given ?01M0TB1VG13RZ0ZKJGP083ZX9A>
+                loaded tree/registry 是结构仿制，或 layer/package/origin/identity/contribution facts 缺失、额外或矛盾
+                </?01M0TB1VG13RZ0ZKJGP083ZX9A>
+                <When ?01M0TB1VG13RZ0ZKJGP083ZX9B>
+                调用 effective content identity projector
+                </?01M0TB1VG13RZ0ZKJGP083ZX9B>
+                <Then ?01M0TB1VG13RZ0ZKJGP083ZX9C>
+                系统 SHALL 返回稳定 diagnostic 且不输出 partial map
+                </?01M0TB1VG13RZ0ZKJGP083ZX9C>
+              )>
+              <Case #no-domain-inference (
+                <Given ?01M0TB1VG13RZ0ZKJGP083ZX9D>
+                resource node 普通文本含 resource-like 字符串或自然语言
+                </?01M0TB1VG13RZ0ZKJGP083ZX9D>
+                <When ?01M0TB1VG13RZ0ZKJGP083ZX9E>
+                loader 与 identity projector 处理 package
+                </?01M0TB1VG13RZ0ZKJGP083ZX9E>
+                <Then ?01M0TB1VG13RZ0ZKJGP083ZX9F>
+                系统 SHALL 只摘要 authority bytes 与显式 contributions，不产生隐式 dependency/material facts
+                </?01M0TB1VG13RZ0ZKJGP083ZX9F>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

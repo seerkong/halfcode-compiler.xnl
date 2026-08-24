@@ -1,0 +1,50 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_2_-_2_1_2_4_-_p_u_b_l_i_s_h_-_h_a_l_f_c_o_d_e_-_c_o_m_p_i_l_e_r_-_x_n_l.behavior_patch.package-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "package-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://package-distribution/requirements/xnl-public-package" } (
+      <Requirement #xnl-public-package (
+        <Statement ?01M0TB1VF4NJ8C1YSAVD4GXPDR>
+        系统 SHALL 只以 halfcode-compiler.xnl 作为 XNL compiler 的公开 npm identity，并保证根入口、所有声明子路径、生成 runtime import 与 tarball consumer 一致。
+        </?01M0TB1VF4NJ8C1YSAVD4GXPDR>
+        <Suites [
+          <Suite #xnl-package (
+            <Cases [
+              <Case #public-imports (
+                <Given ?01M0TB1VF4NJ8C1YSAVD4GXPDS>
+                消费者只安装 halfcode-compiler.xnl tarball
+                </?01M0TB1VF4NJ8C1YSAVD4GXPDS>
+                <When ?01M0TB1VF4NJ8C1YSAVD4GXPDT>
+                导入根入口与全部公开子路径并执行 TypeScript 检查
+                </?01M0TB1VF4NJ8C1YSAVD4GXPDT>
+                <Then ?01M0TB1VF4NJ8C1YSAVD4GXPDV>
+                runtime 与 type imports SHALL 成功且制品不引用私有 workspace 包
+                </?01M0TB1VF4NJ8C1YSAVD4GXPDV>
+              )>
+              <Case #generated-runtime (
+                <Given ?01M0TB1VF4NJ8C1YSAVD4GXPDW>
+                compiler 生成 callable bundle
+                </?01M0TB1VF4NJ8C1YSAVD4GXPDW>
+                <When ?01M0TB1VF4NJ8C1YSAVD4GXPDX>
+                检查其 runtime import
+                </?01M0TB1VF4NJ8C1YSAVD4GXPDX>
+                <Then ?01M0TB1VF4NJ8C1YSAVD4GXPDY>
+                specifier SHALL 为 halfcode-compiler.xnl/authoring-runtime
+                </?01M0TB1VF4NJ8C1YSAVD4GXPDY>
+              )>
+              <Case #no-xml-public-identity (
+                <Given ?01M0TB1VF4NJ8C1YSAVD4GXPDZ>
+                公开源码、文档与 package metadata
+                </?01M0TB1VF4NJ8C1YSAVD4GXPDZ>
+                <When ?01M0TB1VF4NJ8C1YSAVD4GXPE0>
+                扫描产品 identity
+                </?01M0TB1VF4NJ8C1YSAVD4GXPE0>
+                <Then ?01M0TB1VF4NJ8C1YSAVD4GXPE1>
+                不得残留 halfcode-compiler.xml；历史 Codument provenance 除外
+                </?01M0TB1VF4NJ8C1YSAVD4GXPE1>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

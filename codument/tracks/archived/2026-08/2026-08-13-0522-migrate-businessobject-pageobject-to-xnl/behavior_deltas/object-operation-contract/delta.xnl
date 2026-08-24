@@ -1,0 +1,98 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_3_-_0_5_2_2_-_m_i_g_r_a_t_e_-_b_u_s_i_n_e_s_s_o_b_j_e_c_t_-_p_a_g_e_o_b_j_e_c_t_-_t_o_-_x_n_l.behavior_patch.object-operation-contract apiVersion="codument.tech/v1alpha1" version="1" { capability = "object-operation-contract" } (
+  <Mutations [
+    <Upsert { selector = "behavior://object-operation-contract/requirements/shared-definition" } (
+      <Requirement #shared-definition (
+        <Statement ?01M0TB1VFFHK6D2WHW6D9DR9MX>
+        系统 SHALL 将 PageObject 与 BusinessObject operation 规范化为同一个 definition 与 target-kind catalog，并以 owner XNL 作为唯一 definition authority。
+        </?01M0TB1VFFHK6D2WHW6D9DR9MX>
+        <Suites [
+          <Suite #assembly { name = "对象 operation assembly" } (
+            <Cases [
+              <Case #normalize-both-owner-kinds (
+                <Given ?01M0TB1VFFHK6D2WHW6D9DR9MY>
+                PageObject 与 BusinessObject XNL 均声明 action 和 mutation
+                </?01M0TB1VFFHK6D2WHW6D9DR9MY>
+                <When ?01M0TB1VFFHK6D2WHW6D9DR9MZ>
+                加载 application assembly
+                </?01M0TB1VFFHK6D2WHW6D9DR9MZ>
+                <Then ?01M0TB1VFFHK6D2WHW6D9DR9N0>
+                两者 SHALL 生成同构 operation definitions 与 discriminated private bindings
+                </?01M0TB1VFFHK6D2WHW6D9DR9N0>
+              )>
+              <Case #reject-closure-drift (
+                <Given ?01M0TB1VFFHK6D2WHW6D9DR9N1>
+                operation 引用未发布 target kind、错误 owner resource 或缺失 handler binding
+                </?01M0TB1VFFHK6D2WHW6D9DR9N1>
+                <When ?01M0TB1VFFHK6D2WHW6D9DR9N2>
+                加载 application assembly
+                </?01M0TB1VFFHK6D2WHW6D9DR9N2>
+                <Then ?01M0TB1VFFHK6D2WHW6D9DR9N3>
+                系统 MUST 在投影前 fail closed
+                </?01M0TB1VFFHK6D2WHW6D9DR9N3>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://object-operation-contract/requirements/four-dimensional-call" } (
+      <Requirement #four-dimensional-call (
+        <Statement ?01M0TB1VFFHK6D2WHW6D9DR9N4>
+        对象 operation SHALL 保持 runtime、targets、invocation 与 config 四个独立维度；action 使用 invocation.input，mutation 使用 invocation.desired。
+        </?01M0TB1VFFHK6D2WHW6D9DR9N4>
+        <Suites [
+          <Suite #validation { name = "调用契约校验" } (
+            <Cases [
+              <Case #accept-semantic-call (
+                <Given ?01M0TB1VFFHK6D2WHW6D9DR9N5>
+                call 的 target cardinality、kind、behavior、operationRef 和 mode 与 definition 一致
+                </?01M0TB1VFFHK6D2WHW6D9DR9N5>
+                <When ?01M0TB1VFFHK6D2WHW6D9DR9N6>
+                校验 ObjectOperationCall
+                </?01M0TB1VFFHK6D2WHW6D9DR9N6>
+                <Then ?01M0TB1VFFHK6D2WHW6D9DR9N7>
+                系统 SHALL 接受 JSON-compatible input/desired/config
+                </?01M0TB1VFFHK6D2WHW6D9DR9N7>
+              )>
+              <Case #reject-mixed-dimensions (
+                <Given ?01M0TB1VFFHK6D2WHW6D9DR9N8>
+                call 把 mutation desired 当 action input、使用未声明 target kind 或非 JSON config
+                </?01M0TB1VFFHK6D2WHW6D9DR9N8>
+                <When ?01M0TB1VFFHK6D2WHW6D9DR9N9>
+                校验 ObjectOperationCall
+                </?01M0TB1VFFHK6D2WHW6D9DR9N9>
+                <Then ?01M0TB1VFFHK6D2WHW6D9DR9NA>
+                系统 MUST 返回带稳定 code/path 的 contract error
+                </?01M0TB1VFFHK6D2WHW6D9DR9NA>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://object-operation-contract/requirements/semantic-selection-boundary" } (
+      <Requirement #semantic-selection-boundary (
+        <Statement ?01M0TB1VFFHK6D2WHW6D9DR9NB>
+        selection SHALL 只使用 owner 显式发布的业务 target kind 与业务 JSON selector；通用契约 MUST NOT 暴露 DOM、CSS、XPath 或平台 locator。
+        </?01M0TB1VFFHK6D2WHW6D9DR9NB>
+        <Suites [
+          <Suite #targets { name = "目标边界" } (
+            <Cases [
+              <Case #nested-subject-selection (
+                <Given ?01M0TB1VFFHK6D2WHW6D9DR9NC>
+                owner 发布 nested-subject target kind
+                </?01M0TB1VFFHK6D2WHW6D9DR9NC>
+                <When ?01M0TB1VFFHK6D2WHW6D9DR9ND>
+                operation 以 selection target 调用
+                </?01M0TB1VFFHK6D2WHW6D9DR9ND>
+                <Then ?01M0TB1VFFHK6D2WHW6D9DR9NE>
+                all、filter 或 refs selector SHALL 保持业务语义并通过 catalog 校验
+                </?01M0TB1VFFHK6D2WHW6D9DR9NE>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

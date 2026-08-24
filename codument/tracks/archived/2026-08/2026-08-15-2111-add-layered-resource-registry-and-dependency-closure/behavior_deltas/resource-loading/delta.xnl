@@ -1,0 +1,206 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_5_-_2_1_1_1_-_a_d_d_-_l_a_y_e_r_e_d_-_r_e_s_o_u_r_c_e_-_r_e_g_i_s_t_r_y_-_a_n_d_-_d_e_p_e_n_d_e_n_c_y_-_c_l_o_s_u_r_e.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/layered-effective-registry" } (
+      <Requirement #layered-effective-registry (
+        <Statement ?01M0TB1VFRG3ZT8X7YAAX08SVQ>
+        系统 SHALL 将调用方提供的有序 named ResourceTree layers 组合为保留 effective、shadow、tombstone、KindDefinition 与 origin provenance 的确定性 registry，且不得把任何 host 路径或 layer 名称编码为通用语义。
+        </?01M0TB1VFRG3ZT8X7YAAX08SVQ>
+        <Suites [
+          <Suite #layer-composition { name = "Ordered named layer composition" } (
+            <Cases [
+              <Case #higher-layer-shadows-with-provenance (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SVR>
+                两个已验证 named layers 以低到高顺序提供同 kind、同 resourceId 的资源
+                </?01M0TB1VFRG3ZT8X7YAAX08SVR>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SVS>
+                系统组合 effective registry
+                </?01M0TB1VFRG3ZT8X7YAAX08SVS>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SVT>
+                高层资源 SHALL 成为 effective，低层来源 SHALL 保留为 shadow provenance，输出 SHALL 使用稳定排序
+                </?01M0TB1VFRG3ZT8X7YAAX08SVT>
+              )>
+              <Case #explicit-tombstone-only (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SVV>
+                高层对低层资源提供显式 typed tombstone
+                </?01M0TB1VFRG3ZT8X7YAAX08SVV>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SVW>
+                系统组合 effective registry
+                </?01M0TB1VFRG3ZT8X7YAAX08SVW>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SVX>
+                目标资源 SHALL 被抑制并保留 tombstone origin；仅仅缺少高层资源 MUST NOT 被解释为删除
+                </?01M0TB1VFRG3ZT8X7YAAX08SVX>
+              )>
+              <Case #reject-identity-and-kind-contract-conflict (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SVY>
+                layers 对同 resourceId 声明不同 kind，或同 resourceKind 声明不兼容 KindDefinition contract
+                </?01M0TB1VFRG3ZT8X7YAAX08SVY>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SVZ>
+                系统组合 effective registry
+                </?01M0TB1VFRG3ZT8X7YAAX08SVZ>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SW0>
+                系统 SHALL 返回稳定 diagnostics 并拒绝静默 precedence 覆盖
+                </?01M0TB1VFRG3ZT8X7YAAX08SW0>
+              )>
+              <Case #preserve-single-tree-api (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SW1>
+                现有 consumer 只调用 loadResourceTree、validateResourceTree 并读取 registry.byKind/kindDefinitions
+                </?01M0TB1VFRG3ZT8X7YAAX08SW1>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SW2>
+                新 layered API 发布
+                </?01M0TB1VFRG3ZT8X7YAAX08SW2>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SW3>
+                原函数签名与现有规范化结果 SHALL 保持兼容，consumer MUST NOT 被强制迁移
+                </?01M0TB1VFRG3ZT8X7YAAX08SW3>
+              )>
+              <Case #deep-immutable-composition-projection (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SW4>
+                调用方在组合完成后继续持有并修改原 ResourceTree 的 record、metadata、node 或 KindDefinition 数组
+                </?01M0TB1VFRG3ZT8X7YAAX08SW4>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SW5>
+                系统读取既有 effective registry 投影和 composition revision
+                </?01M0TB1VFRG3ZT8X7YAAX08SW5>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SW6>
+                投影 facts 与 composition revision SHALL 保持不变；系统 MUST NOT 通过冻结输入对象破坏旧单树 consumer
+                </?01M0TB1VFRG3ZT8X7YAAX08SW6>
+              )>
+              <Case #composition-revision-excludes-descriptor-content (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SW7>
+                effective identity、layer provenance、tombstone 与 Kind contracts 不变，只有 ResourceRecord descriptor/node/metadata 内容改变
+                </?01M0TB1VFRG3ZT8X7YAAX08SW7>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SW8>
+                系统重新组合 effective registry
+                </?01M0TB1VFRG3ZT8X7YAAX08SW8>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SW9>
+                compositionRevision SHALL 保持不变；这些内容 bytes MUST 由显式 content identity 和 snapshot registryRevision 绑定
+                </?01M0TB1VFRG3ZT8X7YAAX08SW9>
+              )>
+              <Case #composition-revision-binds-logical-provenance (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SWA>
+                resource identity/content 不变，但 canonical documentUri 或 logicalPath provenance 改变
+                </?01M0TB1VFRG3ZT8X7YAAX08SWA>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SWB>
+                系统重新组合 registry 并构建 snapshot
+                </?01M0TB1VFRG3ZT8X7YAAX08SWB>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SWC>
+                composition、registry 与 snapshot revisions SHALL 改变并与公开 origin facts 一致
+                </?01M0TB1VFRG3ZT8X7YAAX08SWC>
+              )>
+              <Case #reject-noncanonical-layer-provenance (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SWD>
+                调用方绕过 loader，提供绝对机器路径、不安全 logicalPath 或不匹配的 documentUri
+                </?01M0TB1VFRG3ZT8X7YAAX08SWD>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SWE>
+                系统组合 effective registry
+                </?01M0TB1VFRG3ZT8X7YAAX08SWE>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SWF>
+                系统 SHALL 返回稳定 provenance diagnostic，MUST NOT 把机器路径写入 revision
+                </?01M0TB1VFRG3ZT8X7YAAX08SWF>
+              )>
+              <Case #composition-revision-binds-kind-definition-identity (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SWG>
+                normalized Kind contract 与 origin 不变，但公开选定 KindDefinition 的 authority resourceId 改变
+                </?01M0TB1VFRG3ZT8X7YAAX08SWG>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SWH>
+                系统重新组合 effective registry
+                </?01M0TB1VFRG3ZT8X7YAAX08SWH>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SWJ>
+                compositionRevision SHALL 改变；兼容 contract 的跨 layer 合并规则 SHALL 保持不变
+                </?01M0TB1VFRG3ZT8X7YAAX08SWJ>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://resource-loading/requirements/resource-dependency-snapshot" } (
+      <Requirement #resource-dependency-snapshot (
+        <Statement ?01M0TB1VFRG3ZT8X7YAAX08SWK>
+        系统 SHALL 仅从显式 typed dependency edges 与带 provenance 的 digest contributions 构建 deterministic content identities、dependency closure、registry revision 和 immutable snapshot，不得扫描任意字符串或自然语言猜测依赖。
+        </?01M0TB1VFRG3ZT8X7YAAX08SWK>
+        <Suites [
+          <Suite #typed-dependency-closure { name = "Typed dependency closure and revision" } (
+            <Cases [
+              <Case #build-deterministic-snapshot (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SWM>
+                effective registry、roots、typed edges 以及 authority/material digest contributions 完整且有效
+                </?01M0TB1VFRG3ZT8X7YAAX08SWM>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SWN>
+                系统构建 dependency snapshot
+                </?01M0TB1VFRG3ZT8X7YAAX08SWN>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SWP>
+                snapshot SHALL 稳定包含可达资源、参与边、origin、content revisions、registry revision 与 snapshot revision
+                </?01M0TB1VFRG3ZT8X7YAAX08SWP>
+              )>
+              <Case #ignore-untyped-resource-like-strings (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SWQ>
+                ResourceNode 中存在形似 resource:// 的普通字符串，但调用方没有提供对应 typed edge
+                </?01M0TB1VFRG3ZT8X7YAAX08SWQ>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SWR>
+                系统构建 dependency closure
+                </?01M0TB1VFRG3ZT8X7YAAX08SWR>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SWS>
+                该字符串 MUST NOT 被解释为 dependency，目标资源 MUST NOT 被隐式加入 closure
+                </?01M0TB1VFRG3ZT8X7YAAX08SWS>
+              )>
+              <Case #reject-invalid-graph (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SWT>
+                typed edge 指向缺失资源、形成 dependency cycle 或存在矛盾 digest contribution
+                </?01M0TB1VFRG3ZT8X7YAAX08SWT>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SWV>
+                系统构建 dependency snapshot
+                </?01M0TB1VFRG3ZT8X7YAAX08SWV>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SWW>
+                系统 SHALL 返回稳定 diagnostics，MUST NOT 产生看似完整的 snapshot
+                </?01M0TB1VFRG3ZT8X7YAAX08SWW>
+              )>
+              <Case #stable-revision-independent-of-incidental-order (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SWX>
+                两个输入具有相同 effective facts、typed edges 和 digest contributions，但 Map 插入或文件枚举顺序不同
+                </?01M0TB1VFRG3ZT8X7YAAX08SWX>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SWY>
+                系统分别计算 revisions
+                </?01M0TB1VFRG3ZT8X7YAAX08SWY>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SWZ>
+                content、composition、registry 与 snapshot revisions SHALL 相同；canonical sort MUST 使用 UTF-16 code-unit order，只有显式 layer precedence 或 root order 变化 MAY 改变相应 revision
+                </?01M0TB1VFRG3ZT8X7YAAX08SWZ>
+              )>
+              <Case #revalidate-all-effective-content-identities (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SX0>
+                调用方提供缺失、格式非法、contribution 不完整或 contentDigest 与 authority/contribution facts 不一致的 identity
+                </?01M0TB1VFRG3ZT8X7YAAX08SX0>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SX1>
+                系统为任意 roots 构建 dependency snapshot
+                </?01M0TB1VFRG3ZT8X7YAAX08SX1>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SX2>
+                系统 SHALL 重新校验全部 effective resources、拒绝任意重复 contribution key 并重算 digest，MUST NOT 信任伪造 claim 或仅校验可达闭包
+                </?01M0TB1VFRG3ZT8X7YAAX08SX2>
+              )>
+              <Case #separate-composition-and-content-sensitive-revisions (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SX3>
+                layer、shadow、tombstone 与 Kind contracts 不变，但一个不可达 effective resource 的显式内容贡献发生变化
+                </?01M0TB1VFRG3ZT8X7YAAX08SX3>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SX4>
+                系统重新组合 registry 并构建 snapshot
+                </?01M0TB1VFRG3ZT8X7YAAX08SX4>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SX5>
+                compositionRevision SHALL 保持不变，snapshot registryRevision 与 snapshotRevision SHALL 改变
+                </?01M0TB1VFRG3ZT8X7YAAX08SX5>
+              )>
+              <Case #reject-forged-registry-and-own-snapshot-origin (
+                <Given ?01M0TB1VFRG3ZT8X7YAAX08SX6>
+                调用方提供手工拼装/复制/篡改 revision 的 registry，或试图在 snapshot 后修改 origin 对象
+                </?01M0TB1VFRG3ZT8X7YAAX08SX6>
+                <When ?01M0TB1VFRG3ZT8X7YAAX08SX7>
+                系统构建 dependency snapshot
+                </?01M0TB1VFRG3ZT8X7YAAX08SX7>
+                <Then ?01M0TB1VFRG3ZT8X7YAAX08SX8>
+                非 canonical composer 产生的 registry SHALL 被拒绝；成功 snapshot SHALL 持有独立 frozen origin facts
+                </?01M0TB1VFRG3ZT8X7YAAX08SX8>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

@@ -1,0 +1,50 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_3_-_0_6_0_4_-_c_l_o_s_e_-_x_n_l_-_o_n_l_y_-_p_r_o_d_u_c_t_-_s_u_r_f_a_c_e.behavior_patch.xnl-product-closure apiVersion="codument.tech/v1alpha1" version="1" { capability = "xnl-product-closure" } (
+  <Mutations [
+    <Upsert { selector = "behavior://xnl-product-closure/requirements/no-product-xml" } (
+      <Requirement #no-product-xml (
+        <Statement ?01M0TB1VFM3N7VDYHKFR52GFDW>
+        系统 SHALL 在产品源码、资源、测试与发布依赖中不保留 XML authority、XML parser 或 legacy descriptor consumer；Codument 控制面 XML 除外。
+        </?01M0TB1VFM3N7VDYHKFR52GFDW>
+        <Suites [
+          <Suite #closure { name = "XNL-only closure" } (
+            <Cases [
+              <Case #zero-product-xml (
+                <Given ?01M0TB1VFM3N7VDYHKFR52GFDX>
+                最终 workspace
+                </?01M0TB1VFM3N7VDYHKFR52GFDX>
+                <When ?01M0TB1VFM3N7VDYHKFR52GFDY>
+                扫描 apps/packages/skills
+                </?01M0TB1VFM3N7VDYHKFR52GFDY>
+                <Then ?01M0TB1VFM3N7VDYHKFR52GFDZ>
+                不得发现 .xml 产品文件
+                </?01M0TB1VFM3N7VDYHKFR52GFDZ>
+              )>
+              <Case #zero-xml-runtime (
+                <Given ?01M0TB1VFM3N7VDYHKFR52GFE0>
+                最终源码、package manifests 与 lockfile
+                </?01M0TB1VFM3N7VDYHKFR52GFE0>
+                <When ?01M0TB1VFM3N7VDYHKFR52GFE1>
+                扫描 XML runtime coupling
+                </?01M0TB1VFM3N7VDYHKFR52GFE1>
+                <Then ?01M0TB1VFM3N7VDYHKFR52GFE2>
+                不得发现 fast-xml-parser、xml-legacy 或 XmlObject consumer
+                </?01M0TB1VFM3N7VDYHKFR52GFE2>
+              )>
+              <Case #full-chain (
+                <Given ?01M0TB1VFM3N7VDYHKFR52GFE3>
+                XNL-only authoring trees
+                </?01M0TB1VFM3N7VDYHKFR52GFE3>
+                <When ?01M0TB1VFM3N7VDYHKFR52GFE4>
+                运行全量测试、demo build 与 package consumer
+                </?01M0TB1VFM3N7VDYHKFR52GFE4>
+                <Then ?01M0TB1VFM3N7VDYHKFR52GFE5>
+                所有路径 SHALL 通过
+                </?01M0TB1VFM3N7VDYHKFR52GFE5>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

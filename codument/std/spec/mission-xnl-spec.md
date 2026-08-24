@@ -19,6 +19,8 @@ missions/<state>/<id>/
 
 ## 2. Canonical DSL
 
+下例是 `codument mission create` 生成骨架并经过执行更新后的完整投影。`#id`、`apiVersion`、`version`、初始状态与时间字段由 CLI 写入；作者只保留这些 receipt 值，不从示例复制。
+
 ```xnl
 <Mission #adopt-kind-system apiVersion="codument.tech/v1alpha1" version="1" {
   status = "active"
@@ -42,7 +44,7 @@ missions/<state>/<id>/
       <Actor { role = "MissionPlanner" project_ref = "host" } (<Description ?>规划下一条可验证 Track。</?>)>
       <Actor { role = "MissionObserver" project_ref = "host" } (<Description ?>读取代码、资源和验证证据。</?>)>
       <Actor { role = "MissionReconciler" project_ref = "host" } (<Description ?>比较 desired 与 actual state。</?>)>
-      <Actor { role = "MissionApplier" project_ref = "host" } (<Description ?>实现并验证 ready action。</?>)>
+      <Actor { role = "MissionApplier" project_ref = "host" } (<Description ?>实现并验证 ready operation。</?>)>
     ]>
   ]>
   <TaskSpace #space_adopt-kind-system { name = "adopt-kind-system" version = "1" child_mode = "dag" } (
@@ -75,10 +77,12 @@ missions/<state>/<id>/
 - Mission `#id` 是 identity；`apiVersion`/`version` 是 metadata。
 - `status`、目标、问答策略、`revision`、时间和可选 `gap_round` 放根 `{}`，不得创建 `<Metadata>`。
 - `Ports`、`ProjectRefs`、`ActorSets`、`SubNodes`、`Schedule`、`Hooks` 等集合使用 `[]`。
-- `TaskSpace`、`Description`、单个 `TrackLink` 和 Hook action 等 singleton 使用 `()`。
+- `TaskSpace`、`Description`、单个 `TrackLink` 和 Hook operation 等 singleton 使用 `()`。
 - 普通节点属性放 `{}`；Mission XNL 不使用 XML namespace 或 `cdt:` 前缀。
 
-Mission 状态：`pending | active | completed | cancelled | superseded | archived`。节点状态：`NOT_STARTED | ACTIVE | DONE | BLOCKED | ABANDONED | SUPERSED`。
+Mission 状态：`pending | active | completed | cancelled | superseded | archived`。节点状态：`NOT_STARTED | ACTIVE | DONE | BLOCKED | ABANDONED | SUPERSEDED`。
+
+根状态是可恢复的生命周期状态，不是永久锁。`completed | cancelled | superseded | archived` Mission 在用户明确续跑或补充任务时，可运行 `codument mission transition <id> active` 恢复；若唯一 authority 已归档，CLI 将其移动回 `missions/active/<id>/` 并递增 revision。恢复不会撤销此前归档产生的 durable 产物；再次进入 `completed` 仍必须通过当前任务树的 completion gate。若 archived 中存在多个同 id authority，CLI 必须拒绝猜测并要求先消除歧义。
 
 ## 4. ProjectRefs 与 ActorSets
 
@@ -101,24 +105,49 @@ Mission 状态：`pending | active | completed | cancelled | superseded | archiv
 
 状态为 `candidate | bound`。`bound` 仅表示通过 session WorkspaceBinding 能在目标项目解析到 active 或 archived `track.xnl`；Mission 不复制 Track 状态，也不持久化项目路径。
 
-`TrackLink state="candidate"` 的激活是 mission logical action 的一部分。`question_severity = "auto"` 时，Applier 必须立即创建、激活并绑定 Track，不等待用户批准。
+`TrackLink { state = "candidate" }` 的激活是 mission logical operation 的一部分。`question_severity = "auto"` 时，Applier 必须立即创建、激活并通过 `codument mission bind-track` 绑定 Track，不等待用户批准。
+
+## 5.1 Nested Mission
+
+`MissionLink` 只挂在叶子 `Task` 的 `()` 中，并通过 `completion_mode = "selected-tasks"` 显式选择子 Mission 的叶子 Task：
+
+```xnl
+<Task #G2-T1 { name = "Deliver repo-a compatibility" status = "ACTIVE" } (
+  <MissionLink #repo-a-evolution {
+    state = "bound"
+    project_ref = "repo-a"
+    mission_ref = "repo-a-evolution"
+    completion_mode = "selected-tasks"
+  } (
+    <SelectedTasks [
+      <TaskRef { ref = "A-G1-T1" }>
+    ]>
+  )>
+)>
+```
+
+子 Mission 必须持久化匹配的 `ParentMission { project_ref, mission_ref, link_ref }`。第一版关系严格为树：子 Mission 只能有一个 ParentMission，禁止环和共享子 Mission。父 Mission 不等待子 Mission 整体 `completed`，只等待 SelectedTasks 中所有叶子 Task 达到 `DONE`，或有受控重规划证据允许 `SUPERSEDED`。
+
+子 Mission 是其 Track 的唯一生命周期 owner。父 Mission 可以同时编排 MissionLink 和跨层 TrackLink；跨层 TrackLink 显式包含 `mission_ref` 与 `track_ref`，但只构成交付投影，不产生第二个 owner。
+
+ProjectRef 的逻辑 id 可提交；本机绝对路径只放在被 Git 忽略的 `codument/.local/workspace-bindings.xnl`。电脑切换时重新运行 `codument project bind <project-ref> <workspace-path>`，不修改 Mission revision。
 
 ## 6. 控制循环
 
-MissionPlanner 维护 desired DAG；MissionObserver 读取真实 Track、测试、资源树和报告；MissionReconciler 比较实际态并选择 ready action；MissionApplier 执行、验证、写回状态和 evidence。
+MissionPlanner 维护 desired DAG；MissionObserver 读取真实 Track、测试、资源树和报告；MissionReconciler 比较实际态并选择 ready operation；MissionApplier 执行、验证、写回状态和 evidence。
 
-每个 action 完成后继续循环。只有以下情况返回调用方：
+每个 operation 完成后继续循环。只有以下情况返回调用方：
 
 - question policy 要求确认且无保守默认；
 - 真实 `BLOCKED` 且无法自动重规划或执行其他 ready 分支；
 - Mission 进入 `completed | cancelled | superseded`；
 - 本次连续完成 10 条 Track，命中 continuation checkpoint。
 
-这些子流程的 `return` / “完成即停” / “收口”只返回到 `MissionApplier`，不是 mission invocation 的默认停点。`mission:after-node` 上的 `MissionReconcile` 是 mission 连续循环内部的 reconcile/checkpoint gate，不是用户确认 gate；`max_tracks` 只统计连续完成的 Track 生命周期，不是通用 action 计数器。
+这些子流程的 `return` / “完成即停” / “收口”只返回到 `MissionApplier`，不是 mission invocation 的默认停点。`mission:after-node` 上的 `MissionReconcile` 是 mission 连续循环内部的 reconcile/checkpoint gate，不是用户确认 gate；`max_tracks` 只统计连续完成的 Track 生命周期，不是通用 operation 计数器。
 
 ## 7. Replanning
 
-active Mission 可以受控修改 `mission.xnl`：先写 `reports/replan-<n>.md`，再更新 TaskSpace/Schedule、递增根 `revision` 与 `updated_at`。历史 DONE 节点不重写；废弃节点用 `SUPERSED` 并保留原因。新 TrackLink 必须指向真实 candidate/bound Track 生命周期。
+active Mission 可以受控修改 `mission.xnl`：先写 `reports/replan-<n>.md`，再更新 TaskSpace/Schedule；状态通过 Mission lifecycle CLI 写回，由 CLI 递增根 `revision` 与 `updated_at`。历史 DONE 节点不重写；废弃节点用 `SUPERSEDED` 并保留原因。新 TrackLink 必须指向真实 candidate/bound Track 生命周期。
 
 ## 8. Authority 与迁移
 

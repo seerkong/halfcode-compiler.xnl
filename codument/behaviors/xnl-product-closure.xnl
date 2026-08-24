@@ -1,0 +1,48 @@
+<Behavior #xnl-product-closure apiVersion="codument.tech/v1alpha1" version="1" (
+  <Requirements [
+    <Requirement #no-product-xml (
+      <Statement ?01M0TB1VE461G04K0F3NASTZ7N>
+      系统 SHALL 在产品源码、资源、测试与发布依赖中不保留 XML authority、XML parser 或 legacy descriptor consumer；Codument 控制面 XML 除外。
+      </?01M0TB1VE461G04K0F3NASTZ7N>
+      <Suites [
+        <Suite #closure { name = "XNL-only closure" } (
+          <Cases [
+            <Case #zero-product-xml (
+              <Given ?01M0TB1VE461G04K0F3NASTZ7P>
+              最终 workspace
+              </?01M0TB1VE461G04K0F3NASTZ7P>
+              <When ?01M0TB1VE461G04K0F3NASTZ7Q>
+              扫描 apps/packages/skills
+              </?01M0TB1VE461G04K0F3NASTZ7Q>
+              <Then ?01M0TB1VE461G04K0F3NASTZ7R>
+              不得发现 .xml 产品文件
+              </?01M0TB1VE461G04K0F3NASTZ7R>
+            )>
+            <Case #zero-xml-runtime (
+              <Given ?01M0TB1VE461G04K0F3NASTZ7S>
+              最终源码、package manifests 与 lockfile
+              </?01M0TB1VE461G04K0F3NASTZ7S>
+              <When ?01M0TB1VE461G04K0F3NASTZ7T>
+              扫描 XML runtime coupling
+              </?01M0TB1VE461G04K0F3NASTZ7T>
+              <Then ?01M0TB1VE461G04K0F3NASTZ7V>
+              不得发现 fast-xml-parser、xml-legacy 或 XmlObject consumer
+              </?01M0TB1VE461G04K0F3NASTZ7V>
+            )>
+            <Case #full-chain (
+              <Given ?01M0TB1VE461G04K0F3NASTZ7W>
+              XNL-only authoring trees
+              </?01M0TB1VE461G04K0F3NASTZ7W>
+              <When ?01M0TB1VE461G04K0F3NASTZ7X>
+              运行全量测试、demo build 与 package consumer
+              </?01M0TB1VE461G04K0F3NASTZ7X>
+              <Then ?01M0TB1VE461G04K0F3NASTZ7Y>
+              所有路径 SHALL 通过
+              </?01M0TB1VE461G04K0F3NASTZ7Y>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+  ]>
+)>

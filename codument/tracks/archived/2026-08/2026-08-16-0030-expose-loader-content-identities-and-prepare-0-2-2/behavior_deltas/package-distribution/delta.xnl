@@ -1,0 +1,50 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_6_-_0_0_3_0_-_e_x_p_o_s_e_-_l_o_a_d_e_r_-_c_o_n_t_e_n_t_-_i_d_e_n_t_i_t_i_e_s_-_a_n_d_-_p_r_e_p_a_r_e_-_0_-_2_-_2.behavior_patch.package-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "package-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://package-distribution/requirements/immutable-0-2-2-candidate" } (
+      <Requirement #immutable-0-2-2-candidate (
+        <Statement ?01M0TB1VG00C2D74XB5ZN9SEHS>
+        系统 SHALL 把 additive layered registry、loader content identities、effective identity projector 与 typed dependency snapshot 准备为新的 halfcode-compiler.xnl@0.2.2 candidate，并保持已发布 0.2.1 与既有 public specifiers 不变。
+        </?01M0TB1VG00C2D74XB5ZN9SEHS>
+        <Suites [
+          <Suite #patch-candidate { name = "0.2.2 release candidate" } (
+            <Cases [
+              <Case #packed-runtime-types (
+                <Given ?01M0TB1VG00C2D74XB5ZN9SEHT>
+                consumer 只安装本地 0.2.2 tarball
+                </?01M0TB1VG00C2D74XB5ZN9SEHT>
+                <When ?01M0TB1VG00C2D74XB5ZN9SEHV>
+                导入全部十个 public specifiers，并从 resource-core 执行真实 loader、layers、identity projector 与 snapshot
+                </?01M0TB1VG00C2D74XB5ZN9SEHV>
+                <Then ?01M0TB1VG00C2D74XB5ZN9SEHW>
+                runtime 与 TypeScript consumer SHALL 通过且制品不得引用 private workspace packages
+                </?01M0TB1VG00C2D74XB5ZN9SEHW>
+              )>
+              <Case #preserve-public-compatibility (
+                <Given ?01M0TB1VG00C2D74XB5ZN9SEHX>
+                0.2.1 consumer 使用旧 root/subpath API 和 structural ResourceTree
+                </?01M0TB1VG00C2D74XB5ZN9SEHX>
+                <When ?01M0TB1VG00C2D74XB5ZN9SEHY>
+                切换到 0.2.2 candidate
+                </?01M0TB1VG00C2D74XB5ZN9SEHY>
+                <Then ?01M0TB1VG00C2D74XB5ZN9SEHZ>
+                旧行为 SHALL 保持，新增 API 仅为 additive
+                </?01M0TB1VG00C2D74XB5ZN9SEHZ>
+              )>
+              <Case #prepare-without-publication (
+                <Given ?01M0TB1VG00C2D74XB5ZN9SEJ0>
+                尚未取得外部 registry 发布授权
+                </?01M0TB1VG00C2D74XB5ZN9SEJ0>
+                <When ?01M0TB1VG00C2D74XB5ZN9SEJ1>
+                本 track 完成 candidate build、pack 与校验
+                </?01M0TB1VG00C2D74XB5ZN9SEJ1>
+                <Then ?01M0TB1VG00C2D74XB5ZN9SEJ2>
+                系统 SHALL 记录 candidate evidence 但不得执行 npm publish 或替换任何已发布版本
+                </?01M0TB1VG00C2D74XB5ZN9SEJ2>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

@@ -1,0 +1,65 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_3_-_0_5_2_2_-_m_i_g_r_a_t_e_-_b_u_s_i_n_e_s_s_o_b_j_e_c_t_-_p_a_g_e_o_b_j_e_c_t_-_t_o_-_x_n_l.behavior_patch.resource-authoring apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-authoring" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-authoring/requirements/xnl-resource-language" } (
+      <Requirement #xnl-resource-language (
+        <Statement ?01M0TB1VFG4C1WRZKMXH4DDN2D>
+        系统 SHALL 以 XNL-native DSL 表达资源 package、catalog、KindDefinition、descriptor 与 mapping，并按 tag、#id、properties、body、extension 的固定语义解释文档。
+        </?01M0TB1VFG4C1WRZKMXH4DDN2D>
+        <Suites [
+          <Suite #language-channels { name = "XNL 通道语义" } (
+            <Cases [
+              <Case #parse-representative-documents (
+                <Given ?01M0TB1VFG4C1WRZKMXH4DDN2E>
+                作者提供符合规范的 package、KindDefinition、generic descriptor、BO/PO owner 与 ResourceMappings XNL 文档
+                </?01M0TB1VFG4C1WRZKMXH4DDN2E>
+                <When ?01M0TB1VFG4C1WRZKMXH4DDN2F>
+                使用当前 xnl-core parser 解析文档
+                </?01M0TB1VFG4C1WRZKMXH4DDN2F>
+                <Then ?01M0TB1VFG4C1WRZKMXH4DDN2G>
+                所有文档 SHALL 可解析，且身份、属性、重复成员和唯一子域保持可区分
+                </?01M0TB1VFG4C1WRZKMXH4DDN2G>
+              )>
+              <Case #canonical-references (
+                <Given ?01M0TB1VFG4C1WRZKMXH4DDN2H>
+                descriptor 引用相对物料、workspace 物料、资源或 TypeScript 导出
+                </?01M0TB1VFG4C1WRZKMXH4DDN2H>
+                <When ?01M0TB1VFG4C1WRZKMXH4DDN2J>
+                作者写入引用
+                </?01M0TB1VFG4C1WRZKMXH4DDN2J>
+                <Then ?01M0TB1VFG4C1WRZKMXH4DDN2K>
+                引用 SHALL 使用 vfs://./、vfs://@/、resource:// 与 code binding properties，不得发明 XML 路径前缀
+                </?01M0TB1VFG4C1WRZKMXH4DDN2K>
+              )>
+            ]>
+          )>
+          <Suite #normalized-boundary { name = "规范化边界" } (
+            <Cases [
+              <Case #no-xml-private-shape (
+                <Given ?01M0TB1VFG4C1WRZKMXH4DDN2M>
+                下游 loader 将 XNL 文档规范化
+                </?01M0TB1VFG4C1WRZKMXH4DDN2M>
+                <When ?01M0TB1VFG4C1WRZKMXH4DDN2N>
+                consumer 读取 normalized descriptor
+                </?01M0TB1VFG4C1WRZKMXH4DDN2N>
+                <Then ?01M0TB1VFG4C1WRZKMXH4DDN2P>
+                consumer SHALL 不依赖 XML attribute-prefix 或 parser-private XmlObject 形状
+                </?01M0TB1VFG4C1WRZKMXH4DDN2P>
+              )>
+              <Case #object-operation-channels (
+                <Given ?01M0TB1VFG4C1WRZKMXH4DDN2Q>
+                BusinessObject 或 PageObject 声明 targets 与 operations
+                </?01M0TB1VFG4C1WRZKMXH4DDN2Q>
+                <When ?01M0TB1VFG4C1WRZKMXH4DDN2R>
+                作者分配 XNL channels
+                </?01M0TB1VFG4C1WRZKMXH4DDN2R>
+                <Then ?01M0TB1VFG4C1WRZKMXH4DDN2S>
+                唯一 owner/binding 使用 properties/subdomains，重复 target kinds/actions/mutations 使用 body members
+                </?01M0TB1VFG4C1WRZKMXH4DDN2S>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

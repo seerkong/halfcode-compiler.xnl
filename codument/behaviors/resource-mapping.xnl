@@ -1,0 +1,37 @@
+<Behavior #resource-mapping apiVersion="codument.tech/v1alpha1" version="1" (
+  <Requirements [
+    <Requirement #xnl-mappings (
+      <Statement ?01M0TB1VE2DP2BF67P2W3ZJ46M>
+      系统 SHALL 使用 XNL ResourceMappings 表达 reference targets、callable target、source roots 与 copy operations，并保持 collision/containment preflight。
+      </?01M0TB1VE2DP2BF67P2W3ZJ46M>
+      <Suites [
+        <Suite #mapping (
+          <Cases [
+            <Case #parse-plan-apply (
+              <Given ?01M0TB1VE2DP2BF67P2W3ZJ46N>
+              有效 XNL ResourceMappings 与命名 module roots
+              </?01M0TB1VE2DP2BF67P2W3ZJ46N>
+              <When ?01M0TB1VE2DP2BF67P2W3ZJ46P>
+              parse、plan、apply
+              </?01M0TB1VE2DP2BF67P2W3ZJ46P>
+              <Then ?01M0TB1VE2DP2BF67P2W3ZJ46Q>
+              复制结果 SHALL 确定且安全
+              </?01M0TB1VE2DP2BF67P2W3ZJ46Q>
+            )>
+            <Case #reject-invalid (
+              <Given ?01M0TB1VE2DP2BF67P2W3ZJ46R>
+              重复 id、危险路径或 target collision
+              </?01M0TB1VE2DP2BF67P2W3ZJ46R>
+              <When ?01M0TB1VE2DP2BF67P2W3ZJ46S>
+              解析或规划
+              </?01M0TB1VE2DP2BF67P2W3ZJ46S>
+              <Then ?01M0TB1VE2DP2BF67P2W3ZJ46T>
+              系统 SHALL 在写入前拒绝
+              </?01M0TB1VE2DP2BF67P2W3ZJ46T>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+  ]>
+)>

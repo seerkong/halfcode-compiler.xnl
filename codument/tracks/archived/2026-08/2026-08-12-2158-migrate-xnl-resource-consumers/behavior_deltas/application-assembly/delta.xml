@@ -1,5 +1,0 @@
-<behavior-patch capability="application-assembly" version="1">
-  <Metadata>
-    <ApiVersion>codument.tech/v1alpha1</ApiVersion>
-  </Metadata><upsert selector="behavior://application-assembly/requirements/xnl-generic-consumers"><requirement id="xnl-generic-consumers"><statement>系统 SHALL 从 normalized ResourceNode 的 properties/body/subdomains 组装通用资源，且 public assembly 不依赖 XmlObject/@attribute 私有形状。</statement><suite id="xnl-generic"><case id="assemble-callable-text-skill"><given>XNL package 含 callable、text 与 SkillCapsule resources</given><when>application assembly 加载 package</when><then>contracts、code binding、materials、includes 与 provenance SHALL 正确投影</then></case><case id="defer-bo-po"><given>BO/PO API 尚在重构</given><when>本阶段加载 generic resources</when><then>不得新增 BO/PO 专用 XNL schema 或 public API</then></case></suite></requirement></upsert></behavior-patch>
-

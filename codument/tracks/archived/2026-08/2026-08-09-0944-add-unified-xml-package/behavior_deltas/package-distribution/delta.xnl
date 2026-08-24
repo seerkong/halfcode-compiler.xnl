@@ -1,0 +1,65 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_0_9_-_0_9_4_4_-_a_d_d_-_u_n_i_f_i_e_d_-_x_m_l_-_p_a_c_k_a_g_e.behavior_patch.package-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "package-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://package-distribution/requirements/unified-public-package" } (
+      <Requirement #unified-public-package (
+        <Statement ?01M0TB1VET1R05N0PMP22X0YVS>
+        系统 SHALL 将 XML 编译器能力作为唯一公开 npm 包 halfcode-compiler.xml 发布，且私有 workspace 包不得成为消费者依赖。
+        </?01M0TB1VET1R05N0PMP22X0YVS>
+        <Suites [
+          <Suite #public-imports { name = "公开入口" } (
+            <Cases [
+              <Case #import-root-api (
+                <Given ?01M0TB1VET1R05N0PMP22X0YVT>
+                消费者只安装 halfcode-compiler.xml
+                </?01M0TB1VET1R05N0PMP22X0YVT>
+                <When ?01M0TB1VET1R05N0PMP22X0YVV>
+                消费者从包根入口导入高级 assembly 与 Skill capsule 编译 API
+                </?01M0TB1VET1R05N0PMP22X0YVV>
+                <Then ?01M0TB1VET1R05N0PMP22X0YVW>
+                导入与类型检查 SHALL 成功
+                </?01M0TB1VET1R05N0PMP22X0YVW>
+              )>
+              <Case #import-subpath-api (
+                <Given ?01M0TB1VET1R05N0PMP22X0YVX>
+                消费者只安装 halfcode-compiler.xml
+                </?01M0TB1VET1R05N0PMP22X0YVX>
+                <When ?01M0TB1VET1R05N0PMP22X0YVY>
+                消费者从已声明的 runtime、resource、schema 和 testing 子路径导入能力
+                </?01M0TB1VET1R05N0PMP22X0YVY>
+                <Then ?01M0TB1VET1R05N0PMP22X0YVZ>
+                导入与类型检查 SHALL 成功，未声明路径 SHALL 保持封装
+                </?01M0TB1VET1R05N0PMP22X0YVZ>
+              )>
+            ]>
+          )>
+          <Suite #artifact-integrity { name = "发布制品完整性" } (
+            <Cases [
+              <Case #no-private-package-reference (
+                <Given ?01M0TB1VET1R05N0PMP22X0YW0>
+                统一包完成生产构建
+                </?01M0TB1VET1R05N0PMP22X0YW0>
+                <When ?01M0TB1VET1R05N0PMP22X0YW1>
+                扫描生成的 JavaScript、声明文件和 tarball metadata
+                </?01M0TB1VET1R05N0PMP22X0YW1>
+                <Then ?01M0TB1VET1R05N0PMP22X0YW2>
+                制品 SHALL 不包含对 halfcode-compiler-* 私有 workspace 包的运行时或类型引用
+                </?01M0TB1VET1R05N0PMP22X0YW2>
+              )>
+              <Case #generated-runtime-import (
+                <Given ?01M0TB1VET1R05N0PMP22X0YW3>
+                Skill capsule compiler 生成 callable bundle
+                </?01M0TB1VET1R05N0PMP22X0YW3>
+                <When ?01M0TB1VET1R05N0PMP22X0YW4>
+                检查生成 bundle 的 runtime import
+                </?01M0TB1VET1R05N0PMP22X0YW4>
+                <Then ?01M0TB1VET1R05N0PMP22X0YW5>
+                生成代码 SHALL 从 halfcode-compiler.xml/authoring-runtime 导入 runWithRuntime
+                </?01M0TB1VET1R05N0PMP22X0YW5>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

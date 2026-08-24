@@ -1,0 +1,65 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_2_-_2_0_2_8_-_d_e_f_i_n_e_-_x_n_l_-_r_e_s_o_u_r_c_e_-_d_s_l.behavior_patch.resource-authoring apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-authoring" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-authoring/requirements/xnl-resource-language" } (
+      <Requirement #xnl-resource-language (
+        <Statement ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F1>
+        系统 SHALL 以 XNL-native DSL 表达资源 package、catalog、KindDefinition、descriptor 与 mapping，并按 tag、#id、properties、body、extension 的固定语义解释文档。
+        </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F1>
+        <Suites [
+          <Suite #language-channels { name = "XNL 通道语义" } (
+            <Cases [
+              <Case #parse-representative-documents (
+                <Given ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F2>
+                作者提供符合规范的 package、KindDefinition、descriptor 与 ResourceMappings XNL 文档
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F2>
+                <When ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F3>
+                使用当前 xnl-core parser 解析文档
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F3>
+                <Then ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F4>
+                所有文档 SHALL 可解析，且身份、属性、重复成员和唯一子域保持可区分
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F4>
+              )>
+              <Case #canonical-references (
+                <Given ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F5>
+                descriptor 引用相对物料、workspace 物料或 TypeScript 导出
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F5>
+                <When ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F6>
+                作者写入引用
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F6>
+                <Then ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F7>
+                引用 SHALL 使用 vfs://./、vfs://@/ 与 #ExportName fragment，不得发明 XML 路径前缀
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F7>
+              )>
+            ]>
+          )>
+          <Suite #migration-boundary { name = "迁移边界" } (
+            <Cases [
+              <Case #no-xml-private-shape (
+                <Given ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F8>
+                下游 loader 将 XNL 文档规范化
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F8>
+                <When ?01M0TB1VEZ1JW6NV1MZ0ZJZ1F9>
+                consumer 读取 normalized descriptor
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1F9>
+                <Then ?01M0TB1VEZ1JW6NV1MZ0ZJZ1FA>
+                consumer SHALL 不依赖 XML attribute-prefix 或 parser-private XmlObject 形状
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1FA>
+              )>
+              <Case #defer-businessobject-pageobject-specialization (
+                <Given ?01M0TB1VEZ1JW6NV1MZ0ZJZ1FB>
+                BusinessObject 与 PageObject 参考 API 仍在重构
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1FB>
+                <When ?01M0TB1VEZ1JW6NV1MZ0ZJZ1FC>
+                通用 XNL 资源 DSL 被冻结
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1FC>
+                <Then ?01M0TB1VEZ1JW6NV1MZ0ZJZ1FD>
+                DSL SHALL 只定义通用资源外壳，不冻结二者的专用字段、操作或 public API
+                </?01M0TB1VEZ1JW6NV1MZ0ZJZ1FD>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

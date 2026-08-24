@@ -1,0 +1,65 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_2_-_2_1_0_4_-_a_d_o_p_t_-_x_n_l_-_r_e_s_o_u_r_c_e_-_c_o_r_e.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/xnl-resource-tree" } (
+      <Requirement #xnl-resource-tree (
+        <Statement ?01M0TB1VF25HBX2XCZJB76507N>
+        系统 SHALL 使用 xnl-core 加载 XNL resource package，并把 parser tree 规范化为带 identity、logical path、document URI 与语义通道的 ResourceRecord registry。
+        </?01M0TB1VF25HBX2XCZJB76507N>
+        <Suites [
+          <Suite #xnl-loading { name = "XNL resource tree" } (
+            <Cases [
+              <Case #load-and-normalize (
+                <Given ?01M0TB1VF25HBX2XCZJB76507P>
+                package 包含 manifest.xnl、KindDefinition catalogs 与多种 source shape resources
+                </?01M0TB1VF25HBX2XCZJB76507P>
+                <When ?01M0TB1VF25HBX2XCZJB76507Q>
+                resource-core 加载 package
+                </?01M0TB1VF25HBX2XCZJB76507Q>
+                <Then ?01M0TB1VF25HBX2XCZJB76507R>
+                registry SHALL 按根 tag 分区、按 #id 唯一寻址，并保留 metadata/properties/body/subdomains 与 provenance
+                </?01M0TB1VF25HBX2XCZJB76507R>
+              )>
+              <Case #reject-invalid-authority (
+                <Given ?01M0TB1VF25HBX2XCZJB76507S>
+                XNL authority 含语法错误、越界 URI、未知 kind 或重复 #id
+                </?01M0TB1VF25HBX2XCZJB76507S>
+                <When ?01M0TB1VF25HBX2XCZJB76507T>
+                resource-core 验证或加载 package
+                </?01M0TB1VF25HBX2XCZJB76507T>
+                <Then ?01M0TB1VF25HBX2XCZJB76507V>
+                验证 SHALL 返回稳定且不泄漏绝对磁盘路径的 diagnostics，加载 SHALL 拒绝产生 registry
+                </?01M0TB1VF25HBX2XCZJB76507V>
+              )>
+            ]>
+          )>
+          <Suite #migration-compatibility { name = "迁移兼容" } (
+            <Cases [
+              <Case #legacy-is-internal (
+                <Given ?01M0TB1VF25HBX2XCZJB76507W>
+                尚未迁移的 XML authoring consumer 仍存在
+                </?01M0TB1VF25HBX2XCZJB76507W>
+                <When ?01M0TB1VF25HBX2XCZJB76507X>
+                resource-core 加载显式 XML manifest
+                </?01M0TB1VF25HBX2XCZJB76507X>
+                <Then ?01M0TB1VF25HBX2XCZJB76507Y>
+                内部 legacy adapter MAY 保持既有行为，但 XNL public records SHALL 使用 normalized ResourceNode 且 adapter 必须可在 mission closure 删除
+                </?01M0TB1VF25HBX2XCZJB76507Y>
+              )>
+              <Case #bo-po-remain-opaque (
+                <Given ?01M0TB1VF25HBX2XCZJB76507Z>
+                BusinessObject/PageObject API 尚未完成重构
+                </?01M0TB1VF25HBX2XCZJB76507Z>
+                <When ?01M0TB1VF25HBX2XCZJB765080>
+                resource-core 规范化任意 kind root
+                </?01M0TB1VF25HBX2XCZJB765080>
+                <Then ?01M0TB1VF25HBX2XCZJB765081>
+                core SHALL 不解释二者专用字段、操作或 public API
+                </?01M0TB1VF25HBX2XCZJB765081>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

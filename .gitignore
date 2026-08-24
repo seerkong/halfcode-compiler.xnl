@@ -9,3 +9,4 @@ codument/**/reports
 node_modules/
 dist/
 *.log
+codument/.local/

@@ -1,0 +1,63 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_3_-_0_5_2_2_-_m_i_g_r_a_t_e_-_b_u_s_i_n_e_s_s_o_b_j_e_c_t_-_p_a_g_e_o_b_j_e_c_t_-_t_o_-_x_n_l.behavior_patch.object-operation-compilation apiVersion="codument.tech/v1alpha1" version="1" { capability = "object-operation-compilation" } (
+  <Mutations [
+    <Upsert { selector = "behavior://object-operation-compilation/requirements/generated-object-entry" } (
+      <Requirement #generated-object-entry (
+        <Statement ?01M0TB1VFDC7PZYPEHVBYQRW8S>
+        Compiler SHALL 从 PageObject/BusinessObject assembly catalog 生成独立对象 registry 与 run_object_operation(call)，并以 host 初始化的 runtime 执行四维 handler。
+        </?01M0TB1VFDC7PZYPEHVBYQRW8S>
+        <Suites [
+          <Suite #bundle { name = "对象 bundle" } (
+            <Cases [
+              <Case #execute-four-dimensional-handler (
+                <Given ?01M0TB1VFDC7PZYPEHVBYQRW8T>
+                合法 action 或 mutation call 且 host 已初始化 runtime
+                </?01M0TB1VFDC7PZYPEHVBYQRW8T>
+                <When ?01M0TB1VFDC7PZYPEHVBYQRW8V>
+                调用 run_object_operation
+                </?01M0TB1VFDC7PZYPEHVBYQRW8V>
+                <Then ?01M0TB1VFDC7PZYPEHVBYQRW8W>
+                handler SHALL 收到 runtime、targets、invocation、config 四个独立参数
+                </?01M0TB1VFDC7PZYPEHVBYQRW8W>
+              )>
+              <Case #fail-closed (
+                <Given ?01M0TB1VFDC7PZYPEHVBYQRW8X>
+                runtime 未初始化、operationRef 未知或 call 与 definition 不匹配
+                </?01M0TB1VFDC7PZYPEHVBYQRW8X>
+                <When ?01M0TB1VFDC7PZYPEHVBYQRW8Y>
+                调用 run_object_operation
+                </?01M0TB1VFDC7PZYPEHVBYQRW8Y>
+                <Then ?01M0TB1VFDC7PZYPEHVBYQRW8Z>
+                bundle MUST fail closed 且不执行 handler
+                </?01M0TB1VFDC7PZYPEHVBYQRW8Z>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://object-operation-compilation/requirements/no-double-authority" } (
+      <Requirement #no-double-authority (
+        <Statement ?01M0TB1VFDC7PZYPEHVBYQRW90>
+        BusinessAction/BusinessMutation SHALL 仅作为 BusinessObject operation binding 被编译，不得作为 generic callable 或独立 AI reference 暴露；runtime definition SHALL 只来自生成 registry，registry 不得发布 binding 字段。
+        </?01M0TB1VFDC7PZYPEHVBYQRW90>
+        <Suites [
+          <Suite #registry { name = "registry closure" } (
+            <Cases [
+              <Case #separate-registries (
+                <Given ?01M0TB1VFDC7PZYPEHVBYQRW91>
+                Skill 同时包含普通 functions 与 object owners
+                </?01M0TB1VFDC7PZYPEHVBYQRW91>
+                <When ?01M0TB1VFDC7PZYPEHVBYQRW92>
+                编译 Skill capsule
+                </?01M0TB1VFDC7PZYPEHVBYQRW92>
+                <Then ?01M0TB1VFDC7PZYPEHVBYQRW93>
+                callable registry SHALL 只包含 Function/ComposedFunction，object registry SHALL 包含 PageObject/BusinessObject operations
+                </?01M0TB1VFDC7PZYPEHVBYQRW93>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

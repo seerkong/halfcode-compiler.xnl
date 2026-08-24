@@ -1,6 +1,6 @@
 # Codument 使用指南（std/AGENTS.md）
 
-AI 编程助手用 Codument 做行为驱动开发的**入口与路由**。本文件只做路由 + 速查；**怎么操作**的过程在 `std/methods/`，**格式规范**在 `std/spec/`，**各 skill** 在 `std/actions/`。init 后全部自包含于 `codument/`。
+AI 编程助手用 Codument 做行为驱动开发的**入口与路由**。本文件只做路由 + 速查；**怎么操作**的过程在 `std/methods/`，**格式规范**在 `std/spec/`，**各 skill** 在 `std/operations/`。init 后全部自包含于 `codument/`。
 
 ## 何时打开本指南
 
@@ -29,8 +29,8 @@ AI 编程助手用 Codument 做行为驱动开发的**入口与路由**。本文
 | 怎么写 behavior delta / behavior 登记表格式 | `std/spec/behavior-delta.md`、`std/spec/behavior-registry.md` |
 | 怎么写 engineering delta / engineering 登记表格式 | `std/spec/engineering-delta.md`、`std/spec/engineering-registry.md` |
 | 长期 decision registry、`decision://`、递归 source/merge 怎么工作 | `std/spec/decision-registry.md`、`std/spec/xnl-format.md` |
-| 具体某个 action 怎么做 | `std/actions/<name>.md`（索引见 `std/actions/README.md`） |
-| 命令级 hook、attractor profile、能力开关 | `config/action-hooks.xml`、`config/attractor-profiles.xml` |
+| 具体某个 operation 怎么做 | `std/operations/<name>.md`（索引见 `std/operations/README.md`） |
+| 命令级 hook、attractor profile、能力开关 | `config/operation-hooks.xnl`、`config/attractor-profiles.xnl` |
 
 ## 三阶段（详见 std/methods/workflow.md）
 
@@ -70,14 +70,20 @@ codument 是 **track 中心**的：迭代记忆强，但 **owner registry（`cod
 
 ## CLI 速查
 
+CLI 是 scaffold、结构校验、生命周期、资源迁移、registry transaction、frontier 计算与文件分发的确定性 authority。operation 提示词先调用对应 CLI，再由 AI 编写 prose/XNL 业务内容、处理 `review-required` 与做语义复核。
+
 ```bash
-codument list [--behaviors]      # 列活跃 track / 行为登记表
-codument show [item] [--json]
+codument list [--behaviors] [--json]
+codument show [item] [--json] [--include-content]
 codument validate [item] [--strict]
 codument archive <track-id>
+codument track transition|ready|task transition|task complete|gap-round
+codument mission transition|task transition|bind-track|gap-round|archive
+codument decisions validate|frontier
+codument artifact sync / std lint
 codument modeling validate|lint
 codument engineering validate|lint
-codument init [path] / upgrade-workspace / upgrade-track <id> / status
+codument init [path] / upgrade-workspace / upgrade-resource <path> / status
 ```
 
-> 外部 CLI 回退：若提示词要求运行 `codument validate ...` 但系统无 `codument` 命令，跳过该步并明确说明已跳过（不阻塞工作流）。详见 `std/methods/workflow.md`。
+> CLI 不可用时：只读检查可标为 `SKIPPED` 并继续语义 review；scaffold、状态写回、迁移、归档、registry 或制品写入保持 blocked。详见 `std/methods/workflow.md`。

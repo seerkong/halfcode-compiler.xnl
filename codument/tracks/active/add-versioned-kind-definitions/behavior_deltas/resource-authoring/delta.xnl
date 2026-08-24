@@ -1,0 +1,39 @@
+<BehaviorPatch #track.add-versioned-kind-definitions.behavior_patch.resource-authoring apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-authoring" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-authoring/requirements/kind-migration-registry" } (
+      <Requirement #kind-migration-registry (
+        <Statement ?01M0TB1VEK45KDD3TBS5Q42MHD>
+        系统 SHALL 提供代码侧确定性 migration registry，把具体 Kind 的纯转换函数组织成无歧义版本路径。
+        </?01M0TB1VEK45KDD3TBS5Q42MHD>
+        <Suites [
+          <Suite #migration-path { name = "Kind migration path" } (
+            <Cases [
+              <Case #unique-path (
+                <Given ?01M0TB1VEK45KDD3TBS5Q42MHE>
+                from 到 current 存在唯一迁移链
+                </?01M0TB1VEK45KDD3TBS5Q42MHE>
+                <When ?01M0TB1VEK45KDD3TBS5Q42MHF>
+                调用方规划迁移
+                </?01M0TB1VEK45KDD3TBS5Q42MHF>
+                <Then ?01M0TB1VEK45KDD3TBS5Q42MHG>
+                registry SHALL 按版本顺序返回稳定 migration steps
+                </?01M0TB1VEK45KDD3TBS5Q42MHG>
+              )>
+              <Case #ambiguous-or-missing (
+                <Given ?01M0TB1VEK45KDD3TBS5Q42MHH>
+                迁移出边歧义、缺失或成环
+                </?01M0TB1VEK45KDD3TBS5Q42MHH>
+                <When ?01M0TB1VEK45KDD3TBS5Q42MHJ>
+                调用方规划迁移
+                </?01M0TB1VEK45KDD3TBS5Q42MHJ>
+                <Then ?01M0TB1VEK45KDD3TBS5Q42MHK>
+                registry SHALL 明确拒绝而不执行任意转换
+                </?01M0TB1VEK45KDD3TBS5Q42MHK>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

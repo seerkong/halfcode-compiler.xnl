@@ -1,0 +1,48 @@
+<Behavior #authoring-trees apiVersion="codument.tech/v1alpha1" version="1" (
+  <Requirements [
+    <Requirement #xnl-generic-authority (
+      <Statement ?01M0TB1VDR5NAG0YY54B6QEK0J>
+      系统 SHALL 提供不含 XML 的完整 XNL authoring trees，并保持 callable、knowledge、SkillCapsule、BusinessObject、PageObject、operation binding、material、include 与 mapping 语义。
+      </?01M0TB1VDR5NAG0YY54B6QEK0J>
+      <Suites [
+        <Suite #xnl-authoring (
+          <Cases [
+            <Case #load-domain-and-shared (
+              <Given ?01M0TB1VDR5NAG0YY54B6QEK0K>
+              domain 与 shared resources-xnl package
+              </?01M0TB1VDR5NAG0YY54B6QEK0K>
+              <When ?01M0TB1VDR5NAG0YY54B6QEK0M>
+              resource loader 与 application assembly 加载
+              </?01M0TB1VDR5NAG0YY54B6QEK0M>
+              <Then ?01M0TB1VDR5NAG0YY54B6QEK0N>
+              所有产品 resources SHALL 以 format=xnl 被发现并正确投影
+              </?01M0TB1VDR5NAG0YY54B6QEK0N>
+            )>
+            <Case #object-operation-authority (
+              <Given ?01M0TB1VDR5NAG0YY54B6QEK0P>
+              BO/PO owner XNL 声明 target kinds 与 operations
+              </?01M0TB1VDR5NAG0YY54B6QEK0P>
+              <When ?01M0TB1VDR5NAG0YY54B6QEK0Q>
+              加载并编译 Skill capsule
+              </?01M0TB1VDR5NAG0YY54B6QEK0Q>
+              <Then ?01M0TB1VDR5NAG0YY54B6QEK0R>
+              owner catalog、private binding、generated registry 与实际 handler 执行 SHALL 闭合
+              </?01M0TB1VDR5NAG0YY54B6QEK0R>
+            )>
+            <Case #xnl-guidance (
+              <Given ?01M0TB1VDR5NAG0YY54B6QEK0S>
+              作者阅读项目 skills 与 docs
+              </?01M0TB1VDR5NAG0YY54B6QEK0S>
+              <When ?01M0TB1VDR5NAG0YY54B6QEK0T>
+              创建资源 package
+              </?01M0TB1VDR5NAG0YY54B6QEK0T>
+              <Then ?01M0TB1VDR5NAG0YY54B6QEK0V>
+              规范 SHALL 以 manifest.xnl、semantic channels 与 resource-mappings.xnl 为唯一新 authoring 路径
+              </?01M0TB1VDR5NAG0YY54B6QEK0V>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+  ]>
+)>

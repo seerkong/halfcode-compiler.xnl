@@ -1,4 +1,0 @@
-<behavior-patch capability="resource-loading" version="1">
-  <Metadata><ApiVersion>codument.tech/v1alpha1</ApiVersion></Metadata>
-  <upsert selector="behavior://resource-loading/requirements/public-kind-definition-registry"><requirement id="public-kind-definition-registry"><statement>resource-core SHALL 在成功加载 ResourcePackage 后公开所有已验证 KindDefinition 的规范化只读 registry。</statement><suite id="kind-registry" name="Public KindDefinition registry"><case id="expose-contract"><given>package 包含合法 KindDefinition catalog</given><when>consumer 加载 ResourceTree</when><then>registry SHALL 按 resourceKind 暴露版本、shape、cardinality 与 provenance</then></case><case id="exclude-invalid"><given>KindDefinition 契约不合法</given><when>loader 校验 package</when><then>系统 SHALL 返回 diagnostics 且不产生包含无效 contract 的 tree</then></case></suite></requirement></upsert>
-</behavior-patch>

@@ -1,0 +1,76 @@
+<BehaviorPatch #track.r_2_0_2_6_-_0_8_-_1_5_-_1_2_2_2_-_r_e_m_o_v_e_-_g_l_o_b_a_l_-_r_e_s_o_u_r_c_e_-_f_i_e_l_d_-_r_e_q_u_i_r_e_m_e_n_t_s.behavior_patch.resource-authoring apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-authoring" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-authoring/requirements/xnl-resource-language" } (
+      <Requirement #xnl-resource-language (
+        <Statement ?01M0TB1VFPF1H73CSR78Z9N6TR>
+        系统 SHALL 以 XNL-native DSL 表达资源 package、catalog、KindDefinition、descriptor 与 mapping，并按 tag、#id、properties、body、extension 的固定语义解释文档；通用 loader SHALL 不把 lifecycle 或 description 强制为所有 Kind 的共同字段。
+        </?01M0TB1VFPF1H73CSR78Z9N6TR>
+        <Suites [
+          <Suite #language-channels { name = "XNL 通道语义" } (
+            <Cases [
+              <Case #parse-representative-documents (
+                <Given ?01M0TB1VFPF1H73CSR78Z9N6TS>
+                作者提供符合规范的 package、KindDefinition、generic descriptor、BO/PO owner 与 ResourceMappings XNL 文档
+                </?01M0TB1VFPF1H73CSR78Z9N6TS>
+                <When ?01M0TB1VFPF1H73CSR78Z9N6TT>
+                使用当前 xnl-core parser 解析文档
+                </?01M0TB1VFPF1H73CSR78Z9N6TT>
+                <Then ?01M0TB1VFPF1H73CSR78Z9N6TV>
+                所有文档 SHALL 可解析，且身份、属性、重复成员和唯一子域保持可区分
+                </?01M0TB1VFPF1H73CSR78Z9N6TV>
+              )>
+              <Case #canonical-references (
+                <Given ?01M0TB1VFPF1H73CSR78Z9N6TW>
+                descriptor 引用相对物料、workspace 物料、资源或 TypeScript 导出
+                </?01M0TB1VFPF1H73CSR78Z9N6TW>
+                <When ?01M0TB1VFPF1H73CSR78Z9N6TX>
+                作者写入引用
+                </?01M0TB1VFPF1H73CSR78Z9N6TX>
+                <Then ?01M0TB1VFPF1H73CSR78Z9N6TY>
+                引用 SHALL 使用 vfs://./、vfs://@/、resource:// 与 code binding properties，不得发明 XML 路径前缀
+                </?01M0TB1VFPF1H73CSR78Z9N6TY>
+              )>
+              <Case #kind-owned-optional-properties (
+                <Given ?01M0TB1VFPF1H73CSR78Z9N6TZ>
+                已注册 Kind 的资源只声明 #id、apiVersion 及该 Kind 自己需要的字段
+                </?01M0TB1VFPF1H73CSR78Z9N6TZ>
+                <When ?01M0TB1VFPF1H73CSR78Z9N6V0>
+                资源不含 lifecycle 和 description
+                </?01M0TB1VFPF1H73CSR78Z9N6V0>
+                <Then ?01M0TB1VFPF1H73CSR78Z9N6V1>
+                通用 loader SHALL 接受该资源并在 normalized record 中保持字段缺失，具体 Kind consumer MAY 另行要求它们
+                </?01M0TB1VFPF1H73CSR78Z9N6V1>
+              )>
+            ]>
+          )>
+          <Suite #normalized-boundary { name = "规范化边界" } (
+            <Cases [
+              <Case #no-xml-private-shape (
+                <Given ?01M0TB1VFPF1H73CSR78Z9N6V2>
+                下游 loader 将 XNL 文档规范化
+                </?01M0TB1VFPF1H73CSR78Z9N6V2>
+                <When ?01M0TB1VFPF1H73CSR78Z9N6V3>
+                consumer 读取 normalized descriptor
+                </?01M0TB1VFPF1H73CSR78Z9N6V3>
+                <Then ?01M0TB1VFPF1H73CSR78Z9N6V4>
+                consumer SHALL 不依赖 XML attribute-prefix 或 parser-private XmlObject 形状
+                </?01M0TB1VFPF1H73CSR78Z9N6V4>
+              )>
+              <Case #object-operation-channels (
+                <Given ?01M0TB1VFPF1H73CSR78Z9N6V5>
+                BusinessObject 或 PageObject 声明 targets 与 operations
+                </?01M0TB1VFPF1H73CSR78Z9N6V5>
+                <When ?01M0TB1VFPF1H73CSR78Z9N6V6>
+                作者分配 XNL channels
+                </?01M0TB1VFPF1H73CSR78Z9N6V6>
+                <Then ?01M0TB1VFPF1H73CSR78Z9N6V7>
+                唯一 owner/binding 使用 properties/subdomains，重复 target kinds/actions/mutations 使用 body members
+                </?01M0TB1VFPF1H73CSR78Z9N6V7>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

@@ -1,0 +1,50 @@
+<BehaviorPatch #track.add-versioned-kind-definitions.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/kind-api-version-contract" } (
+      <Requirement #kind-api-version-contract (
+        <Statement ?01M0TB1VEN3FNGZCXX7JDKBK32>
+        系统 SHALL 依据对应 KindDefinition 校验资源 apiVersion，并只接受显式支持的版本。
+        </?01M0TB1VEN3FNGZCXX7JDKBK32>
+        <Suites [
+          <Suite #version-contract { name = "Kind apiVersion contract" } (
+            <Cases [
+              <Case #accept-supported (
+                <Given ?01M0TB1VEN3FNGZCXX7JDKBK33>
+                资源 apiVersion 在 Kind supportedApiVersions 中
+                </?01M0TB1VEN3FNGZCXX7JDKBK33>
+                <When ?01M0TB1VEN3FNGZCXX7JDKBK34>
+                resource-core 加载资源
+                </?01M0TB1VEN3FNGZCXX7JDKBK34>
+                <Then ?01M0TB1VEN3FNGZCXX7JDKBK35>
+                资源 SHALL 进入 registry
+                </?01M0TB1VEN3FNGZCXX7JDKBK35>
+              )>
+              <Case #reject-unsupported (
+                <Given ?01M0TB1VEN3FNGZCXX7JDKBK36>
+                资源 apiVersion 不在 Kind supportedApiVersions 中
+                </?01M0TB1VEN3FNGZCXX7JDKBK36>
+                <When ?01M0TB1VEN3FNGZCXX7JDKBK37>
+                resource-core 加载资源
+                </?01M0TB1VEN3FNGZCXX7JDKBK37>
+                <Then ?01M0TB1VEN3FNGZCXX7JDKBK38>
+                系统 SHALL 返回稳定 diagnostic 且不产生 tree
+                </?01M0TB1VEN3FNGZCXX7JDKBK38>
+              )>
+              <Case #reject-invalid-definition (
+                <Given ?01M0TB1VEN3FNGZCXX7JDKBK39>
+                KindDefinition currentApiVersion 不在 supportedApiVersions 中
+                </?01M0TB1VEN3FNGZCXX7JDKBK39>
+                <When ?01M0TB1VEN3FNGZCXX7JDKBK3A>
+                注册 KindDefinition
+                </?01M0TB1VEN3FNGZCXX7JDKBK3A>
+                <Then ?01M0TB1VEN3FNGZCXX7JDKBK3B>
+                系统 SHALL 拒绝该契约
+                </?01M0TB1VEN3FNGZCXX7JDKBK3B>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

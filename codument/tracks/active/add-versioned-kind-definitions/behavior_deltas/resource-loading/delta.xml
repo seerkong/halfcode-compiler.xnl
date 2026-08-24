@@ -1,4 +1,0 @@
-<behavior-patch capability="resource-loading" version="1">
-  <Metadata><ApiVersion>codument.tech/v1alpha1</ApiVersion></Metadata>
-  <upsert selector="behavior://resource-loading/requirements/kind-api-version-contract"><requirement id="kind-api-version-contract"><statement>系统 SHALL 依据对应 KindDefinition 校验资源 apiVersion，并只接受显式支持的版本。</statement><suite id="version-contract" name="Kind apiVersion contract"><case id="accept-supported"><given>资源 apiVersion 在 Kind supportedApiVersions 中</given><when>resource-core 加载资源</when><then>资源 SHALL 进入 registry</then></case><case id="reject-unsupported"><given>资源 apiVersion 不在 Kind supportedApiVersions 中</given><when>resource-core 加载资源</when><then>系统 SHALL 返回稳定 diagnostic 且不产生 tree</then></case><case id="reject-invalid-definition"><given>KindDefinition currentApiVersion 不在 supportedApiVersions 中</given><when>注册 KindDefinition</when><then>系统 SHALL 拒绝该契约</then></case></suite></requirement></upsert>
-</behavior-patch>

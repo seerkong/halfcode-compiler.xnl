@@ -1,0 +1,50 @@
+<BehaviorPatch #track.support-multi-root-xnl-documents.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/multi-root-resource-documents" } (
+      <Requirement #multi-root-resource-documents (
+        <Statement ?01M0TB1VERWGFW752069FMJKC7>
+        系统 SHALL 仅在 KindDefinition 显式允许时，把 XNL 文件的多个顶层同 Kind 节点加载为独立资源记录。
+        </?01M0TB1VERWGFW752069FMJKC7>
+        <Suites [
+          <Suite #forest { name = "XNL resource forest" } (
+            <Cases [
+              <Case #load-forest (
+                <Given ?01M0TB1VERWGFW752069FMJKC8>
+                single-file catalog 的 Kind 声明 documentCardinality many
+                </?01M0TB1VERWGFW752069FMJKC8>
+                <When ?01M0TB1VERWGFW752069FMJKC9>
+                文件含多个同 Kind data roots
+                </?01M0TB1VERWGFW752069FMJKC9>
+                <Then ?01M0TB1VERWGFW752069FMJKCA>
+                每个 root SHALL 以独立 identity 进入 registry并共享文档 provenance
+                </?01M0TB1VERWGFW752069FMJKCA>
+              )>
+              <Case #single-remains-strict (
+                <Given ?01M0TB1VERWGFW752069FMJKCB>
+                Kind 缺省或声明 documentCardinality one
+                </?01M0TB1VERWGFW752069FMJKCB>
+                <When ?01M0TB1VERWGFW752069FMJKCC>
+                文件出现多个顶层根
+                </?01M0TB1VERWGFW752069FMJKCC>
+                <Then ?01M0TB1VERWGFW752069FMJKCD>
+                loader SHALL 拒绝该文档
+                </?01M0TB1VERWGFW752069FMJKCD>
+              )>
+              <Case #reject-mixed-forest (
+                <Given ?01M0TB1VERWGFW752069FMJKCE>
+                forest 含不同 tag、缺失或重复 identity
+                </?01M0TB1VERWGFW752069FMJKCE>
+                <When ?01M0TB1VERWGFW752069FMJKCF>
+                loader 验证文档
+                </?01M0TB1VERWGFW752069FMJKCF>
+                <Then ?01M0TB1VERWGFW752069FMJKCG>
+                系统 SHALL 返回稳定 diagnostics 且不产生 tree
+                </?01M0TB1VERWGFW752069FMJKCG>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

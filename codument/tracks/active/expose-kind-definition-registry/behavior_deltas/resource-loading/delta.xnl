@@ -1,0 +1,39 @@
+<BehaviorPatch #track.expose-kind-definition-registry.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/public-kind-definition-registry" } (
+      <Requirement #public-kind-definition-registry (
+        <Statement ?01M0TB1VEPGSR2TMJZF46NP2DH>
+        resource-core SHALL 在成功加载 ResourcePackage 后公开所有已验证 KindDefinition 的规范化只读 registry。
+        </?01M0TB1VEPGSR2TMJZF46NP2DH>
+        <Suites [
+          <Suite #kind-registry { name = "Public KindDefinition registry" } (
+            <Cases [
+              <Case #expose-contract (
+                <Given ?01M0TB1VEPGSR2TMJZF46NP2DJ>
+                package 包含合法 KindDefinition catalog
+                </?01M0TB1VEPGSR2TMJZF46NP2DJ>
+                <When ?01M0TB1VEPGSR2TMJZF46NP2DK>
+                consumer 加载 ResourceTree
+                </?01M0TB1VEPGSR2TMJZF46NP2DK>
+                <Then ?01M0TB1VEPGSR2TMJZF46NP2DM>
+                registry SHALL 按 resourceKind 暴露版本、shape、cardinality 与 provenance
+                </?01M0TB1VEPGSR2TMJZF46NP2DM>
+              )>
+              <Case #exclude-invalid (
+                <Given ?01M0TB1VEPGSR2TMJZF46NP2DN>
+                KindDefinition 契约不合法
+                </?01M0TB1VEPGSR2TMJZF46NP2DN>
+                <When ?01M0TB1VEPGSR2TMJZF46NP2DP>
+                loader 校验 package
+                </?01M0TB1VEPGSR2TMJZF46NP2DP>
+                <Then ?01M0TB1VEPGSR2TMJZF46NP2DQ>
+                系统 SHALL 返回 diagnostics 且不产生包含无效 contract 的 tree
+                </?01M0TB1VEPGSR2TMJZF46NP2DQ>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>
