@@ -1,4 +1,4 @@
-<PromptFragment #Demo.ResourceWorkflow.PromptFragment.SkillPrelude apiVersion="halfcode.resources/v1" version="1.0.0" {
+<PromptFragment #Demo.ResourceWorkflow.PromptFragment.SkillPrelude envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Opening guidance for the generated demo Skill."
 } (

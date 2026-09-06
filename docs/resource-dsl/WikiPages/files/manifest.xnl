@@ -1,4 +1,4 @@
-<WikiPage #Halfcode.ResourceDsl.Wiki.files apiVersion="halfcode.resources/v1" version="1.0.0" {
+<WikiPage #Halfcode.ResourceDsl.Wiki.files envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Stable"
   description = "Resource source shapes, VFS containment and file provenance."
 } (

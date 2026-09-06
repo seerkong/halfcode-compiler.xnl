@@ -1,5 +1,4 @@
-<decisions apiVersion="codument.tech/v1alpha1" [
-  <decision #track.add-pageobject-kind-definition.target-neutral { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" } (
+<decision #track.add-pageobject-kind-definition.target-neutral apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" } (
     <question ?01M02KBYHRR1CYF018250F6X8P>
     PageObject kind 是否承载 browser-robot selector 与 CDP 细节？
     </?01M02KBYHRR1CYF018250F6X8P>
@@ -18,7 +17,7 @@
       </?01M02KBYHRR1CYF018250F6X8T>
     )>
   )>
-  <decision #track.add-pageobject-kind-definition.root-export { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.add-pageobject-kind-definition.target-neutral"] } (
+<decision #track.add-pageobject-kind-definition.root-export apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.add-pageobject-kind-definition.target-neutral"] } (
     <question ?01M02KBYHRR1CYF018250F6X8V>
     消费者应从何处读取 PageObject assembly API？
     </?01M02KBYHRR1CYF018250F6X8V>
@@ -37,4 +36,3 @@
       </?01M02KBYHRR1CYF018250F6X8Z>
     )>
   )>
-]>

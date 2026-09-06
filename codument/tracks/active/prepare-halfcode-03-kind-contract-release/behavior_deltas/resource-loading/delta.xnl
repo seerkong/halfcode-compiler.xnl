@@ -1,0 +1,25 @@
+<BehaviorPatch #track.prepare-halfcode-03-kind-contract-release.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/exact-envelope-and-versioned-kind-contract" } (
+      <Requirement #exact-envelope-and-versioned-kind-contract (
+        <Statement ?>系统 SHALL 只接受 canonical `halfcode.resource-envelope/v1` metadata，并把每个 Kind 的 subject owner、exact SpecRevision、schema/semantic/source fingerprints 与 reader target 作为不可伪造的版本契约。</?>
+        <Suites [
+          <Suite #exact-contract { name = "Halfcode 0.3 exact contract" } (
+            <Cases [
+              <Case #admitted-description-matches-code (
+                <Given ?>Kind owner 用公开 0.3 API 生成 subject owner 与 exact SpecRevision</?>
+                <When ?>同一 KindDefinition description 被 loader 加载并交给 resolver</?>
+                <Then ?>description 中每个 fingerprint SHALL 与代码侧 admitted contract 完全一致</?>
+              )>
+              <Case #reject-legacy-envelope (
+                <Given ?>资源或 KindDefinition 仍声明 legacy `apiVersion/version/currentApiVersion`</?>
+                <When ?>0.3 loader 验证 authority</?>
+                <Then ?>loader MUST fail closed，且不得隐式猜测 writer spec revision</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

@@ -1,0 +1,144 @@
+<Track #add-code-package-resource-shape apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "为 Halfcode resource-core 增加 target-neutral CodePackage source shape、显式 CodeBinding、内容身份和安全模块加载协议" description = "扩展 XNL catalog/KindDefinition、content identity、module loader、caller-owned export admission 与 distribution 公共 API，不引入任何 host 专属 Kind 或 effect" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-24T17:07:48.372Z" updated_at = "2026-08-24T17:49:41.395Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "input" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "resource-core-runtime" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "modeling" domain = "modeling" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_add-code-package-resource-shape { name = "add-code-package-resource-shape" version = "1" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "CodePackage XNL shape and content identity" status = "DONE" priority = "P0" order = 0 } (
+        <Description ?01M0TC5Z85T3XF9D2GSV53WVK4>
+        以测试驱动增加 code-package catalog shape、显式 CodeBinding 规范化和 code bytes content contribution。
+        </?01M0TC5Z85T3XF9D2GSV53WVK4>
+        <SubNodes [
+          <Task #P1-T1 { name = "测试并实现 code-package catalog 与 CodeBinding contract" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVK5>
+              KindDefinition 可声明 code-package，catalog 从每个 package 目录加载 XNL descriptor。
+              </?01M0TC5Z85T3XF9D2GSV53WVK5>
+              <Criterion #P1-T1-AC2 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVK6>
+              每个 code-package resource 必须有且只有一个 CodeBinding，module 仅允许 package 内 vfs://./ JavaScript entry。
+              </?01M0TC5Z85T3XF9D2GSV53WVK6>
+              <Criterion #P1-T1-AC3 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVK7>
+              非法 shape、缺失 binding、绝对/父路径、非 JavaScript entry 和 symlink 逃逸返回稳定 diagnostics。
+              </?01M0TC5Z85T3XF9D2GSV53WVK7>
+            ]>
+          )>
+          <Task #P1-T2 { name = "测试并实现 code entry 内容身份与有效层投影" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVK8>
+              LoadedResourceTree 的 CodePackage identity 同时绑定 XNL authority 与 entry bytes contribution。
+              </?01M0TC5Z85T3XF9D2GSV53WVK8>
+              <Criterion #P1-T2-AC2 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVK9>
+              entry 修改会改变 contentDigest，机器绝对路径不会进入 digest 或公开 provenance。
+              </?01M0TC5Z85T3XF9D2GSV53WVK9>
+              <Criterion #P1-T2-AC3 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKA>
+              effective identity projector 保留 loader-owned contributions 并与 caller typed contributions 确定性合并。
+              </?01M0TC5Z85T3XF9D2GSV53WVKA>
+            ]>
+          )>
+        ]>
+        <Gate [
+          <Criterion #P1-G1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKB>
+          resource-core CodePackage shape、negative path 与 content identity tests 全部通过。
+          </?01M0TC5Z85T3XF9D2GSV53WVKB>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Secure module loading and export admission" status = "DONE" priority = "P0" order = 1 } (
+        <Description ?01M0TC5Z85T3XF9D2GSV53WVKC>
+        从 authentic loaded tree 加载 self-contained ESM entry，以 contentDigest 做 revision，并把 definition 判定留给 caller。
+        </?01M0TC5Z85T3XF9D2GSV53WVKC>
+        <SubNodes [
+          <Task #P2-T1 { name = "测试并实现 authentic CodePackage module loader" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKD>
+              loader 只接受 authentic tree 中 sourceShape=code-package 的 resource，并重复执行 realpath containment。
+              </?01M0TC5Z85T3XF9D2GSV53WVKD>
+              <Criterion #P2-T1-AC2 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKE>
+              模块 URL revision 绑定 loader contentDigest；reload tree 后可观察新 exports，stale tree 明确失败。
+              </?01M0TC5Z85T3XF9D2GSV53WVKE>
+              <Criterion #P2-T1-AC3 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKF>
+              diagnostics 只使用 resourceId、VFS URI 和稳定 code，不泄漏机器绝对路径。
+              </?01M0TC5Z85T3XF9D2GSV53WVKF>
+            ]>
+          )>
+          <Task #P2-T2 { name = "测试并实现 caller-owned module export admission" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKG>
+              generic API 只把顶层 named exports 与其一层数组成员交给 caller predicate，不递归任意对象。
+              </?01M0TC5Z85T3XF9D2GSV53WVKG>
+              <Criterion #P2-T2-AC2 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKH>
+              caller 提供 identity projector 后，单 package 与跨 package duplicate identity 均 fail closed。
+              </?01M0TC5Z85T3XF9D2GSV53WVKH>
+              <Criterion #P2-T2-AC3 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKJ>
+              Halfcode 不依赖 host definition brand、Kind schema、AJV 或 runtime capability。
+              </?01M0TC5Z85T3XF9D2GSV53WVKJ>
+            ]>
+          )>
+        ]>
+        <Gate [
+          <Criterion #P2-G1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKK>
+          module loading、revision、symlink confinement、admission 与 duplicate tests 全部通过。
+          </?01M0TC5Z85T3XF9D2GSV53WVKK>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "Public package closure" status = "DONE" priority = "P0" order = 2 } (
+        <Description ?01M0TC5Z85T3XF9D2GSV53WVKM>
+        冻结公开类型和 export map，在当前 0.2.3 源码上完成 package candidate 验证；版本发布留给后继 Track。
+        </?01M0TC5Z85T3XF9D2GSV53WVKM>
+        <SubNodes [
+          <Task #P3-T1 { name = "公开 CodePackage API 并补齐 distribution consumer smoke" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P3-T1-AC1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKN>
+              halfcode-compiler.xnl/resource-core 公开 shape、binding、loaded module 与 admission 类型/函数。
+              </?01M0TC5Z85T3XF9D2GSV53WVKN>
+              <Criterion #P3-T1-AC2 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKP>
+              npm pack candidate 在隔离 consumer 中可导入并加载 fixture CodePackage。
+              </?01M0TC5Z85T3XF9D2GSV53WVKP>
+              <Criterion #P3-T1-AC3 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKQ>
+              既有十个 public specifier 与结构化 ResourceTree consumer 保持兼容。
+              </?01M0TC5Z85T3XF9D2GSV53WVKQ>
+            ]>
+          )>
+          <Task #P3-T2 { name = "运行全仓、modeling 与严格 Codument 验证" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P3-T2-AC1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKR>
+              bun test、typecheck、workspace verify 与 package check 通过。
+              </?01M0TC5Z85T3XF9D2GSV53WVKR>
+              <Criterion #P3-T2-AC2 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKS>
+              modeling delta 与 Track strict validation 通过。
+              </?01M0TC5Z85T3XF9D2GSV53WVKS>
+              <Criterion #P3-T2-AC3 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKT>
+              diff 不包含 host 专属 Kind、effect、namespace 或包发布操作。
+              </?01M0TC5Z85T3XF9D2GSV53WVKT>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+        <Gate [
+          <Criterion #P3-G1 { checked = true } ?01M0TC5Z85T3XF9D2GSV53WVKV>
+          全仓、package candidate、modeling 与 Codument strict gates 全部通过。
+          </?01M0TC5Z85T3XF9D2GSV53WVKV>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule { max_concurrent = 1 spot_check = true } [
+    <Dag { for = "space_add-code-package-resource-shape" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+      <Node #P3 [
+        <After { ref = "P2" }>
+      ]>
+    ]>
+  ]>
+  <Hooks []>
+)>

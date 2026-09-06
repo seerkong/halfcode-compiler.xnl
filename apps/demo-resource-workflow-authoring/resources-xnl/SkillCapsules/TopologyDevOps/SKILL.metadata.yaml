@@ -1,2 +1,3 @@
 title: Example Resource Lifecycle DevOps
+version: 1.0.0
 description: Generic lifecycle root that routes authoring and run operations.

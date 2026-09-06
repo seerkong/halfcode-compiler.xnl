@@ -1,0 +1,50 @@
+<BehaviorPatch #track.support-single-file-catalog-entry.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/single-file-catalog-entry" } (
+      <Requirement #single-file-catalog-entry (
+        <Statement ?01M0TCTX0CHS8KDXYWKRP1VQS3>
+        single-file Catalog MAY use a plain `.xnl` entry to select exactly one resource file inside its root; without entry it SHALL retain stable directory-scan behavior.
+        </?01M0TCTX0CHS8KDXYWKRP1VQS3>
+        <Suites [
+          <Suite #single-file-entry-selection { name = "Single-file catalog entry selection" } (
+            <Cases [
+              <Case #select-one-shared-root-entry (
+                <Given ?01M0TCTX0CHS8KDXYWKRP1VQS4>
+                different single-file Catalogs share one root and each declares a distinct plain `.xnl` entry
+                </?01M0TCTX0CHS8KDXYWKRP1VQS4>
+                <When ?01M0TCTX0CHS8KDXYWKRP1VQS5>
+                resource-core discovers those catalogs
+                </?01M0TCTX0CHS8KDXYWKRP1VQS5>
+                <Then ?01M0TCTX0CHS8KDXYWKRP1VQS6>
+                each Catalog SHALL load only its selected file without producing kind-mismatch diagnostics for sibling files
+                </?01M0TCTX0CHS8KDXYWKRP1VQS6>
+              )>
+              <Case #reject-unsafe-entry (
+                <Given ?01M0TCTX0CHS8KDXYWKRP1VQS7>
+                a single-file Catalog entry is absolute, traverses directories, contains separators, or does not end in `.xnl`
+                </?01M0TCTX0CHS8KDXYWKRP1VQS7>
+                <When ?01M0TCTX0CHS8KDXYWKRP1VQS8>
+                resource-core validates discovery
+                </?01M0TCTX0CHS8KDXYWKRP1VQS8>
+                <Then ?01M0TCTX0CHS8KDXYWKRP1VQS9>
+                it SHALL emit RESOURCE_CATALOG_ENTRY_INVALID and return no selected files
+                </?01M0TCTX0CHS8KDXYWKRP1VQS9>
+              )>
+              <Case #preserve-directory-scan-without-entry (
+                <Given ?01M0TCTX0CHS8KDXYWKRP1VQSA>
+                a single-file Catalog omits entry
+                </?01M0TCTX0CHS8KDXYWKRP1VQSA>
+                <When ?01M0TCTX0CHS8KDXYWKRP1VQSB>
+                resource-core discovers the Catalog root
+                </?01M0TCTX0CHS8KDXYWKRP1VQSB>
+                <Then ?01M0TCTX0CHS8KDXYWKRP1VQSC>
+                it SHALL preserve the existing stable scan of all `.xnl` files
+                </?01M0TCTX0CHS8KDXYWKRP1VQSC>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

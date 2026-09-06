@@ -1,0 +1,24 @@
+<Track #prepare-halfcode-authoring-runtime-distribution-candidate apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "Prepare an unpublished halfcode-compiler.xnl@0.2.9 tarball whose public authoring-runtime exports the transactional resource authoring API." description = "Bump the immutable distribution candidate, add installed-consumer API gates, and produce exact local pack evidence without publishing npm state." question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-30T11:34:26.964Z" updated_at = "2026-08-30T11:42:59.390Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle #runtime-authoring { role = "input" name = "runtime-authoring" domain = "code" path = "vfs://@/packages/runtime-authoring/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+  ]>
+  <TaskSpace #space_prepare-halfcode-authoring-runtime-distribution-candidate { name = "prepare-halfcode-authoring-runtime-distribution-candidate" version = "1" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Immutable local distribution candidate" status = "DONE" priority = "P0" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "bump candidate identity and gate public authoring runtime exports" status = "DONE" priority = "P0" order = 0 }>
+          <Task #P1-T2 { name = "build test pack and verify tarball-only installed consumer without publish" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?01M197DYNN6FSGTKKV3RBKTA6A>
+              The exact 0.2.9 tarball exposes runtime and type authoring APIs and no npm publish or dist-tag mutation occurs.
+              </?01M197DYNN6FSGTKKV3RBKTA6A>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule []>
+  <Hooks []>
+)>

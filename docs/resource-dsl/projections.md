@@ -6,21 +6,22 @@
 
 | Fact | Authority owner | Halfcode projection |
 |---|---|---|
-| package、Catalog、KindDefinition、resource descriptor | XNL ResourcePackage | `LoadedResourceTree extends ResourceTree` |
+| package、Catalog、KindDefinition、resource descriptor | XNL/Markdown authority | `AuthoredResourceTree` |
+| reader selection、resolution path 与 effective spec | Host exact reader profile + admitted compiler/Kind registrations | `ResolvedResourceTree` + receipts |
 | layer precedence | 调用方提供的有序 `ResourceLayerInput[]` | `EffectiveResourceRegistry.layers` |
 | suppression | 调用方显式提供的 `ResourceTombstone` | effective/tombstone/shadow provenance |
 | Kind-specific dependency semantics | 对应 Kind owner 或 consumer | `ResourceDependencyEdge[]` |
-| XNL authority bytes | canonical loader 的同一次 raw-byte read | `LoadedResourceTree.contentIdentities` |
+| authority bytes | canonical loader 的同一次 raw-byte read | `AuthoredResourceTree.contentIdentities` |
 | Kind-specific material bytes | Kind owner 提供的显式 digest contribution | effective `ResourceContentIdentity` |
 | roots 与 dependency closure | 调用方的显式 roots 加 typed edges | `ResourceDependencySnapshot` |
 
-`ResourceTree` 是单个已验证 package 的规范化结果。`EffectiveResourceRegistry` 只是多个 tree 的确定性只读投影；它会 deep-clone/freeze record、metadata、node/value 与 KindDefinition facts，避免调用方之后修改输入而改变既有投影，但不会原地冻结或改写旧 `ResourceTree`。`ResourceDependencySnapshot` 又是某组 roots 在一个 content-sensitive registry revision 上的冻结闭包。两种投影都可由 authority facts 重建，不得反写任一 XNL package，也不得成为第二份 authoring 真源。
+`AuthoredResourceTree` 是单个已验证 package 的 writer projection；`ResolvedResourceTree` 保留该 authored source，并为 manifest、KindDefinition 与业务 resource 记录 writer/reader/path receipt。`EffectiveResourceRegistry` 只是多个 authored tree 的确定性只读投影；它会 deep-clone/freeze record、metadata、node/value 与 KindDefinition facts，避免调用方之后修改输入而改变既有投影。`ResourceDependencySnapshot` 又是某组 roots 在一个 content-sensitive registry revision 上的冻结闭包。所有 projection 都可由 authority facts 和显式 registrations 重建，不得反写任一 package，也不得成为第二份 authoring 真源。
 
 Snapshot builder 只接受同一 resource-core runtime 中由 `composeLayeredResourceRegistry()` 返回的 canonical immutable registry。手工构造、浅拷贝或改写 revision 字段的结构相似对象会 fail closed；需要跨进程恢复时，应从 XNL packages、ordered layers 与 tombstones 重新组合。Snapshot 会复制并冻结自己的 origin facts，不共享可变调用方引用。
 
 ## Ordered named layers
 
-layer 只包含一个不透明、稳定的 `id` 和一个已验证 `ResourceTree`。数组从低 precedence 到高 precedence 排列，后一个 layer 优先。Halfcode 不保留特殊 layer 名称，不根据名称重排，也不拥有任何产品安装目录或机器路径策略；实际 roots 由 consumer 在调用 resource-core 之前绑定。
+layer 只包含一个不透明、稳定的 `id` 和一个已验证 `AuthoredResourceTree`。数组从低 precedence 到高 precedence 排列，后一个 layer 优先。Halfcode 不保留特殊 layer 名称，不根据名称重排，也不拥有任何产品安装目录或机器路径策略；实际 roots 由 consumer 在调用 resource-core 之前绑定。
 
 组合规则是：
 
@@ -56,9 +57,9 @@ const registry = composeLayeredResourceRegistry({
 
 ## Explicit content identity
 
-canonical loader 对每个 XNL authority 文件只读取一次 raw bytes：同一次读取同时用于 fatal UTF-8 decode、XNL parse 和 SHA-256。成功加载后返回 additive `LoadedResourceTree`；其 `contentIdentities` 精确覆盖 `registry.byKind` 的业务 resources，不包含 package manifest 或 KindDefinition。multi-root document 的 roots 共享同一文件级 `authorityDigest`，但各自的 `resourceId` 和 `contentDigest` 独立。
+canonical loader 对每个 XNL/Markdown authority 文件只读取一次 raw bytes：同一次读取同时用于 fatal UTF-8 decode、parse 和 SHA-256。成功加载后返回 `AuthoredResourceTree`；其 `contentIdentities` 精确覆盖 `registry.byKind` 的 KindDefinition 与业务 resources，不包含 package manifest。multi-root document 的 roots 共享同一文件级 `authorityDigest`，但各自的 `resourceId` 和 `contentDigest` 独立。
 
-`ResourceTree` 仍是兼容父接口，手工 structural tree 仍可参与 generic layer composition。只有 canonical loader 返回并由当前 runtime 登记的 `LoadedResourceTree` 才能进入 `resolveEffectiveResourceContentIdentities()`。projector exact 核对 registry 的 layer id、顺序、package 与 effective origin，从每个 effective layer 选择 loader identity；shadowed non-effective resource 与 tombstone 不进入结果。Kind owner 再把 prompt、schema、instruction 等 material 作为带稳定 `key`、`digest` 和可选 `sourceUri` 的 contribution 显式提供。
+只有 canonical loader 返回并由当前 runtime 登记的 authentic `AuthoredResourceTree` 才能进入 `resolveEffectiveResourceContentIdentities()`。projector exact 核对 registry 的 layer id、顺序、package 与 effective origin，从每个 effective layer 选择 loader identity；shadowed non-effective resource 与 tombstone 不进入结果。Kind owner 再把 prompt、schema、instruction 等 material 作为带稳定 `key`、`digest` 和可选 `sourceUri` 的 contribution 显式提供。
 
 `createResourceContentIdentity()` 按 UTF-16 code-unit key 顺序 canonicalize contributions，并拒绝任何重复 key；即使 digest 相同，重复或不同 provenance 也不是可静默折叠的合法事实。snapshot builder 会对全部 effective resources 重新规范化 authority/contribution facts、重算 `contentDigest` 并核对 claim；它不会只验证 roots 可达的 identity，也不会信任调用方构造的对象。`sourceUri` 是 provenance，不允许机器绝对路径进入 content revision；调用方应使用 Resource DSL 定义的逻辑 URI。
 

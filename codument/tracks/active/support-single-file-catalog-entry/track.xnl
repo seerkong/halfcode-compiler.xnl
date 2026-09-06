@@ -11,7 +11,7 @@
   <Ports { scope = "track" } [
     <MaterialBundle { role = "output" name = "resource-loader" domain = "code" path = "vfs://@/packages/resource-core/" }>
     <MaterialBundle { role = "output" name = "resource-docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
-    <MaterialBundle { role = "output" name = "distribution" domain = "package" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
   ]>
   <TaskSpace #space_support-single-file-catalog-entry { name = "support-single-file-catalog-entry" version = "1" } (
     <SubNodes [

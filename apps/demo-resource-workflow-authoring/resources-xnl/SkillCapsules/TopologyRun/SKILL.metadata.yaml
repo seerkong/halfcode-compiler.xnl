@@ -1,2 +1,3 @@
 title: Example Resource Lifecycle Run
+version: 1.0.0
 description: Generic operations for running a previously authored resource.

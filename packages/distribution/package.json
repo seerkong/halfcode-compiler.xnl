@@ -1,6 +1,6 @@
 {
   "name": "halfcode-compiler.xnl",
-  "version": "0.2.3",
+  "version": "0.3.2-eidolon-trusted-kinds.0",
   "description": "Compile XNL-described applications into runtime-ready skill capsules.",
   "type": "module",
   "private": false,
@@ -70,5 +70,9 @@
     "halfcode-compiler-runtime-testing": "workspace:*",
     "halfcode-compiler-skill-capsule": "workspace:*",
     "tsdown": "0.22.14"
-  }
+  },
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

@@ -1,5 +1,4 @@
-<decisions apiVersion="codument.tech/v1alpha1" [
-  <decision #track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+<decision #track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
     <question ?01M02KBYJKPF2BKYASVPBJ98G0>
     谁拥有 object-operation definition 与 target kinds？
     </?01M02KBYJKPF2BKYASVPBJ98G0>
@@ -18,7 +17,7 @@
       </?01M02KBYJKPF2BKYASVPBJ98G4>
     )>
   )>
-  <decision #track.migrate_businessobject_pageobject_to_xnl.four_dimensions { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
+<decision #track.migrate_businessobject_pageobject_to_xnl.four_dimensions apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 1 reversibility = "medium" } (
     <question ?01M02KBYJKPF2BKYASVPBJ98G5>
     对象 operation handler 的稳定调用形状是什么？
     </?01M02KBYJKPF2BKYASVPBJ98G5>
@@ -37,7 +36,7 @@
       </?01M02KBYJKPF2BKYASVPBJ98G9>
     )>
   )>
-  <decision #track.migrate_businessobject_pageobject_to_xnl.private_binding { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority"] } (
+<decision #track.migrate_businessobject_pageobject_to_xnl.private_binding apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["track.migrate_businessobject_pageobject_to_xnl.xnl_owner_authority"] } (
     <question ?01M02KBYJKPF2BKYASVPBJ98GA>
     PageObject export 与 BusinessObject resource binding 是否进入 public catalog？
     </?01M02KBYJKPF2BKYASVPBJ98GA>
@@ -56,7 +55,7 @@
       </?01M02KBYJKPF2BKYASVPBJ98GE>
     )>
   )>
-  <decision #track.migrate_businessobject_pageobject_to_xnl.separate_object_entry { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+<decision #track.migrate_businessobject_pageobject_to_xnl.separate_object_entry apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
     <question ?01M02KBYJKPF2BKYASVPBJ98GF>
     对象操作是否复用 generic callable entry？
     </?01M02KBYJKPF2BKYASVPBJ98GF>
@@ -75,4 +74,3 @@
       </?01M02KBYJKPF2BKYASVPBJ98GK>
     )>
   )>
-]>

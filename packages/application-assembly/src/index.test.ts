@@ -129,7 +129,8 @@ describe("application-assembly", () => {
     const dependencySkill = assembly.skillCapsules.find((item) => item.fqn === "demo.xnl_assembly.skill.dependency")
 
     expect(rootSkill).toEqual(expect.objectContaining({
-      apiVersion: "halfcode.resources/v1",
+      envelopeVersion: "halfcode.resource-envelope/v1",
+      specVersion: 1,
       version: "1.0.0",
       metadata: expect.objectContaining({ version: "1.0.0" }),
       dependencies: [{
@@ -139,14 +140,15 @@ describe("application-assembly", () => {
       }],
     }))
     expect(dependencySkill).toEqual(expect.objectContaining({
-      apiVersion: "halfcode.resources/v1",
+      envelopeVersion: "halfcode.resource-envelope/v1",
+      specVersion: 1,
       version: "1.0.0",
       metadata: expect.objectContaining({ version: "1.0.0" }),
       dependencies: [],
     }))
   })
 
-  test("rejects conflicting YAML Skill versions", async () => {
+  test("uses YAML as Skill version authority and rejects a dependent exact-version mismatch", async () => {
     const root = await mkdtemp(join(tmpdir(), "halfcode-skill-version-"))
     await cp(xnlAssemblyRoot, root, { recursive: true })
     await writeFile(join(root, "Skills/Dependency/skill.yaml"), [
@@ -157,7 +159,7 @@ describe("application-assembly", () => {
     ].join("\n"))
 
     await expect(loadApplicationAssembly({ resourceRootDir: root }))
-      .rejects.toThrow("SKILL_CAPSULE_VERSION_CONFLICT")
+      .rejects.toThrow("SKILL_DEPENDENCY_VERSION_MISMATCH")
   })
 
   test.each([

@@ -1,0 +1,56 @@
+<BehaviorPatch #track.extend-single-file-and-code-package-manifests.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/single-file-resource-formats" } (
+      <Requirement #single-file-resource-formats (
+        <Statement ?>resource-core SHALL 让 single-file catalog 直接加载 XNL 或带规范 frontmatter 的 Markdown 单文件资源，并以完整 authority bytes 产生确定性 content identity。</?>
+        <Suites [
+          <Suite #markdown-single-file { name = "Markdown single-file resource" } (
+            <Cases [
+              <Case #load-markdown-frontmatter-resource (
+                <Given ?>single-file catalog 中的 Markdown 以闭合 frontmatter 声明 apiVersion、kind、metadata.fqn 与 spec</?>
+                <When ?>resource-core 加载 ResourcePackage</?>
+                <Then ?>registry SHALL 以该 FQN 独立寻址资源、保留 markdown provenance，并以文件完整 bytes 计算 authority identity</?>
+              )>
+              <Case #reject-invalid-markdown-authority (
+                <Given ?>catalog 内 Markdown 缺失或破坏 frontmatter、Kind/FQN/apiVersion 无效，或 YAML 不是 object</?>
+                <When ?>resource-core 加载 ResourcePackage</?>
+                <Then ?>系统 SHALL 返回稳定 diagnostic 且 MUST NOT 产生 partial registry</?>
+              )>
+              <Case #do-not-infer-from-markdown-body (
+                <Given ?>Markdown 正文含 resource-like URI 或其他自然语言</?>
+                <When ?>loader 计算资源结构与 content identity</?>
+                <Then ?>正文 MUST NOT 被解释为 dependency 或额外 metadata，authority digest SHALL 仍覆盖完整原始文件</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://resource-loading/requirements/code-package-source-shape" } (
+      <Requirement #code-package-source-shape (
+        <Statement ?>resource-core SHALL 把 code-package 作为 target-neutral source shape，要求 manifest 显式声明安全 entry、runtime 与 package-local CodeBinding，并把 entry bytes 纳入 canonical content identity。</?>
+        <Suites [
+          <Suite #code-package-authority { name = "CodePackage manifest authority and identity" } (
+            <Cases [
+              <Case #load-complete-code-package-manifest (
+                <Given ?>CodePackage descriptor 声明相对 JavaScript entry、非空 runtime，且 CodeBinding.module 精确绑定同一 entry</?>
+                <When ?>resource-core 加载 package</?>
+                <Then ?>系统 SHALL 保留 entry/runtime facts、生成 binding，并把受限 entry bytes 摘要进 content identity</?>
+              )>
+              <Case #reject-incomplete-or-drifting-manifest (
+                <Given ?>CodePackage 缺 entry/runtime、entry 不安全，或 CodeBinding.module 与 entry 不一致</?>
+                <When ?>resource-core 加载 package</?>
+                <Then ?>系统 SHALL 返回稳定 diagnostic 且 MUST NOT 登记该 CodePackage</?>
+              )>
+              <Case #reject-entry-escape-and-stale-content (
+                <Given ?>entry 经 symlink/realpath 越出 package、不是文件，或 tree snapshot 后 bytes 改变</?>
+                <When ?>系统读取或导入 CodePackage</?>
+                <Then ?>加载 SHALL fail closed，且不得暴露 partial module namespace</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

@@ -1,4 +1,4 @@
-<SkillCapsule #Halfcode.ResourceDsl.Skill.System apiVersion="halfcode.resources/v1" version="1.0.0" {
+<SkillCapsule #Halfcode.ResourceDsl.Skill.System envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   name = "sys-halfcode-resource-dsl"
   lifecycle = "Stable"
   description = "Author and review XNL ResourcePackages, catalogs, KindDefinitions, VFS materials, projections and SkillCapsules using the canonical Halfcode Resource DSL."

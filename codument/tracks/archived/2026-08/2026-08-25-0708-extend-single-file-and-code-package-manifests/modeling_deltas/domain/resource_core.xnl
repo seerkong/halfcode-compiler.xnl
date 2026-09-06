@@ -1,0 +1,41 @@
+<component #resource_core.single_file_loader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/single-file-resource-formats"] } (
+  <desc ?>按 authority 文件格式把 single-file catalog 的 XNL 或 Markdown frontmatter 规范化为统一 ResourceRecord，并以完整原始 bytes 建立内容身份。</?>
+  <runtime ?runtime>interface SingleFileRuntime { readFile(path: string): Promise&lt;Uint8Array&gt; }</?runtime>
+  <input ?input>interface SingleFileInput { filePath: string; sourceShape: "single-file"; expectedKind: string }</?input>
+  <config ?config>interface SingleFileConfig { formats: readonly ["xnl", "markdown"]; markdownIdentityField: "metadata.fqn" }</?config>
+  <output ?output>type SingleFileOutput = ResourceRecord | ResourceDiagnostic[]</?output>
+  <pseudo { kind = "ctrl" } ?ctrl>读取一次 raw bytes → 按扩展名解析 XNL 或闭合 Markdown frontmatter → 规范化 identity/metadata/spec/provenance → 校验 Kind/API version → 以同一 raw bytes 生成 authority digest</?ctrl>
+  <not-owned-here ?>不从 Markdown 正文推断 dependency，不拥有 ApplicationSOP 等消费方 Kind 语义。</?>
+)>
+
+<object #resource_core.code_package_binding apiVersion="codument.tech/v1alpha1" { kind = "entity" fact_grade = "derived_projection_cache" single_writer = "modeling://domain/resource_core/code_package_loader" } (
+  <desc ?>从完整 CodePackage descriptor 的 entry/runtime 与显式 CodeBinding 规范化得到的只读加载事实；descriptor 与 entry bytes 仍是 authority，本对象不反写。</?>
+  <types ?types>
+  interface CodePackageBinding {
+    readonly resourceId: string
+    readonly moduleUri: `vfs://./${string}.js` | `vfs://./${string}.mjs`
+    readonly exportName?: string
+  }
+  interface CodePackageManifestFacts { readonly entry: string; readonly runtime: string }
+  </?types>
+  <invariants ?>只属于 sourceShape=code-package 的 record；entry lexical-safe 且 `vfs://./${entry}` 必须等于 moduleUri；runtime 非空；entry realpath 闭合在 descriptor directory。</?>
+  <fact-source ?>CodePackage XNL 的 entry/runtime/CodeBinding 是事实源；#resource_core.code_package_loader 是唯一规范化者。</?>
+)>
+
+<component #resource_core.code_package_loader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/code-package-source-shape" "behavior://resource-loading/requirements/code-package-module-loading"] } (
+  <desc ?>验证完整 CodePackage manifest 与 binding、摘要 entry bytes、通过 runtime-owned revision-isolated module source 加载 namespace，并通过 caller contract 做 target-neutral export admission。</?>
+  <runtime ?runtime>
+  interface CodePackageRuntime {
+    realpath(path: string): Promise&lt;string&gt;
+    readFile(path: string): Promise&lt;Uint8Array&gt;
+    stat(path: string): Promise&lt;{ isFile(): boolean }&gt;
+    prepareModuleSource(input: { bytes: Uint8Array; revision: string }): Promise&lt;PreparedCodePackageModuleSource&gt;
+    importModule(url: string): Promise&lt;Readonly&lt;Record&lt;string, unknown&gt;&gt;&gt;
+  }
+  </?runtime>
+  <input ?input>interface LoadCodePackageModuleInput { readonly tree: LoadedResourceTree; readonly resourceId: string; readonly rootDir: string }</?input>
+  <config ?config>interface CodePackageConfig { sourceShape: "code-package"; requiredManifestFields: readonly ["entry", "runtime"]; moduleSchemes: readonly ["vfs://./"]; extensions: readonly [".js", ".mjs"] }</?config>
+  <output ?output>type LoadCodePackageModuleOutput = Promise&lt;LoadedCodePackageModule&gt;; type LoadCodePackageModuleFailure = throws CodePackageLoadError</?output>
+  <pseudo { kind = "ctrl" } ?ctrl>验证 authentic tree 与 shape → 校验 entry/runtime 与 singleton CodeBinding 一致 → lexical/realpath containment → 摘要 entry 并核对 loader contribution → runtime 准备 revision-isolated source → import并清理 → 重读 entry 拒绝漂移 → caller contract admission</?ctrl>
+  <not-owned-here ?>Host Kind brand、schema、capability/effect、TypeScript 编译与消费方 runtime 支持矩阵不属于 resource-core。</?>
+)>

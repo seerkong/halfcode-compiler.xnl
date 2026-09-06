@@ -1,4 +1,4 @@
-<ResourceModule #demo.resource_workflow.module.core apiVersion="halfcode.resources/v1" version="1.0.0" {
+<ResourceModule #demo.resource_workflow.module.core envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Nested manifest with a local catalog"
 } (

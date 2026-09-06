@@ -1,0 +1,10 @@
+<module #publication_xnl.halfcode_compiler_xnl apiVersion="codument.tech/v1alpha1" { kind = "module" visibility = "public" depends_on = ["modeling://domain/resource_core/loader" "modeling://domain/resource_core/layered_registry" "modeling://domain/resource_core/effective_content_identity_projector" "modeling://domain/resource_core/dependency_snapshot" "modeling://domain/resource_core/code_package_loader"] behaviors = ["behavior://package-distribution/requirements/xnl-public-package" "behavior://package-distribution/requirements/immutable-0-2-2-candidate" "behavior://package-distribution/requirements/published-0-2-4-code-package" "behavior://resource-loading/requirements/layered-effective-registry" "behavior://resource-loading/requirements/resource-dependency-snapshot" "behavior://resource-loading/requirements/code-package-module-loading"] } [
+  <desc ?>halfcode-compiler.xnl 的唯一公开 npm capsule；0.2.4 以不可变 registry identity 发布，在保留十个既有 specifiers 的同时从 resource-core additive 暴露 CodePackage shape、显式 CodeBinding、受限 loader 与 caller-owned export admission。</?>
+  <capsule-tree ?capsule-tree>
+  packages/distribution/package.json # public identity/version authority: 0.2.4
+  packages/distribution/src/resource-core.ts # target-neutral CodePackage public projection
+  packages/distribution/tools/verify-package.ts # packed runtime/type/CodePackage isolated consumer and release identity gate
+  packages/resource-core/src/code-package.ts # hidden effects runtime plus public module loader/admission capsule
+  npm registry halfcode-compiler.xnl@0.2.4 # immutable publication fact: version/integrity/shasum
+  </?capsule-tree>
+]>

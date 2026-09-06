@@ -1,1 +1,1 @@
-<ResourceMappings #example.resource_lifecycle.resource_mappings.devops apiVersion="halfcode.resources/v1" version="1.0.0">
+<ResourceMappings #example.resource_lifecycle.resource_mappings.devops envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>

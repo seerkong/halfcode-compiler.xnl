@@ -1,4 +1,4 @@
-<Note #demo.resource_workflow.note.root apiVersion="halfcode.resources/v1" version="1.0.0" {
+<Note #demo.resource_workflow.note.root envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Root note discovered by a single-file catalog"
   labels = ["root" "demo"]

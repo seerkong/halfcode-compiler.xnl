@@ -11,7 +11,7 @@ import {
   resolveEffectiveResourceContentIdentities,
   sha256Digest,
   validateResourceTree,
-  type LoadedResourceTree,
+  type AuthoredResourceTree,
   type ResourceDiagnostic,
   type ResourceTree,
 } from "./index"
@@ -58,13 +58,13 @@ describe("loaded resource content identities", () => {
     const root = await fixtureCopy("halfcode-loaded-identity-forest-")
     const definitionPath = join(root, "KindDefinitions/Note/manifest.xnl")
     await writeFile(definitionPath, (await readFile(definitionPath, "utf8")).replace(
-      'supportedApiVersions = ["halfcode.resources/v1"]',
-      'supportedApiVersions = ["halfcode.resources/v1"]\n  documentCardinality = "many"',
+      'sourceShapes = ["single-file"]',
+      'sourceShapes = ["single-file"]\n  documentCardinality = "many"',
     ))
     const forestPath = join(root, "Notes/Forest.xnl")
     await writeFile(forestPath, [
-      '<Note #demo.resource_workflow.note.forest_a apiVersion="halfcode.resources/v1">',
-      '<Note #demo.resource_workflow.note.forest_b apiVersion="halfcode.resources/v1">',
+      '<Note #demo.resource_workflow.note.forest_a envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>',
+      '<Note #demo.resource_workflow.note.forest_b envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>',
       "",
     ].join("\n"))
 
@@ -92,7 +92,7 @@ describe("loaded resource content identities", () => {
     const missingIdentityRoot = await fixtureCopy("halfcode-loaded-identity-missing-")
     await writeFile(
       join(missingIdentityRoot, "Notes/MissingIdentity.xnl"),
-      '<Note apiVersion="halfcode.resources/v1">\n',
+      '<Note envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>\n',
     )
     expect(await validateResourceTree({ rootDir: missingIdentityRoot })).toContainEqual(expect.objectContaining({
       code: "RESOURCE_IDENTITY_MISSING",
@@ -233,7 +233,7 @@ describe("effective resource content identity projector", () => {
       layers: validLayers,
     }))).toContain("RESOURCE_CONTENT_IDENTITY_REGISTRY_UNTRUSTED")
 
-    const structuralTree = { ...base } as LoadedResourceTree
+    const structuralTree = { ...base } as AuthoredResourceTree
     expect(diagnosticCodes(() => resolveEffectiveResourceContentIdentities({
       registry,
       layers: [{ id: "base", tree: structuralTree }, validLayers[1]],
@@ -276,7 +276,7 @@ async function fixtureCopy(prefix: string): Promise<string> {
 async function loadNamedFixture(
   name: string,
   options: { changeRootNote?: boolean; emptyBusinessCatalogs?: boolean } = {},
-): Promise<LoadedResourceTree> {
+): Promise<AuthoredResourceTree> {
   const root = await fixtureCopy(`halfcode-loaded-${name}-`)
   const manifestPath = join(root, "manifest.xnl")
   let manifest = (await readFile(manifestPath, "utf8")).replace(

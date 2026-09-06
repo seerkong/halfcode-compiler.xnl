@@ -1,8 +1,20 @@
-<KindDefinition #halfcode.resource_kind.Note apiVersion="halfcode.resources/v1" version="1.0.0" {
+<KindDefinition #halfcode.resource_kind.Note envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Stable"
   resourceKind = "Note"
+  subjectFqn = "Halfcode.ResourceKind.Note"
   sourceShapes = ["single-file"]
-  currentApiVersion = "halfcode.resources/v1"
-  supportedApiVersions = ["halfcode.resources/v1"]
   description = "Note resource contract"
-}>
+} (
+  <SpecRevisions [
+    <SpecRevision #v1 {
+      specVersion = 1
+      schemaRef = "vfs://./spec-v1.schema.json"
+      schemaFingerprint = "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      contractFingerprint = "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      semanticValidatorFingerprint = "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      referenceProjectionFingerprint = "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      compilerInputFingerprint = "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      stability = "stable"
+    }>
+  ]>
+)>

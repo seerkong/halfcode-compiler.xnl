@@ -1,4 +1,4 @@
-<SkillCapsule #example.resource_lifecycle.skill.devops apiVersion="halfcode.resources/v1" version="1.0.0" {
+<SkillCapsule #example.resource_lifecycle.skill.devops envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   name = "example-resource-lifecycle-devops"
   lifecycle = "Active"
   description = "Generic lifecycle root that routes authoring and run operations."

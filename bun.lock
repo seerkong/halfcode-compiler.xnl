@@ -43,11 +43,19 @@
         "halfcode-compiler-skill-capsule": "workspace:*",
       },
     },
+    "apps/halfcode-resource-dsl-system-skill": {
+      "name": "halfcode-resource-dsl-system-skill",
+      "version": "1.0.0",
+      "dependencies": {
+        "halfcode-compiler-application-assembly": "workspace:*",
+      },
+    },
     "packages/application-assembly": {
       "name": "halfcode-compiler-application-assembly",
       "version": "0.2.1",
       "dependencies": {
         "halfcode-compiler-resource-core": "workspace:*",
+        "typescript": "5.9.3",
         "yaml": "^2.8.0",
       },
     },
@@ -73,7 +81,7 @@
     },
     "packages/distribution": {
       "name": "halfcode-compiler.xnl",
-      "version": "0.2.3",
+      "version": "0.3.1",
       "dependencies": {
         "typescript": "5.9.3",
         "yaml": "^2.8.0",
@@ -103,6 +111,7 @@
       "version": "0.2.1",
       "dependencies": {
         "xnl-core": "^0.1.12",
+        "yaml": "^2.8.0",
       },
     },
     "packages/resource-mapping": {
@@ -122,6 +131,10 @@
     "packages/runtime-authoring": {
       "name": "halfcode-compiler-authoring-runtime",
       "version": "0.2.1",
+      "dependencies": {
+        "halfcode-compiler-application-assembly": "workspace:*",
+        "halfcode-compiler-resource-core": "workspace:*",
+      },
     },
     "packages/runtime-mock": {
       "name": "halfcode-compiler-runtime-testing",
@@ -270,6 +283,8 @@
     "halfcode-compiler-workspace-tools": ["halfcode-compiler-workspace-tools@workspace:packages/workspace-tools"],
 
     "halfcode-compiler.xnl": ["halfcode-compiler.xnl@workspace:packages/distribution"],
+
+    "halfcode-resource-dsl-system-skill": ["halfcode-resource-dsl-system-skill@workspace:apps/halfcode-resource-dsl-system-skill"],
 
     "hookable": ["hookable@6.1.1", "https://npm.corp.kuaishou.com/hookable/-/hookable-6.1.1.tgz", {}, "sha512-U9LYDy1CwhMCnprUfeAZWZGByVbhd54hwepegYTK7Pi5NvqEj63ifz5z+xukznehT7i6NIZRu89Ay1AZmRsLEQ=="],
 

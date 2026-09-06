@@ -78,7 +78,7 @@ Directories are storage until a root `Catalog` admits them and a `KindDefinition
 Keep implementations in the authoring package and bind them semantically:
 
 ```xnl
-<Function #Demo.ResourceWorkflow.Function.PrepareProcedure apiVersion="halfcode.resources/v1" {
+<Function #Demo.ResourceWorkflow.Function.PrepareProcedure envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Prepare a procedure."
 } (

@@ -1,2 +1,3 @@
 title: Example Resource Lifecycle DSL
+version: 1.0.0
 description: Shared resource DSL reference used by generic authoring operations.

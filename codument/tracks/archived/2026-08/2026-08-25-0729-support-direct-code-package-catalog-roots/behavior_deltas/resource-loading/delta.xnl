@@ -1,0 +1,13 @@
+<BehaviorPatch #track.support-direct-code-package-catalog-roots.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [<Upsert { selector = "behavior://resource-loading/requirements/code-package-source-shape" } (
+    <Requirement #code-package-source-shape (
+      <Statement ?>resource-core SHALL 让 code-package catalog 同时支持直接 descriptor root 与既有 collection root，并执行同一完整 manifest、binding、confinement 与 identity pipeline。</?>
+      <Suites [<Suite #code-package-authority { name = "CodePackage direct and collection roots" } (<Cases [
+        <Case #load-direct-code-package-root (<Given ?>catalog root 自身包含配置的普通 entry 文件</?> <When ?>resource-core 加载 package</?> <Then ?>系统 SHALL 只加载该 descriptor，并保留 entry/runtime/CodeBinding 与 entry bytes identity。</?>)>
+        <Case #preserve-code-package-collection-root (<Given ?>root 自身没有 entry 且子目录包含 entry</?> <When ?>加载 package</?> <Then ?>系统 SHALL 保持稳定排序的 collection 扫描。</?>)>
+        <Case #reject-unsafe-direct-entry (<Given ?>root entry 存在但为 symlink 或非普通文件</?> <When ?>选择 discovery mode</?> <Then ?>系统 SHALL 返回稳定 diagnostic，不得回退或产生 partial registry。</?>)>
+        <Case #reject-incomplete-or-drifting-manifest (<Given ?>任一模式的 manifest/binding/entry 不完整或漂移</?> <When ?>加载或导入</?> <Then ?>系统 SHALL 沿统一 pipeline fail closed。</?>)>
+      ]>)>]>
+    )>
+  )>]>
+)>

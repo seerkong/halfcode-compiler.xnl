@@ -1,0 +1,76 @@
+<BehaviorPatch #track.add-code-package-resource-shape.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/code-package-source-shape" } (
+      <Requirement #code-package-source-shape (
+        <Statement ?>resource-core SHALL 把 code-package 作为 target-neutral XNL source shape，以显式 package-local CodeBinding 绑定 self-contained JavaScript entry，并把 entry bytes 纳入 canonical content identity。</?>
+        <Suites [
+          <Suite #code-package-authority { name = "CodePackage XNL authority and identity" } (
+            <Cases [
+              <Case #load-code-package-shape (
+                <Given ?>KindDefinition 允许 code-package，Catalog 指向多个 package 子目录，每个 XNL descriptor 含一个 vfs://./ CodeBinding</?>
+                <When ?>resource-core 加载 ResourcePackage</?>
+                <Then ?>registry SHALL 产生 sourceShape=code-package 的规范化 records，并公开不含机器绝对路径的 binding facts</?>
+              )>
+              <Case #reject-invalid-code-binding (
+                <Given ?>code-package descriptor 缺少或重复 CodeBinding，或 module 使用绝对路径、父目录、编码分隔符、反斜杠、非 JavaScript extension</?>
+                <When ?>resource-core 验证或加载 package</?>
+                <Then ?>系统 SHALL 返回稳定 diagnostics 并拒绝产生 partial tree</?>
+              )>
+              <Case #reject-realpath-escape (
+                <Given ?>CodeBinding lexical path 位于 package 目录内，但祖先 symlink 或 entry symlink 指向 resource root 外</?>
+                <When ?>resource-core 解析 entry</?>
+                <Then ?>系统 MUST 以 realpath confinement 拒绝，且 diagnostic MUST NOT 泄漏机器绝对路径</?>
+              )>
+              <Case #bind-entry-content-identity (
+                <Given ?>两个 package 的 XNL descriptor 相同，而 self-contained entry bytes 不同</?>
+                <When ?>loader 构造 per-resource content identities</?>
+                <Then ?>authorityDigest SHALL 只绑定 XNL bytes，code-binding contribution 与 contentDigest SHALL 绑定 entry bytes并随其变化</?>
+              )>
+              <Case #preserve-loader-contributions-through-layers (
+                <Given ?>authentic loaded layers 含 CodePackage entry contribution，并另有 caller typed contributions</?>
+                <When ?>系统投影 effective content identities</?>
+                <Then ?>系统 SHALL 保留 effective loader contribution、确定性合并 caller contribution，并 MUST 拒绝同 key 冲突</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+    <Upsert { selector = "behavior://resource-loading/requirements/code-package-module-loading" } (
+      <Requirement #code-package-module-loading (
+        <Statement ?>resource-core SHALL 只从 authentic loaded CodePackage facts 加载 revision-bound module namespace，并通过 caller-owned predicate/identity protocol 接纳 definitions，而不拥有任何 host Kind、schema 或 effect。</?>
+        <Suites [
+          <Suite #module-runtime { name = "Secure revisioned module runtime" } (
+            <Cases [
+              <Case #load-authentic-revision (
+                <Given ?>authentic LoadedResourceTree 中的 CodePackage entry bytes 与 code-binding contribution 一致</?>
+                <When ?>consumer 加载 module</?>
+                <Then ?>系统 SHALL 重复 realpath confinement，以 contentDigest 作为 import revision，并返回 frozen binding/revision/module namespace</?>
+              )>
+              <Case #reject-stale-or-forged-tree (
+                <Given ?>tree 是结构仿制、resource 不属于 code-package、或 entry 已变但 tree 尚未重载</?>
+                <When ?>consumer 请求加载 module</?>
+                <Then ?>系统 SHALL fail closed，MUST NOT 以 mtime fallback 或调用方 revision 掩盖不一致</?>
+              )>
+              <Case #reload-updated-entry (
+                <Given ?>同一进程先加载 entry，再修改 entry并重新加载 ResourceTree</?>
+                <When ?>consumer 再次加载 CodePackage module</?>
+                <Then ?>新 module namespace SHALL 可见更新后的 exports，revision SHALL 与旧值不同</?>
+              )>
+              <Case #admit-caller-definitions-only (
+                <Given ?>module 导出 caller-branded definitions、普通辅助值、一层 definition 数组与嵌套任意对象</?>
+                <When ?>caller 用 predicate 和 identity projector 执行 admission</?>
+                <Then ?>系统 SHALL 只接纳顶层 export 和一层数组中的合格值、忽略普通/嵌套值、稳定排序并拒绝重复 identity</?>
+              )>
+              <Case #remain-target-neutral (
+                <Given ?>consumer 定义自己的 Kind brand、schema validator 和 runtime capabilities</?>
+                <When ?>它使用 Halfcode CodePackage API</?>
+                <Then ?>Halfcode MUST NOT 导入或推断这些 host contracts，只按 caller predicate 返回 target-neutral definitions</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

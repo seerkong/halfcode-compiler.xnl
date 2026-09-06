@@ -1,4 +1,5 @@
 export * from "./application-assembly"
 export * from "./bundled-system-skills"
 export * from "./resource-core"
+export * from "./kind-definition"
 export * from "halfcode-compiler-skill-capsule"

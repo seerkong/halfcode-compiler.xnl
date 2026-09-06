@@ -14,7 +14,7 @@ Read `docs/resource-dsl/` before changing the grammar. Keep parser-private `xnl-
 Start each package at `manifest.xnl`. Admit resources only through `Catalog` entries and a matching `KindDefinition`:
 
 ```xnl
-<ResourcePackage #Demo.ResourceWorkflow.Authoring apiVersion="halfcode.resources/v1" version="1.0.0" {
+<ResourcePackage #Demo.ResourceWorkflow.Authoring envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Demo authoring package."
 } (
@@ -39,7 +39,7 @@ Use semantic channels consistently:
 
 - root tag: resource kind;
 - `#id`: global resource identity/FQN;
-- metadata channel: `apiVersion`, `version`;
+- metadata channel: `envelopeVersion` and positive-integer writer `specVersion`;
 - property channel: Kind-owned lifecycle, description, and scalar configuration when applicable;
 - unique extension subdomains: contracts, binding, materials, catalogs;
 - body members: repeated catalogs, includes, refs, files, and operations.
@@ -51,12 +51,25 @@ Do not encode XML artifacts such as attribute prefixes, wrapper objects, or repe
 Store one `manifest.xnl` per PascalCase kind directory:
 
 ```xnl
-<KindDefinition #Demo.ResourceWorkflow.KindDefinition.Function apiVersion="halfcode.resources/v1" version="1.0.0" {
+<KindDefinition #Demo.ResourceWorkflow.KindDefinition.Function envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Stable"
   description = "Kind definition for Function resources."
   resourceKind = "Function"
+  subjectFqn = "Halfcode.ResourceKind.Function"
   sourceShapes = ["directory"]
 } (
+  <SpecRevisions [
+    <SpecRevision #v1 {
+      specVersion = 1
+      schemaRef = "vfs://./spec-v1.schema.json"
+      schemaFingerprint = "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      contractFingerprint = "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      semanticValidatorFingerprint = "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      referenceProjectionFingerprint = "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      compilerInputFingerprint = "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      stability = "stable"
+    }>
+  ]>
   <DescriptorContract (
     <RequiredFiles [
       <File { name = "instruction.md" }>
@@ -65,14 +78,14 @@ Store one `manifest.xnl` per PascalCase kind directory:
 )>
 ```
 
-The loader universally enforces non-empty identity, `apiVersion`, catalog shape, kind match, required files, unique identity, and VFS containment. `lifecycle` and `description` are optional Kind-owned properties; require them only in the specific Kind or consumer contract that owns their semantics.
+The loader universally enforces non-empty identity, exact `envelopeVersion`, positive-integer writer `specVersion`, catalog shape, kind/subject ownership, exact SpecRevision contract fingerprints, required files, unique identity, and VFS containment. The Host's explicit ReaderProfile selects `readerSpecVersion`; never write reader selection, `current*`, or `supported*` version fields into source resources. `lifecycle` and `description` are optional Kind-owned properties; require them only in the specific Kind or consumer contract that owns their semantics.
 
 ## Author generic descriptors
 
 Use directory-shaped resources with a local `manifest.xnl`:
 
 ```xnl
-<Function #Demo.ResourceWorkflow.Function.PrepareProcedure apiVersion="halfcode.resources/v1" version="1.0.0" {
+<Function #Demo.ResourceWorkflow.Function.PrepareProcedure envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Prepare a procedure draft from structured input."
 } (
@@ -94,7 +107,7 @@ Use the same `Instruction` channel for text resources such as `ApplicationSOP`, 
 Keep unique materials as subdomains and repeated includes in an `Includes` body:
 
 ```xnl
-<SkillCapsule #Demo.ResourceWorkflow.Skill.Main apiVersion="halfcode.resources/v1" version="1.0.0" {
+<SkillCapsule #Demo.ResourceWorkflow.Skill.Main envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Main demo Skill capsule."
 } (

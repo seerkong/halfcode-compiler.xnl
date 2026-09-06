@@ -1,0 +1,14 @@
+<BehaviorPatch #track.add-native-code-binding-execution-closure.behavior_patch.application-assembly apiVersion="codument.tech/v1alpha1" version="1" { capability = "application-assembly" } (
+  <Mutations [
+    <Upsert { selector = "behavior://application-assembly/requirements/frozen-code-execution" } (
+      <Requirement #frozen-code-execution (
+        <Statement ?>系统 SHALL 提供 CodeBinding 原生冻结执行闭包，旧运行不依赖 live 代码，声明的环境身份必须匹配。</?>
+        <Suites [<Suite #closure { name = "闭包捕获恢复" } (<Cases [
+          <Case #version-isolation (<Given ?>V1 有静态 helper 和声明资产并已捕获。</?> <When ?>live 更新为 V2 或删除，同进程及新进程恢复 V1。</?> <Then ?>V1 执行原字节，新 admission 执行 V2，互不污染。</?>)>
+          <Case #invalid-closure (<Given ?>模块/资产/边/入口被篡改或环境身份不同。</?> <When ?>绑定闭包。</?> <Then ?>执行前拒绝，不回退 live。</?>)>
+          <Case #unclosed-dependency (<Given ?>入口有未知动态加载、未声明外部依赖或越界路径。</?> <When ?>捕获闭包。</?> <Then ?>拒绝不完整闭包，原资源不变。</?>)>
+        ]>)>]>
+      )>
+    )>
+  ]>
+)>

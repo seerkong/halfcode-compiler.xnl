@@ -1,4 +1,4 @@
-<Function #demo.xnl_assembly.function.prepare apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Active" description = "Prepare data" } (
+<Function #demo.xnl_assembly.function.prepare envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 { lifecycle = "Active" description = "Prepare data" } (
   <Instruction { href = "vfs://./instruction.md" format = "markdown" }>
   <InputContract { ref = "resource://demo.contract.prepare.input" }>
   <OutputContract { ref = "resource://demo.contract.prepare.output" }>

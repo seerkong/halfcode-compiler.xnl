@@ -6,7 +6,7 @@ kind 与 identity 来自文件根 tag 和 `#id`。目录名、文件名和 catal
 
 ## 两种定义形态
 
-- 单文件 definition：任意描述性 `.xnl` 文件名，文件内有一个语义根。
+- 单文件 definition：任意描述性 `.xnl` 或 `.md` 文件名；XNL 文件内有一个语义根，Markdown 由 frontmatter 声明 Kind/FQN 并由正文承载文本内容。
 - 目录 bundle：入口固定为 `manifest.xnl`，域文件使用描述性 `.xnl` 文件名。
 
 目录 bundle 示例：
@@ -40,7 +40,9 @@ loader 为每个 normalized descriptor 附加只读 provenance：
 ## 扫描边界
 
 - 默认目录入口仅为 `manifest.xnl`。
-- `single-file` catalog 缺省扫描 root 下全部 `.xnl`；声明 `entry = "name.xnl"` 时只加载该文件，便于多个不同 Kind 共用一个物理目录。
+- `DirectoryResourceCatalog scope="root"` 加载 catalog root 自身的入口；`scope="children"` 按稳定顺序扫描直接子目录入口。root 入口必须是普通非符号链接 XNL 文件。
+- `FileResourceCatalog`、`DirectoryResourceCatalog`、`ManifestResourceCatalog` 的 tag 固定 source shape；冲突的 `shape` 属性不会覆盖 tag，而会 fail closed。
+- `single-file` catalog 缺省扫描 root 下全部 `.xnl` 与 `.md`；声明 `entry = "name.xnl|name.md"` 时只加载该文件，便于多个不同 Kind 共用一个物理目录。
 - 非入口 `.xnl` 文件只能作为显式域/物料被入口引用，不能被重复注册为第二资源。
 - 多根文档必须由 KindDefinition 显式授权；loader 不根据文件名或根数量猜测 forest 语义。
 - catalog root 必须是 `vfs://` URI。

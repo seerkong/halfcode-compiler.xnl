@@ -1,4 +1,4 @@
-<ComposedFunction #Demo.ResourceWorkflow.ComposedFunction.PrepareWorkflow apiVersion="halfcode.resources/v1" version="1.0.0" {
+<ComposedFunction #Demo.ResourceWorkflow.ComposedFunction.PrepareWorkflow envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Prepare a workflow by composing lower-level procedure preparation logic."
 } (

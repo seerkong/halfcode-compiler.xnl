@@ -1,0 +1,23 @@
+<component #resource_core.resource_package_read_port apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/resource-package-read-port"] } (
+  <desc ?01M1C7READPORT0000000000020>
+  为 ResourcePackage semantic loader 提供 storage-neutral 文件视图；provider coordinate 只用于读取，输出 provenance 始终由 package-relative coordinate 生成。
+  </?01M1C7READPORT0000000000020>
+  <runtime ?runtime>
+  interface ResourcePackageReadPort { stat(path: string): Awaitable&lt;ResourcePackageEntry | undefined&gt;; readDirectory(path: string): Awaitable&lt;readonly ResourcePackageDirectoryEntry[] | undefined&gt;; readBytes(path: string): Awaitable&lt;Uint8Array | undefined&gt; }
+  </?runtime>
+  <input ?input>
+  interface ResourcePackageReadSource { port: ResourcePackageReadPort; rootPath: string; manifestPath?: string }
+  </?input>
+  <config ?config>
+  interface ReadPortPolicy { path: "canonical-posix-absolute"; provenance: "package-relative"; providerOrder: "ignored"; partialTree: "reject" }
+  </?config>
+  <output ?output>
+  type ResourcePackageReadOutput = LoadedResourceTree | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  规范化 rootPath 与 manifestPath → 仅向 port 请求 containment 内路径 → 稳定排序目录 entries → 读取一次 authority bytes → 复用同一 parser/validator/digest 链 → 以 package-relative path 生成 provenance
+  </?ctrl>
+  <not-owned-here ?01M1C7READPORT0000000000021>
+  overlay materialization、BunFS/xnl-vfs adapter、Eidolon authority、资源业务 Kind 与执行 admission 均由调用方或既有 owner 管理。
+  </?01M1C7READPORT0000000000021>
+)>

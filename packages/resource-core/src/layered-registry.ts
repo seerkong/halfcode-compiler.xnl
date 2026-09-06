@@ -425,9 +425,9 @@ function cloneResourceRecord(resource: ResourceRecord): ResourceRecord {
 
 function cloneResourceMetadata(metadata: ResourceMetadata): ResourceMetadata {
   return Object.freeze({
-    apiVersion: metadata.apiVersion,
+    envelopeVersion: metadata.envelopeVersion,
+    specVersion: metadata.specVersion,
     ...(metadata.lifecycle === undefined ? {} : { lifecycle: metadata.lifecycle }),
-    ...(metadata.version === undefined ? {} : { version: metadata.version }),
   })
 }
 
@@ -449,10 +449,17 @@ function cloneRegisteredKindDefinition(definition: RegisteredKindDefinition): Re
   return Object.freeze({
     resourceId: definition.resourceId,
     resourceKind: definition.resourceKind,
+    subjectFqn: definition.subjectFqn,
     sourceShapes: Object.freeze([...definition.sourceShapes].sort(compareCodeUnits)),
     requiredFiles: Object.freeze([...definition.requiredFiles].sort(compareCodeUnits)),
-    currentApiVersion: definition.currentApiVersion,
-    supportedApiVersions: Object.freeze([...definition.supportedApiVersions].sort(compareCodeUnits)),
+    specRevisions: Object.freeze(definition.specRevisions.map((revision) => Object.freeze({
+      specVersion: revision.specVersion,
+      schemaRef: revision.schemaRef,
+      schemaFingerprint: revision.schemaFingerprint,
+      contractFingerprint: revision.contractFingerprint,
+      semanticContract: Object.freeze({ ...revision.semanticContract }),
+      stability: revision.stability,
+    })).sort((left, right) => left.specVersion - right.specVersion)),
     documentCardinality: definition.documentCardinality,
     documentUri: definition.documentUri,
   })
@@ -461,10 +468,17 @@ function cloneRegisteredKindDefinition(definition: RegisteredKindDefinition): Re
 function normalizedKindContract(definition: RegisteredKindDefinition): unknown {
   return {
     resourceKind: definition.resourceKind,
+    subjectFqn: definition.subjectFqn,
     sourceShapes: [...definition.sourceShapes].sort(compareCodeUnits),
     requiredFiles: [...definition.requiredFiles].sort(compareCodeUnits),
-    currentApiVersion: definition.currentApiVersion,
-    supportedApiVersions: [...definition.supportedApiVersions].sort(compareCodeUnits),
+    specRevisions: definition.specRevisions.map((revision) => ({
+      specVersion: revision.specVersion,
+      schemaRef: revision.schemaRef,
+      schemaFingerprint: revision.schemaFingerprint,
+      contractFingerprint: revision.contractFingerprint,
+      semanticContract: revision.semanticContract,
+      stability: revision.stability,
+    })),
     documentCardinality: definition.documentCardinality,
   }
 }

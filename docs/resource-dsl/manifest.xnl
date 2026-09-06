@@ -1,4 +1,4 @@
-<ResourcePackage #Halfcode.ResourceDsl.Package apiVersion="halfcode.resources/v1" version="1.0.0" {
+<ResourcePackage #Halfcode.ResourceDsl.Package envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Stable"
   description = "Canonical Halfcode Resource DSL documentation and consumer Skill resources."
 } (

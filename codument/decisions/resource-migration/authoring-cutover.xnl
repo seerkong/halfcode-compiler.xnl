@@ -1,0 +1,46 @@
+<decision #parallel_xnl_authority apiVersion="codument.tech/v1alpha1" { status = "accepted" priority = "P1" blocks = [] durable_candidate = false } (
+  <question ?01M0TCTX0CHS8KDXYWKRP1VQRQ>
+  在最终切换前，完整的通用 XNL package 应如何暂存？
+  </?01M0TCTX0CHS8KDXYWKRP1VQRQ>
+  <recommendation ?01M0TCTX0CHS8KDXYWKRP1VQRR>
+  Stage complete generic XNL packages under resources-xnl before the final cutover.
+  </?01M0TCTX0CHS8KDXYWKRP1VQRR>
+  <options {  } [
+    <option { key = "A" recommended = true } (
+      <title ?01M0TCTX0CHS8KDXYWKRP1VQRS>
+      在 resources-xnl 下并行暂存完整 package
+      </?01M0TCTX0CHS8KDXYWKRP1VQRS>
+      <description ?01M0TCTX0CHS8KDXYWKRP1VQRT>
+      The loader prefers manifest.xnl; a separate staging tree keeps the incomplete cutover from becoming authority.
+      </?01M0TCTX0CHS8KDXYWKRP1VQRT>
+      <tradeoff ?01M0TCTX0CHS8KDXYWKRP1VQRV>
+      G7 must cut over the staged tree only after BO/PO convergence.
+      </?01M0TCTX0CHS8KDXYWKRP1VQRV>
+    )>
+    <option { key = "B" recommended = false } (
+      <title ?01M0TCTX0CHS8KDXYWKRP1VQRW>
+      与当前 authority 同目录提前合并
+      </?01M0TCTX0CHS8KDXYWKRP1VQRW>
+      <description ?01M0TCTX0CHS8KDXYWKRP1VQRX>
+      Co-locate the intentionally incomplete tree before the deferred BO/PO resources converge.
+      </?01M0TCTX0CHS8KDXYWKRP1VQRX>
+      <tradeoff ?01M0TCTX0CHS8KDXYWKRP1VQRY>
+      Because the loader prefers manifest.xnl, this would hide deferred BO/PO resources.
+      </?01M0TCTX0CHS8KDXYWKRP1VQRY>
+    )>
+  ]>
+  <answer {  } (
+    <raw-answer ?01M0TCTX0CHS8KDXYWKRP1VQRZ>
+    Stage complete generic XNL packages under resources-xnl before the final cutover.
+    </?01M0TCTX0CHS8KDXYWKRP1VQRZ>
+    <decision-text ?01M0TCTX0CHS8KDXYWKRP1VQS0>
+    Stage complete generic XNL packages under resources-xnl before the final cutover.
+    </?01M0TCTX0CHS8KDXYWKRP1VQS0>
+    <rationale ?01M0TCTX0CHS8KDXYWKRP1VQS1>
+    The loader prefers manifest.xnl; co-locating an intentionally incomplete tree would hide deferred BO/PO resources.
+    </?01M0TCTX0CHS8KDXYWKRP1VQS1>
+    <evidence ?01M0TCTX0CHS8KDXYWKRP1VQS2>
+    G7 must cut over the staged tree only after BO/PO convergence.
+    </?01M0TCTX0CHS8KDXYWKRP1VQS2>
+  )>
+)>

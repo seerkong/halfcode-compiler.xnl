@@ -1,0 +1,32 @@
+<BehaviorPatch #track.remove-code-package-and-generalize-directory-resources.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Delete { selector = "behavior://resource-loading/requirements/code-package-source-shape" }>
+    <Delete { selector = "behavior://resource-loading/requirements/code-package-module-loading" }>
+    <Upsert { selector = "behavior://resource-loading/requirements/directory-resource-materials" } (
+      <Requirement #directory-resource-materials (
+        <Statement ?>系统 SHALL 只从 authentic directory resource boundary 读取调用方显式指定的受限 VFS material，并输出 target-neutral 内容身份贡献。</?>
+        <Suites [
+          <Suite #material-read { name = "Restricted directory material read" } (
+            <Cases [
+              <Case #read-authentic-material (
+                <Given ?>authentic LoadedResourceTree 含 directory resource，调用方指定 boundary 内普通文件 URI</?>
+                <When ?>resource-core 读取 material</?>
+                <Then ?>系统 SHALL 返回 frozen bytes、canonical URI、SHA-256 digest 与稳定 contribution，不执行或解释内容</?>
+              )>
+              <Case #reject-unsafe-material (
+                <Given ?>tree 被伪造、资源不是 directory、URI 越界/编码逃逸、目标为 symlink/目录/缺失文件</?>
+                <When ?>调用方请求 material</?>
+                <Then ?>系统 SHALL 返回不含机器路径的稳定 diagnostics 且不得返回 partial bytes</?>
+              )>
+              <Case #reject-legacy-code-package (
+                <Given ?>输入或 consumer 仍声明 code-package shape 或调用旧 module/admission API</?>
+                <When ?>系统校验资源或打包 public capsule</?>
+                <Then ?>旧协议 SHALL 不存在且不得自动映射到 directory resource</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

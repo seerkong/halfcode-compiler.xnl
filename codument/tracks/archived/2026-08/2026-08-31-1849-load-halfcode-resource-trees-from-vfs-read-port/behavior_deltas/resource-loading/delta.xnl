@@ -1,0 +1,61 @@
+<BehaviorPatch #track.load-halfcode-resource-trees-from-vfs-read-port.behavior_patch.resource-loading apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-loading" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/resource-package-read-port" } (
+      <Requirement #resource-package-read-port (
+        <Statement ?01M1C7READPORT0000000000001>
+        resource-core SHALL 通过 storage-neutral ResourcePackage read port 运行唯一的资源发现、解析、规范化与内容身份链路，同时保持现有 physical directory API 兼容。
+        </?01M1C7READPORT0000000000001>
+        <Suites [
+          <Suite #read-port-parity { name = "ResourcePackage read-port parity" } (
+            <Cases [
+              <Case #directory-and-port-equivalence (
+                <Given ?01M1C7READPORT0000000000002>
+                同一个含 XNL、Markdown、typed Catalog、required material 与多文件 source shape 的 ResourcePackage 分别由 physical directory 和 VFS-like read port 提供
+                </?01M1C7READPORT0000000000002>
+                <When ?01M1C7READPORT0000000000003>
+                resource-core 通过两个入口加载资源树
+                </?01M1C7READPORT0000000000003>
+                <Then ?01M1C7READPORT0000000000004>
+                两者 SHALL 产生等价 manifest、registry、logicalPath、canonical documentUri、diagnostics 与 content identities，且 provider root MUST NOT 进入输出
+                </?01M1C7READPORT0000000000004>
+              )>
+              <Case #stable-provider-independent-discovery (
+                <Given ?01M1C7READPORT0000000000005>
+                read port 以不同枚举顺序返回相同 entries，或使用不同内部 rootPath 提供相同 package-relative bytes
+                </?01M1C7READPORT0000000000005>
+                <When ?01M1C7READPORT0000000000006>
+                loader 构建 ResourceTree 与 content identities
+                </?01M1C7READPORT0000000000006>
+                <Then ?01M1C7READPORT0000000000007>
+                输出 SHALL 使用 canonical package-relative provenance 和稳定排序并保持等价，不得编码 provider coordinate
+                </?01M1C7READPORT0000000000007>
+              )>
+              <Case #diagnostic-and-atomic-parity (
+                <Given ?01M1C7READPORT0000000000008>
+                source 存在缺失文件、无效 UTF-8、越界引用、错误 entry kind 或重复 resource identity
+                </?01M1C7READPORT0000000000008>
+                <When ?01M1C7READPORT0000000000009>
+                directory 与 read-port validation 执行
+                </?01M1C7READPORT0000000000009>
+                <Then ?01M1C7READPORT000000000000A>
+                两者 SHALL 返回稳定、无机器路径的等价 diagnostics 且 MUST NOT 返回 partial ResourceTree
+                </?01M1C7READPORT000000000000A>
+              )>
+              <Case #preserve-directory-api (
+                <Given ?01M1C7READPORT000000000000B>
+                现有 consumer 仅调用 loadResourceTree 或 validateResourceTree 并传入 rootDir
+                </?01M1C7READPORT000000000000B>
+                <When ?01M1C7READPORT000000000000C>
+                storage-neutral loader 发布
+                </?01M1C7READPORT000000000000C>
+                <Then ?01M1C7READPORT000000000000D>
+                旧签名、成功结果和既有 diagnostic contract SHALL 保持兼容，并经同一 semantic loader 执行
+                </?01M1C7READPORT000000000000D>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

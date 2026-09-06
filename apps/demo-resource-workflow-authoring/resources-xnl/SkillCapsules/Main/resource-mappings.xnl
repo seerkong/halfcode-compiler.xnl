@@ -1,4 +1,4 @@
-<ResourceMappings #Demo.ResourceWorkflow.ResourceMappings.Main apiVersion="halfcode.resources/v1" version="1.0.0" (
+<ResourceMappings #Demo.ResourceWorkflow.ResourceMappings.Main envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 (
   <ReferenceTargets [
     <ReferenceTarget { kind = "ComposedFunction" target = "references/ComposedFunctions/" }>
     <ReferenceTarget { kind = "Function" target = "references/Functions/" }>

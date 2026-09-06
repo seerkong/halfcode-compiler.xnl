@@ -1,0 +1,35 @@
+<BehaviorPatch #track.publish-code-package-resource-runtime.behavior_patch.package-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "package-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://package-distribution/requirements/published-0-2-4-code-package" } (
+      <Requirement #published-0-2-4-code-package (
+        <Statement ?>系统 SHALL 将包含通用 CodePackage resource shape、显式 CodeBinding 与受限 module admission 的 halfcode-compiler.xnl@0.2.4 发布为不可变公开包，并用发布前 tarball identity 验证 registry 事实。</?>
+        <Suites [
+          <Suite #release-gates { name = "发布门禁" } (
+            <Cases [
+              <Case #exact-version-is-new (
+                <Given ?>公开 registry 已存在 0.2.3 且尚不存在 0.2.4</?>
+                <When ?>系统准备 CodePackage runtime 正式发布</?>
+                <Then ?>package metadata、lockfile 与 verifier SHALL 精确使用 0.2.4，且不得覆盖既有版本</?>
+              )>
+              <Case #installed-code-package (
+                <Given ?>只安装发布前生成的 0.2.4 tarball 的隔离 consumer</?>
+                <When ?>consumer 导入全部 public specifiers 并加载真实 CodePackage fixture</?>
+                <Then ?>runtime 与 TypeScript 检查 SHALL 通过，CodePackage export admission 可用且 internal runtime/helper 不得公开</?>
+              )>
+              <Case #registry-identity-roundtrip (
+                <Given ?>本地 candidate 已通过测试并取得 integrity 与 shasum</?>
+                <When ?>系统发布并回读 halfcode-compiler.xnl@0.2.4</?>
+                <Then ?>registry 的 name、version、integrity 与 shasum SHALL 与本地 candidate 精确一致，并形成机器可读 evidence</?>
+              )>
+              <Case #no-host-semantics (
+                <Given ?>检查正式 tarball 的 API 与内容</?>
+                <When ?>识别 CodePackage protocol 的 ownership</?>
+                <Then ?>包 SHALL 保持 target-neutral，不包含 Host 专属 Kind、品牌、schema、capability 或 effect</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

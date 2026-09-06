@@ -8,6 +8,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "xnl-core": "^0.1.12"
+    "xnl-core": "^0.1.12",
+    "yaml": "^2.8.0"
   }
 }

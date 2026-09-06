@@ -1,0 +1,18 @@
+<component #resource_core.code_package_loader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/code-package-source-shape" "behavior://resource-loading/requirements/code-package-module-loading"] } (
+  <desc ?>发现 direct 或 collection descriptor，验证完整 CodePackage manifest 与 binding、摘要 entry bytes、通过 runtime-owned revision-isolated module source 加载 namespace，并通过 caller contract 做 target-neutral export admission。</?>
+  <runtime ?runtime>
+  interface CodePackageRuntime {
+    lstat(path: string): Promise&lt;{ isFile(): boolean; isSymbolicLink(): boolean }&gt;
+    realpath(path: string): Promise&lt;string&gt;
+    readFile(path: string): Promise&lt;Uint8Array&gt;
+    stat(path: string): Promise&lt;{ isFile(): boolean }&gt;
+    prepareModuleSource(input: { bytes: Uint8Array; revision: string }): Promise&lt;PreparedCodePackageModuleSource&gt;
+    importModule(url: string): Promise&lt;Readonly&lt;Record&lt;string, unknown&gt;&gt;&gt;
+  }
+  </?runtime>
+  <input ?input>interface LoadCodePackageModuleInput { readonly tree: LoadedResourceTree; readonly resourceId: string; readonly rootDir: string }</?input>
+  <config ?config>interface CodePackageConfig { sourceShape: "code-package"; discovery: "direct-entry-if-present-else-child-collection"; unsafePresentEntryFallback: false; requiredManifestFields: readonly ["entry", "runtime"]; moduleSchemes: readonly ["vfs://./"]; extensions: readonly [".js", ".mjs"] }</?config>
+  <output ?output>type LoadCodePackageModuleOutput = Promise&lt;LoadedCodePackageModule&gt;; type LoadCodePackageModuleFailure = throws CodePackageLoadError</?output>
+  <pseudo { kind = "ctrl" } ?ctrl>resolve catalog root → lstat root/entry → regular: direct singleton | ENOENT: sorted child collection | unsafe present: diagnostic → 对每个 descriptor 校验 entry/runtime 与 singleton CodeBinding 一致 → lexical/realpath containment → 摘要 entry → revision-isolated import/cleanup → 重读拒绝漂移 → caller admission</?ctrl>
+  <not-owned-here ?>Host Kind brand、schema、capability/effect、TypeScript 编译、消费方 runtime 支持矩阵与目录命名不属于 resource-core。</?>
+)>

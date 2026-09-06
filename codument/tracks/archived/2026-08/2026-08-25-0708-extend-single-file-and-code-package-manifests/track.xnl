@@ -1,0 +1,86 @@
+<Track #extend-single-file-and-code-package-manifests apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "让 single-file 直接承载 Markdown 资源，并让 CodePackage manifest 显式拥有 entry/runtime 且与 CodeBinding 一致" description = "扩展 Halfcode 通用资源加载协议、公共 capsule、文档和正式发布物，为 Host 纠偏提供精确版本" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-25T03:48:01.574Z" updated_at = "2026-08-25T04:08:42.411Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #modeling_deltas { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle #source { role = "input" name = "source" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+  ]>
+  <TaskSpace #space_extend-single-file-and-code-package-manifests { name = "extend-single-file-and-code-package-manifests" version = "1" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "协议红测" status = "DONE" priority = "P0" order = 0 } (
+        <Description ?01M0VHB195PT8BN8ED19ZJ5Q9P>
+        用可执行正反例冻结 Markdown single-file 与完整 CodePackage manifest 契约。
+        </?01M0VHB195PT8BN8ED19ZJ5Q9P>
+        <SubNodes [
+          <Task #P1-T1 { name = "新增 Markdown frontmatter single-file 正反例" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?01M0VHB195PT8BN8ED19ZJ5Q9Q>
+              测试证明 Markdown 独立 FQN、完整 bytes digest、无正文依赖推断与非法 frontmatter fail-closed。
+              </?01M0VHB195PT8BN8ED19ZJ5Q9Q>
+            ]>
+          )>
+          <Task #P1-T2 { name = "新增 CodePackage entry/runtime 完整性与漂移反例" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?01M0VHB195PT8BN8ED19ZJ5Q9R>
+              测试证明缺字段、不安全 entry、binding 漂移均被稳定拒绝。
+              </?01M0VHB195PT8BN8ED19ZJ5Q9R>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "协议实现" status = "DONE" priority = "P0" order = 1 } (
+        <Description ?01M0VHB195PT8BN8ED19ZJ5Q9S>
+        实现通用 loader、公开类型与 CodePackage 规范化，不引入 Host Kind 语义。
+        </?01M0VHB195PT8BN8ED19ZJ5Q9S>
+        <SubNodes [
+          <Task #P2-T1 { name = "实现 Markdown single-file 解析与内容身份" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?01M0VHB195PT8BN8ED19ZJ5Q9T>
+              `.md` 与 `.xnl` 可在同一 single-file catalog 稳定加载，公开 format/provenance 正确。
+              </?01M0VHB195PT8BN8ED19ZJ5Q9T>
+            ]>
+          )>
+          <Task #P2-T2 { name = "实现 CodePackage entry/runtime 校验并迁移 fixtures" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?01M0VHB195PT8BN8ED19ZJ5Q9V>
+              所有 CodePackage fixtures 声明 entry/runtime，binding 一致性与现有 confinement/revision 语义同时通过。
+              </?01M0VHB195PT8BN8ED19ZJ5Q9V>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "发布与安装态闭环" status = "DONE" priority = "P0" order = 2 } (
+        <Description ?01M0VHB195PT8BN8ED19ZJ5Q9W>
+        同步公共 capsule、文档和版本，发布并从 registry 验证 clean consumer。
+        </?01M0VHB195PT8BN8ED19ZJ5Q9W>
+        <SubNodes [
+          <Task #P3-T1 { name = "更新公共导出、文档与全量验证" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P3-T1-AC1 { checked = true } ?01M0VHB195PT8BN8ED19ZJ5Q9X>
+              全仓测试、typecheck、workspace verify 与 distribution package check 通过。
+              </?01M0VHB195PT8BN8ED19ZJ5Q9X>
+            ]>
+          )>
+          <Task #P3-T2 { name = "发布新 patch 并验证 registry 安装态" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P3-T2-AC1 { checked = true } ?01M0VHB195PT8BN8ED19ZJ5Q9Y>
+              正式 registry 提供新版本，隔离 consumer 可加载 Markdown 与完整 CodePackage。
+              </?01M0VHB195PT8BN8ED19ZJ5Q9Y>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule { max_concurrent = 1 spot_check = true } [
+    <Dag { for = "space_extend-single-file-and-code-package-manifests" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+      <Node #P3 [
+        <After { ref = "P2" }>
+      ]>
+    ]>
+  ]>
+  <Hooks []>
+)>

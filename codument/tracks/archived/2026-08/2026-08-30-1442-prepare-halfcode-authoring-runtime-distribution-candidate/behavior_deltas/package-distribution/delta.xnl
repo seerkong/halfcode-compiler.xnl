@@ -1,0 +1,25 @@
+<BehaviorPatch #track.prepare-halfcode-authoring-runtime-distribution-candidate.behavior_patch.package-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "package-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://package-distribution/requirements/unpublished-0-2-9-authoring-runtime-candidate" } (
+      <Requirement #unpublished-0-2-9-authoring-runtime-candidate (
+        <Statement ?>The system SHALL prepare an immutable halfcode-compiler.xnl@0.2.9 local candidate that publicly exports transactional resource authoring through authoring-runtime, verifies it as a tarball-only consumer, and leaves npm registry state unchanged.</?>
+        <Suites [
+          <Suite #candidate-gates { name = "0.2.9 authoring runtime candidate gates" } (
+            <Cases [
+              <Case #public-runtime-and-types (
+                <Given ?>a consumer installs only the locally packed 0.2.9 tarball</?>
+                <When ?>it imports the authoring-runtime public subpath at runtime and in TypeScript</?>
+                <Then ?>the transactional authoring functions, schema constant, proposal, receipt and runtime types SHALL be available without private workspace imports</?>
+              )>
+              <Case #unpublished-candidate (
+                <Given ?>all candidate gates pass</?>
+                <When ?>the Track completes</?>
+                <Then ?>no npm publish or dist-tag mutation SHALL have occurred</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

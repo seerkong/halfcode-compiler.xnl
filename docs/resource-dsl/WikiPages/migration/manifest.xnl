@@ -1,4 +1,4 @@
-<WikiPage #Halfcode.ResourceDsl.Wiki.migration apiVersion="halfcode.resources/v1" version="1.0.0" {
+<WikiPage #Halfcode.ResourceDsl.Wiki.migration envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Stable"
   description = "Migration guidance from non-canonical resource representations."
 } (

@@ -1,308 +1,506 @@
 <Behavior #resource-loading apiVersion="codument.tech/v1alpha1" version="1" (
   <Requirements [
     <Requirement #xnl-resource-tree (
-      <Statement ?01M0TB1VE0NG89K501B090CCXJ>
+      <Statement ?01M1C88FF6TT9GPK7RA77MZC99>
       系统 SHALL 仅使用 xnl-core 加载 manifest.xnl resource package，并把 parser tree 规范化为带 identity、logical path、document URI 与语义通道的 XNL ResourceRecord registry。
-      </?01M0TB1VE0NG89K501B090CCXJ>
+      </?01M1C88FF6TT9GPK7RA77MZC99>
       <Suites [
         <Suite #xnl-loading { name = "XNL resource tree" } (
           <Cases [
             <Case #load-and-normalize (
-              <Given ?01M0TB1VE0NG89K501B090CCXK>
+              <Given ?01M1C88FF6TT9GPK7RA77MZC9A>
               package 包含 manifest.xnl、KindDefinition catalogs 与多种 source shape resources
-              </?01M0TB1VE0NG89K501B090CCXK>
-              <When ?01M0TB1VE0NG89K501B090CCXM>
+              </?01M1C88FF6TT9GPK7RA77MZC9A>
+              <When ?01M1C88FF6TT9GPK7RA77MZC9B>
               resource-core 加载 package
-              </?01M0TB1VE0NG89K501B090CCXM>
-              <Then ?01M0TB1VE0NG89K501B090CCXN>
+              </?01M1C88FF6TT9GPK7RA77MZC9B>
+              <Then ?01M1C88FF6TT9GPK7RA77MZC9C>
               registry SHALL 按根 tag 分区、按 #id 唯一寻址，并保留语义通道与 provenance
-              </?01M0TB1VE0NG89K501B090CCXN>
+              </?01M1C88FF6TT9GPK7RA77MZC9C>
             )>
             <Case #reject-invalid-authority (
-              <Given ?01M0TB1VE0NG89K501B090CCXP>
+              <Given ?01M1C88FF6TT9GPK7RA77MZC9D>
               XNL authority 含语法错误、越界 URI、未知 kind 或重复 #id
-              </?01M0TB1VE0NG89K501B090CCXP>
-              <When ?01M0TB1VE0NG89K501B090CCXQ>
+              </?01M1C88FF6TT9GPK7RA77MZC9D>
+              <When ?01M1C88FF6TT9GPK7RA77MZC9E>
               resource-core 验证或加载 package
-              </?01M0TB1VE0NG89K501B090CCXQ>
-              <Then ?01M0TB1VE0NG89K501B090CCXR>
+              </?01M1C88FF6TT9GPK7RA77MZC9E>
+              <Then ?01M1C88FF6TT9GPK7RA77MZC9F>
               验证 SHALL 返回稳定 diagnostics 且拒绝产生 registry
-              </?01M0TB1VE0NG89K501B090CCXR>
+              </?01M1C88FF6TT9GPK7RA77MZC9F>
             )>
             <Case #reject-xml-authority (
-              <Given ?01M0TB1VE0NG89K501B090CCXS>
+              <Given ?01M1C88FF6TT9GPK7RA77MZC9G>
               调用方提供 XML manifest 或产品路径无 manifest.xnl
-              </?01M0TB1VE0NG89K501B090CCXS>
-              <When ?01M0TB1VE0NG89K501B090CCXT>
+              </?01M1C88FF6TT9GPK7RA77MZC9G>
+              <When ?01M1C88FF6TT9GPK7RA77MZC9H>
               resource-core 加载 package
-              </?01M0TB1VE0NG89K501B090CCXT>
-              <Then ?01M0TB1VE0NG89K501B090CCXV>
+              </?01M1C88FF6TT9GPK7RA77MZC9H>
+              <Then ?01M1C88FF6TT9GPK7RA77MZC9J>
               系统 SHALL 不解析 XML 且不得回退 legacy adapter
-              </?01M0TB1VE0NG89K501B090CCXV>
+              </?01M1C88FF6TT9GPK7RA77MZC9J>
             )>
           ]>
         )>
       ]>
     )>
     <Requirement #layered-effective-registry (
-      <Statement ?01M0TB1VE0NG89K501B090CCXW>
+      <Statement ?01M1C88FF6TT9GPK7RA77MZC9K>
       系统 SHALL 将调用方提供的有序 named ResourceTree layers 组合为保留 effective、shadow、tombstone、KindDefinition 与 origin provenance 的确定性 registry，且不得把任何 host 路径或 layer 名称编码为通用语义。
-      </?01M0TB1VE0NG89K501B090CCXW>
+      </?01M1C88FF6TT9GPK7RA77MZC9K>
       <Suites [
         <Suite #layer-composition { name = "Ordered named layer composition" } (
           <Cases [
             <Case #higher-layer-shadows-with-provenance (
-              <Given ?01M0TB1VE0NG89K501B090CCXX>
+              <Given ?01M1C88FF6TT9GPK7RA77MZC9M>
               两个已验证 named layers 以低到高顺序提供同 kind、同 resourceId 的资源
-              </?01M0TB1VE0NG89K501B090CCXX>
-              <When ?01M0TB1VE0NG89K501B090CCXY>
+              </?01M1C88FF6TT9GPK7RA77MZC9M>
+              <When ?01M1C88FF6TT9GPK7RA77MZC9N>
               系统组合 effective registry
-              </?01M0TB1VE0NG89K501B090CCXY>
-              <Then ?01M0TB1VE0NG89K501B090CCXZ>
+              </?01M1C88FF6TT9GPK7RA77MZC9N>
+              <Then ?01M1C88FF6TT9GPK7RA77MZC9P>
               高层资源 SHALL 成为 effective，低层来源 SHALL 保留为 shadow provenance，输出 SHALL 使用稳定排序
-              </?01M0TB1VE0NG89K501B090CCXZ>
+              </?01M1C88FF6TT9GPK7RA77MZC9P>
             )>
             <Case #explicit-tombstone-only (
-              <Given ?01M0TB1VE0NG89K501B090CCY0>
+              <Given ?01M1C88FF6TT9GPK7RA77MZC9Q>
               高层对低层资源提供显式 typed tombstone
-              </?01M0TB1VE0NG89K501B090CCY0>
-              <When ?01M0TB1VE0NG89K501B090CCY1>
+              </?01M1C88FF6TT9GPK7RA77MZC9Q>
+              <When ?01M1C88FF6TT9GPK7RA77MZC9R>
               系统组合 effective registry
-              </?01M0TB1VE0NG89K501B090CCY1>
-              <Then ?01M0TB1VE0NG89K501B090CCY2>
+              </?01M1C88FF6TT9GPK7RA77MZC9R>
+              <Then ?01M1C88FF6TT9GPK7RA77MZC9S>
               目标资源 SHALL 被抑制并保留 tombstone origin；仅仅缺少高层资源 MUST NOT 被解释为删除
-              </?01M0TB1VE0NG89K501B090CCY2>
+              </?01M1C88FF6TT9GPK7RA77MZC9S>
             )>
             <Case #reject-identity-and-kind-contract-conflict (
-              <Given ?01M0TB1VE0NG89K501B090CCY3>
+              <Given ?01M1C88FF6TT9GPK7RA77MZC9T>
               layers 对同 resourceId 声明不同 kind，或同 resourceKind 声明不兼容 KindDefinition contract
-              </?01M0TB1VE0NG89K501B090CCY3>
-              <When ?01M0TB1VE0NG89K501B090CCY4>
+              </?01M1C88FF6TT9GPK7RA77MZC9T>
+              <When ?01M1C88FF6TT9GPK7RA77MZC9V>
               系统组合 effective registry
-              </?01M0TB1VE0NG89K501B090CCY4>
-              <Then ?01M0TB1VE0NG89K501B090CCY5>
+              </?01M1C88FF6TT9GPK7RA77MZC9V>
+              <Then ?01M1C88FF6TT9GPK7RA77MZC9W>
               系统 SHALL 返回稳定 diagnostics 并拒绝静默 precedence 覆盖
-              </?01M0TB1VE0NG89K501B090CCY5>
+              </?01M1C88FF6TT9GPK7RA77MZC9W>
             )>
             <Case #preserve-single-tree-api (
-              <Given ?01M0TB1VE0NG89K501B090CCY6>
+              <Given ?01M1C88FF6TT9GPK7RA77MZC9X>
               现有 consumer 只调用 loadResourceTree、validateResourceTree 并读取 registry.byKind/kindDefinitions
-              </?01M0TB1VE0NG89K501B090CCY6>
-              <When ?01M0TB1VE0NG89K501B090CCY7>
+              </?01M1C88FF6TT9GPK7RA77MZC9X>
+              <When ?01M1C88FF6TT9GPK7RA77MZC9Y>
               新 layered API 发布
-              </?01M0TB1VE0NG89K501B090CCY7>
-              <Then ?01M0TB1VE0NG89K501B090CCY8>
+              </?01M1C88FF6TT9GPK7RA77MZC9Y>
+              <Then ?01M1C88FF6TT9GPK7RA77MZC9Z>
               原函数签名与现有规范化结果 SHALL 保持兼容，consumer MUST NOT 被强制迁移
-              </?01M0TB1VE0NG89K501B090CCY8>
+              </?01M1C88FF6TT9GPK7RA77MZC9Z>
             )>
             <Case #deep-immutable-composition-projection (
-              <Given ?01M0TB1VE0NG89K501B090CCY9>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCA0>
               调用方在组合完成后继续持有并修改原 ResourceTree 的 record、metadata、node 或 KindDefinition 数组
-              </?01M0TB1VE0NG89K501B090CCY9>
-              <When ?01M0TB1VE0NG89K501B090CCYA>
+              </?01M1C88FF6TT9GPK7RA77MZCA0>
+              <When ?01M1C88FF6TT9GPK7RA77MZCA1>
               系统读取既有 effective registry 投影和 composition revision
-              </?01M0TB1VE0NG89K501B090CCYA>
-              <Then ?01M0TB1VE0NG89K501B090CCYB>
+              </?01M1C88FF6TT9GPK7RA77MZCA1>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCA2>
               投影 facts 与 composition revision SHALL 保持不变；系统 MUST NOT 通过冻结输入对象破坏旧单树 consumer
-              </?01M0TB1VE0NG89K501B090CCYB>
+              </?01M1C88FF6TT9GPK7RA77MZCA2>
             )>
             <Case #composition-revision-excludes-descriptor-content (
-              <Given ?01M0TB1VE0NG89K501B090CCYC>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCA3>
               effective identity、layer provenance、tombstone 与 Kind contracts 不变，只有 ResourceRecord descriptor/node/metadata 内容改变
-              </?01M0TB1VE0NG89K501B090CCYC>
-              <When ?01M0TB1VE0NG89K501B090CCYD>
+              </?01M1C88FF6TT9GPK7RA77MZCA3>
+              <When ?01M1C88FF6TT9GPK7RA77MZCA4>
               系统重新组合 effective registry
-              </?01M0TB1VE0NG89K501B090CCYD>
-              <Then ?01M0TB1VE0NG89K501B090CCYE>
+              </?01M1C88FF6TT9GPK7RA77MZCA4>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCA5>
               compositionRevision SHALL 保持不变；这些内容 bytes MUST 由显式 content identity 和 snapshot registryRevision 绑定
-              </?01M0TB1VE0NG89K501B090CCYE>
+              </?01M1C88FF6TT9GPK7RA77MZCA5>
             )>
             <Case #composition-revision-binds-logical-provenance (
-              <Given ?01M0TB1VE0NG89K501B090CCYF>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCA6>
               resource identity/content 不变，但 canonical documentUri 或 logicalPath provenance 改变
-              </?01M0TB1VE0NG89K501B090CCYF>
-              <When ?01M0TB1VE0NG89K501B090CCYG>
+              </?01M1C88FF6TT9GPK7RA77MZCA6>
+              <When ?01M1C88FF6TT9GPK7RA77MZCA7>
               系统重新组合 registry 并构建 snapshot
-              </?01M0TB1VE0NG89K501B090CCYG>
-              <Then ?01M0TB1VE0NG89K501B090CCYH>
+              </?01M1C88FF6TT9GPK7RA77MZCA7>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCA8>
               composition、registry 与 snapshot revisions SHALL 改变并与公开 origin facts 一致
-              </?01M0TB1VE0NG89K501B090CCYH>
+              </?01M1C88FF6TT9GPK7RA77MZCA8>
             )>
             <Case #reject-noncanonical-layer-provenance (
-              <Given ?01M0TB1VE0NG89K501B090CCYJ>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCA9>
               调用方绕过 loader，提供绝对机器路径、不安全 logicalPath 或不匹配的 documentUri
-              </?01M0TB1VE0NG89K501B090CCYJ>
-              <When ?01M0TB1VE0NG89K501B090CCYK>
+              </?01M1C88FF6TT9GPK7RA77MZCA9>
+              <When ?01M1C88FF6TT9GPK7RA77MZCAA>
               系统组合 effective registry
-              </?01M0TB1VE0NG89K501B090CCYK>
-              <Then ?01M0TB1VE0NG89K501B090CCYM>
+              </?01M1C88FF6TT9GPK7RA77MZCAA>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCAB>
               系统 SHALL 返回稳定 provenance diagnostic，MUST NOT 把机器路径写入 revision
-              </?01M0TB1VE0NG89K501B090CCYM>
+              </?01M1C88FF6TT9GPK7RA77MZCAB>
             )>
             <Case #composition-revision-binds-kind-definition-identity (
-              <Given ?01M0TB1VE0NG89K501B090CCYN>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCAC>
               normalized Kind contract 与 origin 不变，但公开选定 KindDefinition 的 authority resourceId 改变
-              </?01M0TB1VE0NG89K501B090CCYN>
-              <When ?01M0TB1VE0NG89K501B090CCYP>
+              </?01M1C88FF6TT9GPK7RA77MZCAC>
+              <When ?01M1C88FF6TT9GPK7RA77MZCAD>
               系统重新组合 effective registry
-              </?01M0TB1VE0NG89K501B090CCYP>
-              <Then ?01M0TB1VE0NG89K501B090CCYQ>
+              </?01M1C88FF6TT9GPK7RA77MZCAD>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCAE>
               compositionRevision SHALL 改变；兼容 contract 的跨 layer 合并规则 SHALL 保持不变
-              </?01M0TB1VE0NG89K501B090CCYQ>
+              </?01M1C88FF6TT9GPK7RA77MZCAE>
             )>
           ]>
         )>
       ]>
     )>
     <Requirement #resource-dependency-snapshot (
-      <Statement ?01M0TB1VE0NG89K501B090CCYR>
+      <Statement ?01M1C88FF6TT9GPK7RA77MZCAF>
       系统 SHALL 仅从显式 typed dependency edges 与带 provenance 的 digest contributions 构建 deterministic content identities、dependency closure、registry revision 和 immutable snapshot，不得扫描任意字符串或自然语言猜测依赖。
-      </?01M0TB1VE0NG89K501B090CCYR>
+      </?01M1C88FF6TT9GPK7RA77MZCAF>
       <Suites [
         <Suite #typed-dependency-closure { name = "Typed dependency closure and revision" } (
           <Cases [
             <Case #build-deterministic-snapshot (
-              <Given ?01M0TB1VE0NG89K501B090CCYS>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCAG>
               effective registry、roots、typed edges 以及 authority/material digest contributions 完整且有效
-              </?01M0TB1VE0NG89K501B090CCYS>
-              <When ?01M0TB1VE0NG89K501B090CCYT>
+              </?01M1C88FF6TT9GPK7RA77MZCAG>
+              <When ?01M1C88FF6TT9GPK7RA77MZCAH>
               系统构建 dependency snapshot
-              </?01M0TB1VE0NG89K501B090CCYT>
-              <Then ?01M0TB1VE0NG89K501B090CCYV>
+              </?01M1C88FF6TT9GPK7RA77MZCAH>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCAJ>
               snapshot SHALL 稳定包含可达资源、参与边、origin、content revisions、registry revision 与 snapshot revision
-              </?01M0TB1VE0NG89K501B090CCYV>
+              </?01M1C88FF6TT9GPK7RA77MZCAJ>
             )>
             <Case #ignore-untyped-resource-like-strings (
-              <Given ?01M0TB1VE0NG89K501B090CCYW>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCAK>
               ResourceNode 中存在形似 resource:// 的普通字符串，但调用方没有提供对应 typed edge
-              </?01M0TB1VE0NG89K501B090CCYW>
-              <When ?01M0TB1VE0NG89K501B090CCYX>
+              </?01M1C88FF6TT9GPK7RA77MZCAK>
+              <When ?01M1C88FF6TT9GPK7RA77MZCAM>
               系统构建 dependency closure
-              </?01M0TB1VE0NG89K501B090CCYX>
-              <Then ?01M0TB1VE0NG89K501B090CCYY>
+              </?01M1C88FF6TT9GPK7RA77MZCAM>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCAN>
               该字符串 MUST NOT 被解释为 dependency，目标资源 MUST NOT 被隐式加入 closure
-              </?01M0TB1VE0NG89K501B090CCYY>
+              </?01M1C88FF6TT9GPK7RA77MZCAN>
             )>
             <Case #reject-invalid-graph (
-              <Given ?01M0TB1VE0NG89K501B090CCYZ>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCAP>
               typed edge 指向缺失资源、形成 dependency cycle 或存在矛盾 digest contribution
-              </?01M0TB1VE0NG89K501B090CCYZ>
-              <When ?01M0TB1VE0NG89K501B090CCZ0>
+              </?01M1C88FF6TT9GPK7RA77MZCAP>
+              <When ?01M1C88FF6TT9GPK7RA77MZCAQ>
               系统构建 dependency snapshot
-              </?01M0TB1VE0NG89K501B090CCZ0>
-              <Then ?01M0TB1VE0NG89K501B090CCZ1>
+              </?01M1C88FF6TT9GPK7RA77MZCAQ>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCAR>
               系统 SHALL 返回稳定 diagnostics，MUST NOT 产生看似完整的 snapshot
-              </?01M0TB1VE0NG89K501B090CCZ1>
+              </?01M1C88FF6TT9GPK7RA77MZCAR>
             )>
             <Case #stable-revision-independent-of-incidental-order (
-              <Given ?01M0TB1VE0NG89K501B090CCZ2>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCAS>
               两个输入具有相同 effective facts、typed edges 和 digest contributions，但 Map 插入或文件枚举顺序不同
-              </?01M0TB1VE0NG89K501B090CCZ2>
-              <When ?01M0TB1VE0NG89K501B090CCZ3>
+              </?01M1C88FF6TT9GPK7RA77MZCAS>
+              <When ?01M1C88FF6TT9GPK7RA77MZCAT>
               系统分别计算 revisions
-              </?01M0TB1VE0NG89K501B090CCZ3>
-              <Then ?01M0TB1VE0NG89K501B090CCZ4>
+              </?01M1C88FF6TT9GPK7RA77MZCAT>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCAV>
               content、composition、registry 与 snapshot revisions SHALL 相同；canonical sort MUST 使用 UTF-16 code-unit order，只有显式 layer precedence 或 root order 变化 MAY 改变相应 revision
-              </?01M0TB1VE0NG89K501B090CCZ4>
+              </?01M1C88FF6TT9GPK7RA77MZCAV>
             )>
             <Case #revalidate-all-effective-content-identities (
-              <Given ?01M0TB1VE0NG89K501B090CCZ5>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCAW>
               调用方提供缺失、格式非法、contribution 不完整或 contentDigest 与 authority/contribution facts 不一致的 identity
-              </?01M0TB1VE0NG89K501B090CCZ5>
-              <When ?01M0TB1VE0NG89K501B090CCZ6>
+              </?01M1C88FF6TT9GPK7RA77MZCAW>
+              <When ?01M1C88FF6TT9GPK7RA77MZCAX>
               系统为任意 roots 构建 dependency snapshot
-              </?01M0TB1VE0NG89K501B090CCZ6>
-              <Then ?01M0TB1VE0NG89K501B090CCZ7>
+              </?01M1C88FF6TT9GPK7RA77MZCAX>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCAY>
               系统 SHALL 重新校验全部 effective resources、拒绝任意重复 contribution key 并重算 digest，MUST NOT 信任伪造 claim 或仅校验可达闭包
-              </?01M0TB1VE0NG89K501B090CCZ7>
+              </?01M1C88FF6TT9GPK7RA77MZCAY>
             )>
             <Case #separate-composition-and-content-sensitive-revisions (
-              <Given ?01M0TB1VE0NG89K501B090CCZ8>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCAZ>
               layer、shadow、tombstone 与 Kind contracts 不变，但一个不可达 effective resource 的显式内容贡献发生变化
-              </?01M0TB1VE0NG89K501B090CCZ8>
-              <When ?01M0TB1VE0NG89K501B090CCZ9>
+              </?01M1C88FF6TT9GPK7RA77MZCAZ>
+              <When ?01M1C88FF6TT9GPK7RA77MZCB0>
               系统重新组合 registry 并构建 snapshot
-              </?01M0TB1VE0NG89K501B090CCZ9>
-              <Then ?01M0TB1VE0NG89K501B090CCZA>
+              </?01M1C88FF6TT9GPK7RA77MZCB0>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCB1>
               compositionRevision SHALL 保持不变，snapshot registryRevision 与 snapshotRevision SHALL 改变
-              </?01M0TB1VE0NG89K501B090CCZA>
+              </?01M1C88FF6TT9GPK7RA77MZCB1>
             )>
             <Case #reject-forged-registry-and-own-snapshot-origin (
-              <Given ?01M0TB1VE0NG89K501B090CCZB>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCB2>
               调用方提供手工拼装/复制/篡改 revision 的 registry，或试图在 snapshot 后修改 origin 对象
-              </?01M0TB1VE0NG89K501B090CCZB>
-              <When ?01M0TB1VE0NG89K501B090CCZC>
+              </?01M1C88FF6TT9GPK7RA77MZCB2>
+              <When ?01M1C88FF6TT9GPK7RA77MZCB3>
               系统构建 dependency snapshot
-              </?01M0TB1VE0NG89K501B090CCZC>
-              <Then ?01M0TB1VE0NG89K501B090CCZD>
+              </?01M1C88FF6TT9GPK7RA77MZCB3>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCB4>
               非 canonical composer 产生的 registry SHALL 被拒绝；成功 snapshot SHALL 持有独立 frozen origin facts
-              </?01M0TB1VE0NG89K501B090CCZD>
+              </?01M1C88FF6TT9GPK7RA77MZCB4>
             )>
           ]>
         )>
       ]>
     )>
     <Requirement #loader-content-identities (
-      <Statement ?01M0TB1VE0NG89K501B090CCZE>
+      <Statement ?01M1C88FF6TT9GPK7RA77MZCB5>
       resource-core loader SHALL 在同一次 XNL authority byte read 中产生可验证的 per-resource content identities，并由 Halfcode projector 按 exact effective layer provenance 形成 snapshot-ready identity map。
-      </?01M0TB1VE0NG89K501B090CCZE>
+      </?01M1C88FF6TT9GPK7RA77MZCB5>
       <Suites [
         <Suite #loaded-authority-identities { name = "Loader authority identity projection" } (
           <Cases [
             <Case #digest-raw-authority-bytes (
-              <Given ?01M0TB1VE0NG89K501B090CCZF>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCB6>
               一个已验证 XNL package 含 single-root 与 multi-root authority 文件
-              </?01M0TB1VE0NG89K501B090CCZF>
-              <When ?01M0TB1VE0NG89K501B090CCZG>
+              </?01M1C88FF6TT9GPK7RA77MZCB6>
+              <When ?01M1C88FF6TT9GPK7RA77MZCB7>
               loadResourceTree 返回 LoadedResourceTree
-              </?01M0TB1VE0NG89K501B090CCZG>
-              <Then ?01M0TB1VE0NG89K501B090CCZH>
+              </?01M1C88FF6TT9GPK7RA77MZCB7>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCB8>
               每个 registry business resource SHALL 有 SHA-256 authority identity；同文件 roots 共享 authorityDigest 但保持不同 resourceId/contentDigest
-              </?01M0TB1VE0NG89K501B090CCZH>
+              </?01M1C88FF6TT9GPK7RA77MZCB8>
             )>
             <Case #preserve-legacy-tree-contract (
-              <Given ?01M0TB1VE0NG89K501B090CCZJ>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCB9>
               旧 consumer 只读取 ResourceTree manifest/registry/diagnostics 或手工构造 structural ResourceTree
-              </?01M0TB1VE0NG89K501B090CCZJ>
-              <When ?01M0TB1VE0NG89K501B090CCZK>
+              </?01M1C88FF6TT9GPK7RA77MZCB9>
+              <When ?01M1C88FF6TT9GPK7RA77MZCBA>
               使用单树 API 或 composeLayeredResourceRegistry
-              </?01M0TB1VE0NG89K501B090CCZK>
-              <Then ?01M0TB1VE0NG89K501B090CCZM>
+              </?01M1C88FF6TT9GPK7RA77MZCBA>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCBB>
               现有字段、函数与行为 SHALL 保持兼容且不要求调用方补 contentIdentities
-              </?01M0TB1VE0NG89K501B090CCZM>
+              </?01M1C88FF6TT9GPK7RA77MZCBB>
             )>
             <Case #resolve-effective-identities (
-              <Given ?01M0TB1VE0NG89K501B090CCZN>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCBC>
               authentic loaded trees 按显式 layers 组合出 authentic effective registry，并可选提供 typed contributions
-              </?01M0TB1VE0NG89K501B090CCZN>
-              <When ?01M0TB1VE0NG89K501B090CCZP>
+              </?01M1C88FF6TT9GPK7RA77MZCBC>
+              <When ?01M1C88FF6TT9GPK7RA77MZCBD>
               调用 effective content identity projector
-              </?01M0TB1VE0NG89K501B090CCZP>
-              <Then ?01M0TB1VE0NG89K501B090CCZQ>
+              </?01M1C88FF6TT9GPK7RA77MZCBD>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCBE>
               结果 SHALL 精确覆盖全部 present effective resources、选择 effective origin 对应 authority digest、canonicalize contributions 并冻结输出
-              </?01M0TB1VE0NG89K501B090CCZQ>
+              </?01M1C88FF6TT9GPK7RA77MZCBE>
             )>
             <Case #reject-inconsistent-identity-input (
-              <Given ?01M0TB1VE0NG89K501B090CCZR>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCBF>
               loaded tree/registry 是结构仿制，或 layer/package/origin/identity/contribution facts 缺失、额外或矛盾
-              </?01M0TB1VE0NG89K501B090CCZR>
-              <When ?01M0TB1VE0NG89K501B090CCZS>
+              </?01M1C88FF6TT9GPK7RA77MZCBF>
+              <When ?01M1C88FF6TT9GPK7RA77MZCBG>
               调用 effective content identity projector
-              </?01M0TB1VE0NG89K501B090CCZS>
-              <Then ?01M0TB1VE0NG89K501B090CCZT>
+              </?01M1C88FF6TT9GPK7RA77MZCBG>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCBH>
               系统 SHALL 返回稳定 diagnostic 且不输出 partial map
-              </?01M0TB1VE0NG89K501B090CCZT>
+              </?01M1C88FF6TT9GPK7RA77MZCBH>
             )>
             <Case #no-domain-inference (
-              <Given ?01M0TB1VE0NG89K501B090CCZV>
+              <Given ?01M1C88FF6TT9GPK7RA77MZCBJ>
               resource node 普通文本含 resource-like 字符串或自然语言
-              </?01M0TB1VE0NG89K501B090CCZV>
-              <When ?01M0TB1VE0NG89K501B090CCZW>
+              </?01M1C88FF6TT9GPK7RA77MZCBJ>
+              <When ?01M1C88FF6TT9GPK7RA77MZCBK>
               loader 与 identity projector 处理 package
-              </?01M0TB1VE0NG89K501B090CCZW>
-              <Then ?01M0TB1VE0NG89K501B090CCZX>
+              </?01M1C88FF6TT9GPK7RA77MZCBK>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCBM>
               系统 SHALL 只摘要 authority bytes 与显式 contributions，不产生隐式 dependency/material facts
-              </?01M0TB1VE0NG89K501B090CCZX>
+              </?01M1C88FF6TT9GPK7RA77MZCBM>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #single-file-resource-formats (
+      <Statement ?01M1C88FF6TT9GPK7RA77MZCBN>
+      resource-core SHALL 让 single-file catalog 直接加载 XNL 或带规范 frontmatter 的 Markdown 单文件资源，并以完整 authority bytes 产生确定性 content identity。
+      </?01M1C88FF6TT9GPK7RA77MZCBN>
+      <Suites [
+        <Suite #markdown-single-file { name = "Markdown single-file resource" } (
+          <Cases [
+            <Case #load-markdown-frontmatter-resource (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCBP>
+              single-file catalog 中的 Markdown 以闭合 frontmatter 声明 apiVersion、kind、metadata.fqn 与 spec
+              </?01M1C88FF6TT9GPK7RA77MZCBP>
+              <When ?01M1C88FF6TT9GPK7RA77MZCBQ>
+              resource-core 加载 ResourcePackage
+              </?01M1C88FF6TT9GPK7RA77MZCBQ>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCBR>
+              registry SHALL 以该 FQN 独立寻址资源、保留 markdown provenance，并以文件完整 bytes 计算 authority identity
+              </?01M1C88FF6TT9GPK7RA77MZCBR>
+            )>
+            <Case #reject-invalid-markdown-authority (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCBS>
+              catalog 内 Markdown 缺失或破坏 frontmatter、Kind/FQN/apiVersion 无效，或 YAML 不是 object
+              </?01M1C88FF6TT9GPK7RA77MZCBS>
+              <When ?01M1C88FF6TT9GPK7RA77MZCBT>
+              resource-core 加载 ResourcePackage
+              </?01M1C88FF6TT9GPK7RA77MZCBT>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCBV>
+              系统 SHALL 返回稳定 diagnostic 且 MUST NOT 产生 partial registry
+              </?01M1C88FF6TT9GPK7RA77MZCBV>
+            )>
+            <Case #do-not-infer-from-markdown-body (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCBW>
+              Markdown 正文含 resource-like URI 或其他自然语言
+              </?01M1C88FF6TT9GPK7RA77MZCBW>
+              <When ?01M1C88FF6TT9GPK7RA77MZCBX>
+              loader 计算资源结构与 content identity
+              </?01M1C88FF6TT9GPK7RA77MZCBX>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCBY>
+              正文 MUST NOT 被解释为 dependency 或额外 metadata，authority digest SHALL 仍覆盖完整原始文件
+              </?01M1C88FF6TT9GPK7RA77MZCBY>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #semantic-resource-catalogs (
+      <Statement ?01M1C88FF6TT9GPK7RA77MZCBZ>
+      系统 SHALL 通过已注册语义根与具名 Catalog 编译结构资源，并保持非 CodePackage 通用 Catalog 输入兼容。
+      </?01M1C88FF6TT9GPK7RA77MZCBZ>
+      <Suites [
+        <Suite #catalog-loading { name = "Semantic root and typed catalog loading" } (
+          <Cases [
+            <Case #register-semantic-root (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCC0>
+              根 manifest 使用已由 KindDefinition 声明的 SkillApp 等语义 Kind
+              </?01M1C88FF6TT9GPK7RA77MZCC0>
+              <When ?01M1C88FF6TT9GPK7RA77MZCC1>
+              resource-core 加载资源树
+              </?01M1C88FF6TT9GPK7RA77MZCC1>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCC2>
+              根 SHALL 按 manifest shape/apiVersion 校验并作为一等资源进入 registry 和 content identity
+              </?01M1C88FF6TT9GPK7RA77MZCC2>
+            )>
+            <Case #normalize-named-catalogs (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCC3>
+              Catalogs 包含 FileResourceCatalog、DirectoryResourceCatalog 或 ManifestResourceCatalog
+              </?01M1C88FF6TT9GPK7RA77MZCC3>
+              <When ?01M1C88FF6TT9GPK7RA77MZCC4>
+              loader 规范化发现计划
+              </?01M1C88FF6TT9GPK7RA77MZCC4>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCC5>
+              tag SHALL 决定 source shape，resourceKind SHALL 作为期望 Kind，Directory scope SHALL 决定 root 或 children 枚举
+              </?01M1C88FF6TT9GPK7RA77MZCC5>
+            )>
+            <Case #preserve-generic-catalog (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCC6>
+              既有 consumer 使用非 CodePackage 的 Catalog kind/shape/root/entry 语法
+              </?01M1C88FF6TT9GPK7RA77MZCC6>
+              <When ?01M1C88FF6TT9GPK7RA77MZCC7>
+              升级后的 loader 加载该 package
+              </?01M1C88FF6TT9GPK7RA77MZCC7>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCC8>
+              资源发现与 Kind 校验 SHALL 保持兼容
+              </?01M1C88FF6TT9GPK7RA77MZCC8>
+            )>
+            <Case #reject-catalog-conflict (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCC9>
+              typed Catalog 的 tag/shape/scope 非法或资源自述 Kind 与 expected resourceKind 不一致
+              </?01M1C88FF6TT9GPK7RA77MZCC9>
+              <When ?01M1C88FF6TT9GPK7RA77MZCCA>
+              resource-core 验证 package
+              </?01M1C88FF6TT9GPK7RA77MZCCA>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCCB>
+              系统 SHALL 返回稳定 diagnostic 并拒绝产生资源树
+              </?01M1C88FF6TT9GPK7RA77MZCCB>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #directory-resource-materials (
+      <Statement ?01M1C88FF6TT9GPK7RA77MZCCC>
+      系统 SHALL 只从 authentic directory resource boundary 读取调用方显式指定的受限 VFS material，并输出 target-neutral 内容身份贡献。
+      </?01M1C88FF6TT9GPK7RA77MZCCC>
+      <Suites [
+        <Suite #material-read { name = "Restricted directory material read" } (
+          <Cases [
+            <Case #read-authentic-material (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCCD>
+              authentic LoadedResourceTree 含 directory resource，调用方指定 boundary 内普通文件 URI
+              </?01M1C88FF6TT9GPK7RA77MZCCD>
+              <When ?01M1C88FF6TT9GPK7RA77MZCCE>
+              resource-core 读取 material
+              </?01M1C88FF6TT9GPK7RA77MZCCE>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCCF>
+              系统 SHALL 返回 frozen bytes、canonical URI、SHA-256 digest 与稳定 contribution，不执行或解释内容
+              </?01M1C88FF6TT9GPK7RA77MZCCF>
+            )>
+            <Case #reject-unsafe-material (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCCG>
+              tree 被伪造、资源不是 directory、URI 越界/编码逃逸、目标为 symlink/目录/缺失文件
+              </?01M1C88FF6TT9GPK7RA77MZCCG>
+              <When ?01M1C88FF6TT9GPK7RA77MZCCH>
+              调用方请求 material
+              </?01M1C88FF6TT9GPK7RA77MZCCH>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCCJ>
+              系统 SHALL 返回不含机器路径的稳定 diagnostics 且不得返回 partial bytes
+              </?01M1C88FF6TT9GPK7RA77MZCCJ>
+            )>
+            <Case #reject-legacy-code-package (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCCK>
+              输入或 consumer 仍声明 code-package shape 或调用旧 module/admission API
+              </?01M1C88FF6TT9GPK7RA77MZCCK>
+              <When ?01M1C88FF6TT9GPK7RA77MZCCM>
+              系统校验资源或打包 public capsule
+              </?01M1C88FF6TT9GPK7RA77MZCCM>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCCN>
+              旧协议 SHALL 不存在且不得自动映射到 directory resource
+              </?01M1C88FF6TT9GPK7RA77MZCCN>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #resource-package-read-port (
+      <Statement ?01M1C88FF6TT9GPK7RA77MZCCP>
+      resource-core SHALL 通过 storage-neutral ResourcePackage read port 运行唯一的资源发现、解析、规范化与内容身份链路，同时保持现有 physical directory API 兼容。
+      </?01M1C88FF6TT9GPK7RA77MZCCP>
+      <Suites [
+        <Suite #read-port-parity { name = "ResourcePackage read-port parity" } (
+          <Cases [
+            <Case #directory-and-port-equivalence (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCCQ>
+              同一个含 XNL、Markdown、typed Catalog、required material 与多文件 source shape 的 ResourcePackage 分别由 physical directory 和 VFS-like read port 提供
+              </?01M1C88FF6TT9GPK7RA77MZCCQ>
+              <When ?01M1C88FF6TT9GPK7RA77MZCCR>
+              resource-core 通过两个入口加载资源树
+              </?01M1C88FF6TT9GPK7RA77MZCCR>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCCS>
+              两者 SHALL 产生等价 manifest、registry、logicalPath、canonical documentUri、diagnostics 与 content identities，且 provider root MUST NOT 进入输出
+              </?01M1C88FF6TT9GPK7RA77MZCCS>
+            )>
+            <Case #stable-provider-independent-discovery (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCCT>
+              read port 以不同枚举顺序返回相同 entries，或使用不同内部 rootPath 提供相同 package-relative bytes
+              </?01M1C88FF6TT9GPK7RA77MZCCT>
+              <When ?01M1C88FF6TT9GPK7RA77MZCCV>
+              loader 构建 ResourceTree 与 content identities
+              </?01M1C88FF6TT9GPK7RA77MZCCV>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCCW>
+              输出 SHALL 使用 canonical package-relative provenance 和稳定排序并保持等价，不得编码 provider coordinate
+              </?01M1C88FF6TT9GPK7RA77MZCCW>
+            )>
+            <Case #diagnostic-and-atomic-parity (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCCX>
+              source 存在缺失文件、无效 UTF-8、越界引用、错误 entry kind 或重复 resource identity
+              </?01M1C88FF6TT9GPK7RA77MZCCX>
+              <When ?01M1C88FF6TT9GPK7RA77MZCCY>
+              directory 与 read-port validation 执行
+              </?01M1C88FF6TT9GPK7RA77MZCCY>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCCZ>
+              两者 SHALL 返回稳定、无机器路径的等价 diagnostics 且 MUST NOT 返回 partial ResourceTree
+              </?01M1C88FF6TT9GPK7RA77MZCCZ>
+            )>
+            <Case #preserve-directory-api (
+              <Given ?01M1C88FF6TT9GPK7RA77MZCD0>
+              现有 consumer 仅调用 loadResourceTree 或 validateResourceTree 并传入 rootDir
+              </?01M1C88FF6TT9GPK7RA77MZCD0>
+              <When ?01M1C88FF6TT9GPK7RA77MZCD1>
+              storage-neutral loader 发布
+              </?01M1C88FF6TT9GPK7RA77MZCD1>
+              <Then ?01M1C88FF6TT9GPK7RA77MZCD2>
+              旧签名、成功结果和既有 diagnostic contract SHALL 保持兼容，并经同一 semantic loader 执行
+              </?01M1C88FF6TT9GPK7RA77MZCD2>
             )>
           ]>
         )>

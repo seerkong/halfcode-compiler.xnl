@@ -1,5 +1,4 @@
-<decisions apiVersion="codument.tech/v1alpha1" [
-  <decision #mission.halfcode-compiler-xnl-migration.scope-boundary { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+<decision #mission.halfcode-compiler-xnl-migration.scope-boundary apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
     <question ?01M02KBYH01S2HM3GEC82BXWPW>
     哪些 XML 属于本次 XNL 迁移边界？
     </?01M02KBYH01S2HM3GEC82BXWPW>
@@ -18,7 +17,7 @@
       </?01M02KBYH01S2HM3GEC82BXWQ0>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.semantic-migration { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
+<decision #mission.halfcode-compiler-xnl-migration.semantic-migration apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" } (
     <question ?01M02KBYH01S2HM3GEC82BXWQ1>
     迁移应是 XML 语法转写还是重新建立 XNL-native DSL？
     </?01M02KBYH01S2HM3GEC82BXWQ1>
@@ -37,7 +36,7 @@
       </?01M02KBYH01S2HM3GEC82BXWQ5>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.entry-and-identity { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.97 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+<decision #mission.halfcode-compiler-xnl-migration.entry-and-identity apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.97 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
     <question ?01M02KBYH01S2HM3GEC82BXWQ6>
     资源 kind、identity 与目录入口由什么决定？
     </?01M02KBYH01S2HM3GEC82BXWQ6>
@@ -56,7 +55,7 @@
       </?01M02KBYH01S2HM3GEC82BXWQA>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.publication-identity { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+<decision #mission.halfcode-compiler-xnl-migration.publication-identity apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
     <question ?01M02KBYH01S2HM3GEC82BXWQB>
     迁移后的唯一公开 npm identity 是什么？
     </?01M02KBYH01S2HM3GEC82BXWQB>
@@ -75,7 +74,7 @@
       </?01M02KBYH01S2HM3GEC82BXWQF>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.parser-authority { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+<decision #mission.halfcode-compiler-xnl-migration.parser-authority apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.98 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
     <question ?01M02KBYH01S2HM3GEC82BXWQG>
     产品使用哪一个 XNL parsing authority？
     </?01M02KBYH01S2HM3GEC82BXWQG>
@@ -94,7 +93,7 @@
       </?01M02KBYH01S2HM3GEC82BXWQM>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.single-authority { priority = "P1" status = "accepted" durable_candidate = true confidence = 0.96 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.parser-authority"] } (
+<decision #mission.halfcode-compiler-xnl-migration.single-authority apiVersion="codument.tech/v1alpha1" { priority = "P1" status = "accepted" durable_candidate = true confidence = 0.96 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.parser-authority"] } (
     <question ?01M02KBYH01S2HM3GEC82BXWQN>
     最终是否长期同时支持 XML 与 XNL authoring？
     </?01M02KBYH01S2HM3GEC82BXWQN>
@@ -113,7 +112,7 @@
       </?01M02KBYH01S2HM3GEC82BXWQS>
     )>
   )>
-  <decision #mission.halfcode-compiler-xnl-migration.defer-businessobject-pageobject { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
+<decision #mission.halfcode-compiler-xnl-migration.defer-businessobject-pageobject apiVersion="codument.tech/v1alpha1" { priority = "P0" status = "accepted" durable_candidate = true confidence = 0.99 reversibility = "medium" depends_on = ["mission.halfcode-compiler-xnl-migration.semantic-migration"] } (
     <question ?01M02KBYH01S2HM3GEC82BXWQT>
     BusinessObject 与 PageObject 应在何时迁移？
     </?01M02KBYH01S2HM3GEC82BXWQT>
@@ -132,4 +131,3 @@
       </?01M02KBYH01S2HM3GEC82BXWQY>
     )>
   )>
-]>

@@ -1,4 +1,18 @@
-<KindDefinition #halfcode.resource_kind.SkillCapsule apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Stable" resourceKind = "SkillCapsule" sourceShapes = ["directory"] currentApiVersion = "halfcode.resources/v1" supportedApiVersions = ["halfcode.resources/v1"] description = "Versioned Skill capsule with exact sibling dependencies" } (
+<KindDefinition #halfcode.resource_kind.SkillCapsule envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 { lifecycle = "Stable" resourceKind = "SkillCapsule"
+  subjectFqn = "Halfcode.ResourceKind.SkillCapsule" sourceShapes = ["directory"] description = "Versioned Skill capsule with exact sibling dependencies" } (
+  <SpecRevisions [
+    <SpecRevision #v1 {
+      specVersion = 1
+      schemaRef = "vfs://./spec-v1.schema.json"
+      schemaFingerprint = "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      contractFingerprint = "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      semanticValidatorFingerprint = "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      referenceProjectionFingerprint = "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      compilerInputFingerprint = "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      stability = "stable"
+    }>
+  ]>
+
   <DescriptorContract (
     <SkillDependencyContract { collection = "SkillDependencies" member = "SkillDependency" refScheme = "resource" targetKind = "SkillCapsule" versionBinding = "exact" }>
     <IncludeContract { collection = "Includes" relation = "compiled-resource-selection" dependencySemantics = false }>

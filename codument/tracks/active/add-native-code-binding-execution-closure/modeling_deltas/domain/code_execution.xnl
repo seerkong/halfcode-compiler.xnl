@@ -1,0 +1,12 @@
+<object #code_execution.frozen_closure { kind = "object" fact_grade = "checkpoint_snapshot" single_writer = "code_execution.capture" } (
+  <desc ?>资源模块、依赖边和资产字节的不可变恢复材料，不是当前可变资源 authority。</?>
+  <types ?>interface FrozenCodeClosure { format: "halfcode-code-closure/v1"; compilerIdentity: string; binding: CodeBinding; entryPath: string; modules: readonly FrozenCodeModule[]; assets: readonly FrozenCodeAsset[]; environment: CodeExecutionEnvironment; digest: string }
+interface CodeExecutionEnvironment { hostIdentity: string; ambient: Readonly<Record<string, string>> }
+interface FrozenCodeModule { path: string; source: string; sourceDigest: string; code: string; codeDigest: string; dependencies: readonly FrozenCodeDependency[] }
+interface FrozenCodeAsset { path: string; format: "text" | "json"; content: string; contentDigest: string }</?>
+  <fact-source ?>由显式 source reader 在 admission 生成，run owner 保存并校验恢复，不反写 registry。</?>
+)>
+<policy #code_execution.closed_restore { kind = "policy" behaviors = ["behavior://application-assembly/requirements/frozen-code-execution"] } (
+  <desc ?>完整闭包及匹配环境才允许恢复。</?>
+  <pseudo { kind = "rule" } ?>完整模块/资产/边/摘要和环境匹配 -> bind；未知动态依赖、越界、摘要不符 -> 拒绝；禁止 live fallback。</?>
+)>

@@ -1,0 +1,71 @@
+<Track #prepare-halfcode-03-kind-contract-release apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "把 Halfcode 0.3 exact resource envelope、versioned Kind contract 与公开 npm distribution 收敛为可供 Holarchy/Eidolon 真实消费的发布候选。" description = "验证现有 0.3 实现的 contract authority、公开 exports、核心矩阵、tarball 边界与隔离 consumer；生成可审计候选证据并只做发布准备。" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-09-04T09:17:41.718Z" updated_at = "2026-09-04T09:30:57.814Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle #resource_contract { role = "input" name = "resource-contract" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle #kind_contract { role = "input" name = "kind-contract" domain = "code" path = "vfs://@/packages/kind-definition/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle #reports { role = "output" name = "reports" domain = "artifact" path = "vfs://./reports/" }>
+  ]>
+  <TaskSpace #space_prepare-halfcode-03-kind-contract-release { name = "prepare-halfcode-03-kind-contract-release" version = "1" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "0.3 contract authority" status = "DONE" priority = "P0" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "复核 exact envelope 与 versioned Kind contract" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?01M1NVN0YMCBJC6GDVQV9MRZ1G>
+              公开 `RESOURCE_ENVELOPE_CONTRACT/FINGERPRINT` 与 Kind owner/spec/reader registrations 由确定性代码生成并在根入口和子路径保持同一 identity。
+              </?01M1NVN0YMCBJC6GDVQV9MRZ1G>
+              <Criterion #P1-T1-AC2 { checked = true } ?01M1NVN0YMCBJC6GDVQV9MRZ1H>
+              loader 拒绝 legacy `apiVersion/version/currentApiVersion` authority，且 description 中的 SpecRevision fingerprints 必须与 admitted code contract 精确一致。
+              </?01M1NVN0YMCBJC6GDVQV9MRZ1H>
+              <Criterion #P1-T1-AC3 { checked = true } ?01M1NVN0YMCBJC6GDVQV9MRZ1J>
+              envelope、loader、Kind registry/resolution 的正反例测试全部通过，不能以 test-only fingerprint 放宽物理 gate。
+              </?01M1NVN0YMCBJC6GDVQV9MRZ1J>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "npm distribution candidate" status = "DONE" priority = "P0" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "构建并隔离消费 halfcode-compiler.xnl@0.3.0 tarball" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?01M1NVN0YMCBJC6GDVQV9MRZ1K>
+              distribution build/check、十个公开 specifier runtime/types、内置 Resource DSL bytes 与 tarball 边界全部通过。
+              </?01M1NVN0YMCBJC6GDVQV9MRZ1K>
+              <Criterion #P2-T1-AC2 { checked = true } ?01M1NVN0YMCBJC6GDVQV9MRZ1M>
+              隔离 consumer 只安装本地 tarball，也能读取公开 envelope/Kind authority 并执行真实 resource loader/resolver。
+              </?01M1NVN0YMCBJC6GDVQV9MRZ1M>
+              <Criterion #P2-T1-AC3 { checked = true } ?01M1NVN0YMCBJC6GDVQV9MRZ1N>
+              候选报告记录 name/version/integrity/shasum/size，且未执行 npm publish 或 dist-tag mutation。
+              </?01M1NVN0YMCBJC6GDVQV9MRZ1N>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "联合迁移交接" status = "DONE" priority = "P0" order = 2 } (
+        <SubNodes [
+          <Task #P3-T1 { name = "验证官方 registry 配置并固化 consumer handoff" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P3-T1-AC1 { checked = true } ?01M1NVN0YMCBJC6GDVQV9MRZ1P>
+              只用 `/Users/kongweixian/.npmrc_official` 做只读 registry/auth preflight；不读取默认 npmrc，也不泄露凭据内容。
+              </?01M1NVN0YMCBJC6GDVQV9MRZ1P>
+              <Criterion #P3-T1-AC2 { checked = true } ?01M1NVN0YMCBJC6GDVQV9MRZ1Q>
+              报告明确 Holarchy/Eidolon 的消费入口、候选 tarball provenance、发布顺序和“未获授权不 publish”边界。
+              </?01M1NVN0YMCBJC6GDVQV9MRZ1Q>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule { max_concurrent = 1 spot_check = true } [
+    <Dag { for = "space_prepare-halfcode-03-kind-contract-release" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+      <Node #P3 [
+        <After { ref = "P2" }>
+      ]>
+    ]>
+  ]>
+  <Hooks []>
+)>

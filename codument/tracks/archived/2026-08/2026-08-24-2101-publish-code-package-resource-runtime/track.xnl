@@ -1,0 +1,53 @@
+<Track #publish-code-package-resource-runtime apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "将包含 CodePackage 协议的 halfcode-compiler.xnl@0.2.4 通过完整门禁发布，并验证 registry identity" description = "版本化 distribution，执行 tarball/isolated consumer 验证，发布 npm 包并回读 integrity/shasum" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-24T17:53:09.331Z" updated_at = "2026-08-24T18:01:32.385Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "input" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "release-candidate" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "publication-evidence" domain = "artifact" path = "vfs://./reports/publication.json" }>
+  ]>
+  <TaskSpace #space_publish-code-package-resource-runtime { name = "publish-code-package-resource-runtime" version = "1" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "0.2.4 release candidate" status = "DONE" priority = "P0" order = 0 } (
+        <Description ?01M0TES1NHH87BPYAJ887P8FRE>
+        以测试先行方式提升 candidate identity，并完成 source、tarball 与隔离安装门禁。
+        </?01M0TES1NHH87BPYAJ887P8FRE>
+        <SubNodes [
+          <Task #P1-T1 { name = "先更新 candidate 断言并观察 0.2.3 metadata 失败" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { text = "verifier 精确要求 0.2.4，旧 package metadata 产生预期失败" checked = true }>
+            ]>
+          )>
+          <Task #P1-T2 { name = "提升 distribution 与 lockfile 到 0.2.4 并通过完整 candidate 验证" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { text = "test、typecheck、workspace verify 和 package:check 全部通过" checked = true }>
+              <Criterion #P1-T2-AC2 { text = "isolated consumer 从 tarball 加载真实 CodePackage 且 internal API 不泄漏" checked = true }>
+              <Criterion #P1-T2-AC3 { text = "npm registry 精确版本 0.2.4 在发布前不存在" checked = true }>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "npm publication and roundtrip" status = "DONE" priority = "P0" order = 1 } (
+        <Description ?01M0TES1NHH87BPYAJ887P8FRF>
+        发布精确正式版本，并用本地 candidate identity 校验 registry 回读结果。
+        </?01M0TES1NHH87BPYAJ887P8FRF>
+        <SubNodes [
+          <Task #P2-T1 { name = "发布 halfcode-compiler.xnl@0.2.4" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { text = "npm publish 成功且未覆盖或修改任何既有版本" checked = true }>
+            ]>
+          )>
+          <Task #P2-T2 { name = "回读 registry identity 并固化 publication evidence" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { text = "registry name/version/integrity/shasum 与发布前 candidate 精确一致" checked = true }>
+              <Criterion #P2-T2-AC2 { text = "reports/publication.json 可供 Host Mission 后续精确采用" checked = true }>
+              <Criterion #P2-T2-AC3 { text = "严格 Codument 与 modeling validation 通过" checked = true }>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule []>
+  <Hooks []>
+)>

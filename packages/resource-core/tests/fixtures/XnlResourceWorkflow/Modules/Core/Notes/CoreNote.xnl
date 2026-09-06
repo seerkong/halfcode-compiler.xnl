@@ -1,4 +1,4 @@
-<Note #demo.resource_workflow.note.core apiVersion="halfcode.resources/v1" version="1.0.0" {
+<Note #demo.resource_workflow.note.core envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Note discovered through a nested manifest"
 }>

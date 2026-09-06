@@ -1,23 +1,121 @@
 import { describe, expect, test } from "bun:test"
-import { cp, mkdtemp, readFile, writeFile } from "node:fs/promises"
+import { cp, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import {
   loadResourceTree,
   ResourceValidationError,
+  sha256Digest,
   validateResourceTree,
   type ResourceNode,
 } from "./index"
 
 const xnlFixtureRoot = join(import.meta.dir, "../tests/fixtures/XnlResourceWorkflow")
+const fp = (digit: string) => `sha256:${digit.repeat(64)}`
+
+function kindDefinition(kind: string, shape: string, extra = ""): string {
+  return [
+    `<KindDefinition #halfcode.resource_kind.${kind} envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {`,
+    `  resourceKind = "${kind}"`,
+    `  subjectFqn = "Halfcode.ResourceKind.${kind}"`,
+    `  sourceShapes = ["${shape}"]`,
+    ...(extra ? [`  ${extra}`] : []),
+    '} (',
+    '  <SpecRevisions [',
+    '    <SpecRevision #v1 {',
+    '      specVersion = 1',
+    '      schemaRef = "vfs://./spec-v1.schema.json"',
+    `      schemaFingerprint = "${fp("1")}"`,
+    `      contractFingerprint = "${fp("2")}"`,
+    `      semanticValidatorFingerprint = "${fp("3")}"`,
+    `      referenceProjectionFingerprint = "${fp("4")}"`,
+    `      compilerInputFingerprint = "${fp("5")}"`,
+    '      stability = "stable"',
+    '    }>',
+    '  ]>',
+    ')>',
+    '',
+  ].join("\n")
+}
+
+async function writeSemanticCatalogFixture(root: string): Promise<void> {
+  for (const path of [
+    "KindDefinitions/SkillApp",
+    "KindDefinitions/Note",
+    "KindDefinitions/ResourceModule",
+    "KindDefinitions/LocalFunctionBundle",
+    "Notes",
+    "Modules/Search",
+    "LocalFunction",
+  ]) {
+    await mkdir(join(root, path), { recursive: true })
+  }
+  await writeFile(join(root, "manifest.xnl"), [
+    '<SkillApp #demo.semantic.app envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 (',
+    '  <Catalogs [',
+    '    <DirectoryResourceCatalog #kind_definitions { resourceKind = "KindDefinition" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" scope = "children" }>',
+    '    <FileResourceCatalog #notes { resourceKind = "Note" root = "vfs://./Notes/" }>',
+    '    <ManifestResourceCatalog #modules { resourceKind = "ResourceModule" root = "vfs://./Modules/" entry = "manifest.xnl" }>',
+    '    <DirectoryResourceCatalog #local_functions { resourceKind = "LocalFunctionBundle" root = "vfs://./LocalFunction/" entry = "manifest.xnl" scope = "root" }>',
+    '  ]>',
+    ')>',
+    '',
+  ].join("\n"))
+  const definitions: ReadonlyArray<readonly [string, string]> = [
+    ["SkillApp", "manifest"],
+    ["Note", "single-file"],
+    ["ResourceModule", "manifest"],
+    ["LocalFunctionBundle", "directory"],
+  ]
+  for (const [kind, shape] of definitions) {
+    await writeFile(join(root, `KindDefinitions/${kind}/manifest.xnl`), kindDefinition(kind, shape))
+  }
+  await writeFile(join(root, "Notes/Welcome.xnl"), '<Note #demo.semantic.note.welcome envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>\n')
+  await writeFile(join(root, "Modules/Search/manifest.xnl"), '<ResourceModule #demo.semantic.module.search envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>\n')
+  await writeFile(join(root, "LocalFunction/manifest.xnl"), '<LocalFunctionBundle #demo.semantic.local_functions envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 { runtime = "bun" entry = "vfs://./bundle/index.js" }>\n')
+}
 
 describe("resource-core XNL-native loader", () => {
+  test("loads a registered semantic root through named resource catalogs", async () => {
+    const root = await mkdtemp(join(tmpdir(), "halfcode-semantic-catalogs-"))
+    await writeSemanticCatalogFixture(root)
+
+    const tree = await loadResourceTree({ rootDir: root })
+
+    expect(tree.manifest).toMatchObject({ kind: "SkillApp", resourceId: "demo.semantic.app", sourceShape: "manifest" })
+    expect(tree.registry.byKind.get("SkillApp")?.map((item) => item.resourceId)).toEqual(["demo.semantic.app"])
+    expect(tree.registry.byKind.get("Note")?.[0]).toMatchObject({ sourceShape: "single-file", logicalPath: "Notes/Welcome.xnl" })
+    expect(tree.registry.byKind.get("ResourceModule")?.[0]).toMatchObject({ sourceShape: "manifest", logicalPath: "Modules/Search/manifest.xnl" })
+    expect(tree.registry.byKind.get("LocalFunctionBundle")?.[0]).toMatchObject({ sourceShape: "directory", logicalPath: "LocalFunction/manifest.xnl" })
+    expect(tree.contentIdentities.has("demo.semantic.app")).toBe(true)
+  })
+
+  test.each([
+    ["unknown semantic root", (source: string) => source.replace("<SkillApp #", "<UnknownApp #"), "KIND_DEFINITION_MISSING"],
+    ["typed catalog shape conflict", (source: string) => source.replace("<FileResourceCatalog #notes {", '<FileResourceCatalog #notes { shape = "directory"'), "RESOURCE_CATALOG_INVALID"],
+    ["invalid directory scope", (source: string) => source.replace('scope = "root"', 'scope = "package"'), "RESOURCE_CATALOG_INVALID"],
+  ])("rejects %s", async (_label, mutate, code) => {
+    const root = await mkdtemp(join(tmpdir(), "halfcode-semantic-invalid-"))
+    await writeSemanticCatalogFixture(root)
+    const manifestPath = join(root, "manifest.xnl")
+    await writeFile(manifestPath, mutate(await readFile(manifestPath, "utf8")))
+    expect(await validateResourceTree({ rootDir: root })).toContainEqual(expect.objectContaining({ code }))
+  })
+
+  test("rejects a named catalog whose expected kind disagrees with the resource root", async () => {
+    const root = await mkdtemp(join(tmpdir(), "halfcode-semantic-kind-mismatch-"))
+    await writeSemanticCatalogFixture(root)
+    const bundlePath = join(root, "LocalFunction/manifest.xnl")
+    await writeFile(bundlePath, (await readFile(bundlePath, "utf8")).replace("<LocalFunctionBundle #", "<PageWorkflowBundle #"))
+    expect(await validateResourceTree({ rootDir: root })).toContainEqual(expect.objectContaining({ code: "RESOURCE_KIND_MISMATCH" }))
+  })
+
   test("loads XNL catalogs and exposes normalized semantic channels with provenance", async () => {
     const tree = await loadResourceTree({ rootDir: xnlFixtureRoot })
 
     expect(tree.manifest.kind).toBe("ResourcePackage")
     expect(tree.manifest.resourceId).toBe("demo.resource_workflow.project")
-    expect(tree.manifest.metadata.apiVersion).toBe("halfcode.resources/v1")
+    expect(tree.manifest.metadata).toMatchObject({ envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 })
     expect(tree.manifest.format).toBe("xnl")
     expect(tree.registry.byKind.get("Note")?.map((item) => item.resourceId).sort()).toEqual([
       "demo.resource_workflow.note.core",
@@ -31,14 +129,22 @@ describe("resource-core XNL-native loader", () => {
     expect(tree.registry.kindDefinitions.get("Note")).toEqual({
       resourceId: "halfcode.resource_kind.Note",
       resourceKind: "Note",
+      subjectFqn: "Halfcode.ResourceKind.Note",
       sourceShapes: ["single-file"],
       requiredFiles: [],
-      currentApiVersion: "halfcode.resources/v1",
-      supportedApiVersions: ["halfcode.resources/v1"],
+      specRevisions: [expect.objectContaining({ specVersion: 1 })],
       documentCardinality: "one",
       documentUri: "vfs://@/KindDefinitions/Note/manifest.xnl",
     })
-    expect(tree.registry.byKind.has("KindDefinition")).toBe(false)
+    expect(tree.registry.byKind.get("KindDefinition")?.map((item) => ({
+      resourceId: item.resourceId,
+      subjectFqn: item.subjectFqn,
+      stage: item.stage,
+    }))).toEqual([
+      { resourceId: "halfcode.resource_kind.Note", subjectFqn: "Halfcode.ResourceKind.KindDefinition", stage: "authored" },
+      { resourceId: "halfcode.resource_kind.Procedure", subjectFqn: "Halfcode.ResourceKind.KindDefinition", stage: "authored" },
+      { resourceId: "halfcode.resource_kind.ResourceModule", subjectFqn: "Halfcode.ResourceKind.KindDefinition", stage: "authored" },
+    ])
 
     const rootNote = tree.registry.byKind.get("Note")?.find((item) => item.resourceId.endsWith(".root"))
     expect(rootNote?.node.properties.labels).toEqual(["root", "demo"])
@@ -77,34 +183,22 @@ describe("resource-core XNL-native loader", () => {
     ])
   })
 
-  test("validates resource apiVersion against its KindDefinition contract", async () => {
+  test("preserves the exact authored writer specVersion", async () => {
     const root = await mkdtemp(join(tmpdir(), "halfcode-kind-version-"))
     await cp(xnlFixtureRoot, root, { recursive: true })
-    const definitionPath = join(root, "KindDefinitions/Note/manifest.xnl")
-    const definition = await readFile(definitionPath, "utf8")
-    await writeFile(definitionPath, definition.replace(
-      'currentApiVersion = "halfcode.resources/v1"\n  supportedApiVersions = ["halfcode.resources/v1"]',
-      'currentApiVersion = "demo.notes/v2"\n  supportedApiVersions = ["halfcode.resources/v1" "demo.notes/v1" "demo.notes/v2"]',
-    ))
     const notePath = join(root, "Notes/RootNote.xnl")
     const note = await readFile(notePath, "utf8")
-    await writeFile(notePath, note.replace('apiVersion="halfcode.resources/v1"', 'apiVersion="demo.notes/v1"'))
-    expect((await loadResourceTree({ rootDir: root })).registry.byKind.get("Note")?.find((item) => item.resourceId.endsWith(".root"))?.metadata.apiVersion).toBe("demo.notes/v1")
-
-    await writeFile(notePath, note.replace('apiVersion="halfcode.resources/v1"', 'apiVersion="demo.notes/unknown"'))
-    expect(await validateResourceTree({ rootDir: root })).toContainEqual(expect.objectContaining({ code: "RESOURCE_API_VERSION_UNSUPPORTED" }))
+    await writeFile(notePath, note.replace("specVersion=1", "specVersion=2"))
+    expect((await loadResourceTree({ rootDir: root })).registry.byKind.get("Note")?.find((item) => item.resourceId.endsWith(".root"))?.metadata.specVersion).toBe(2)
   })
 
-  test("rejects an inconsistent KindDefinition version contract", async () => {
+  test("rejects removed KindDefinition current/supported version fields", async () => {
     const root = await mkdtemp(join(tmpdir(), "halfcode-kind-contract-"))
     await cp(xnlFixtureRoot, root, { recursive: true })
     const definitionPath = join(root, "KindDefinitions/Note/manifest.xnl")
     const definition = await readFile(definitionPath, "utf8")
-    await writeFile(definitionPath, definition.replace(
-      'currentApiVersion = "halfcode.resources/v1"\n  supportedApiVersions = ["halfcode.resources/v1"]',
-      'currentApiVersion = "demo.notes/v2"\n  supportedApiVersions = ["demo.notes/v1"]',
-    ))
-    expect(await validateResourceTree({ rootDir: root })).toContainEqual(expect.objectContaining({ code: "KIND_DEFINITION_VERSION_INVALID" }))
+    await writeFile(definitionPath, definition.replace('resourceKind = "Note"', 'resourceKind = "Note"\n  currentSpecVersion = 1'))
+    expect(await validateResourceTree({ rootDir: root })).toContainEqual(expect.objectContaining({ code: "KIND_DEFINITION_VERSION_FIELDS_REMOVED" }))
   })
 
   test("selects one named XNL document from a single-file catalog", async () => {
@@ -159,12 +253,12 @@ describe("resource-core XNL-native loader", () => {
     const definitionPath = join(root, "KindDefinitions/Note/manifest.xnl")
     const definition = await readFile(definitionPath, "utf8")
     await writeFile(definitionPath, definition.replace(
-      'supportedApiVersions = ["halfcode.resources/v1"]',
-      'supportedApiVersions = ["halfcode.resources/v1"]\n  documentCardinality = "many"',
+      'sourceShapes = ["single-file"]',
+      'sourceShapes = ["single-file"]\n  documentCardinality = "many"',
     ))
     await writeFile(join(root, "Notes/Forest.xnl"), [
-      '<Note #demo.resource_workflow.note.forest_a apiVersion="halfcode.resources/v1" { labels = ["forest"] }>',
-      '<Note #demo.resource_workflow.note.forest_b apiVersion="halfcode.resources/v1" { labels = ["forest"] }>',
+      '<Note #demo.resource_workflow.note.forest_a envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 { labels = ["forest"] }>',
+      '<Note #demo.resource_workflow.note.forest_b envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 { labels = ["forest"] }>',
       "",
     ].join("\n"))
 
@@ -176,12 +270,71 @@ describe("resource-core XNL-native loader", () => {
     expect(new Set(forest.map((item) => item.documentUri))).toEqual(new Set(["vfs://@/Notes/Forest.xnl"]))
   })
 
+  test("loads one Markdown frontmatter file as one single-file resource authority", async () => {
+    const root = await mkdtemp(join(tmpdir(), "halfcode-markdown-resource-"))
+    await mkdir(join(root, "KindDefinitions/ApplicationSOP"), { recursive: true })
+    await mkdir(join(root, "ApplicationSOP"), { recursive: true })
+    await writeFile(join(root, "manifest.xnl"), [
+      '<ResourcePackage #demo.markdown envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 (',
+      '  <Catalogs [',
+      '    <Catalog #kind_definitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>',
+      '    <Catalog #application_sops { kind = "ApplicationSOP" shape = "single-file" root = "vfs://./ApplicationSOP/" }>',
+      '  ]>',
+      ')>',
+      '',
+    ].join("\n"))
+    await writeFile(join(root, "KindDefinitions/ApplicationSOP/manifest.xnl"), kindDefinition("ApplicationSOP", "single-file"))
+    const markdown = [
+      '---',
+      'envelopeVersion: halfcode.resource-envelope/v1',
+      'specVersion: 1',
+      'kind: ApplicationSOP',
+      'metadata:',
+      '  fqn: Demo.ApplicationSOP.Search',
+      'spec:',
+      '  description: Search and return a typed result.',
+      '---',
+      '',
+      'Use resource://Not.A.Dependency only as prose.',
+      '',
+    ].join("\n")
+    await writeFile(join(root, "ApplicationSOP/search.md"), markdown)
+
+    const tree = await loadResourceTree({ rootDir: root })
+    const resource = tree.registry.byKind.get("ApplicationSOP")?.[0]
+    expect(resource).toMatchObject({
+      resourceId: "Demo.ApplicationSOP.Search",
+      fqn: "Demo.ApplicationSOP.Search",
+      kind: "ApplicationSOP",
+      description: "Search and return a typed result.",
+      format: "markdown",
+      sourceShape: "single-file",
+      logicalPath: "ApplicationSOP/search.md",
+      documentUri: "vfs://@/ApplicationSOP/search.md",
+      metadata: { envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 },
+    })
+    expect(resource?.node.properties).toEqual({ description: "Search and return a typed result." })
+    expect(tree.contentIdentities.get("Demo.ApplicationSOP.Search")?.authorityDigest).toBe(sha256Digest(markdown))
+  })
+
+  test.each([
+    ["missing frontmatter", "# SOP\n", "RESOURCE_MARKDOWN_FRONTMATTER_INVALID"],
+    ["unterminated frontmatter", "---\nkind: ApplicationSOP\n", "RESOURCE_MARKDOWN_FRONTMATTER_INVALID"],
+    ["non-object frontmatter", "---\n- invalid\n---\nbody\n", "RESOURCE_MARKDOWN_FRONTMATTER_INVALID"],
+    ["missing identity", "---\nenvelopeVersion: halfcode.resource-envelope/v1\nspecVersion: 1\nkind: ApplicationSOP\nmetadata: {}\n---\nbody\n", "RESOURCE_MARKDOWN_METADATA_INVALID"],
+  ])("rejects Markdown single-file authority with %s", async (_label, markdown, code) => {
+    const root = await mkdtemp(join(tmpdir(), "halfcode-markdown-invalid-"))
+    await cp(xnlFixtureRoot, root, { recursive: true })
+    await writeFile(join(root, "Notes/Invalid.md"), markdown)
+    expect(await validateResourceTree({ rootDir: root })).toContainEqual(expect.objectContaining({ code }))
+  })
+
   test("keeps single-root kinds strict and rejects mixed or duplicate forest roots", async () => {
     const strictRoot = await mkdtemp(join(tmpdir(), "halfcode-resource-single-"))
     await cp(xnlFixtureRoot, strictRoot, { recursive: true })
     await writeFile(join(strictRoot, "Notes/Forest.xnl"), [
-      '<Note #demo.resource_workflow.note.a apiVersion="halfcode.resources/v1">',
-      '<Note #demo.resource_workflow.note.b apiVersion="halfcode.resources/v1">',
+      '<Note #demo.resource_workflow.note.a envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>',
+      '<Note #demo.resource_workflow.note.b envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>',
     ].join("\n"))
     expect(await validateResourceTree({ rootDir: strictRoot })).toContainEqual(expect.objectContaining({ code: "RESOURCE_XNL_ROOT_INVALID" }))
 
@@ -190,19 +343,19 @@ describe("resource-core XNL-native loader", () => {
     const definitionPath = join(forestRoot, "KindDefinitions/Note/manifest.xnl")
     const definition = await readFile(definitionPath, "utf8")
     await writeFile(definitionPath, definition.replace(
-      'supportedApiVersions = ["halfcode.resources/v1"]',
-      'supportedApiVersions = ["halfcode.resources/v1"]\n  documentCardinality = "many"',
+      'sourceShapes = ["single-file"]',
+      'sourceShapes = ["single-file"]\n  documentCardinality = "many"',
     ))
     const forestPath = join(forestRoot, "Notes/Forest.xnl")
     await writeFile(forestPath, [
-      '<Note #demo.resource_workflow.note.a apiVersion="halfcode.resources/v1">',
-      '<Procedure #demo.resource_workflow.procedure.b apiVersion="halfcode.resources/v1">',
+      '<Note #demo.resource_workflow.note.a envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>',
+      '<Procedure #demo.resource_workflow.procedure.b envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>',
     ].join("\n"))
     expect(await validateResourceTree({ rootDir: forestRoot })).toContainEqual(expect.objectContaining({ code: "RESOURCE_KIND_MISMATCH" }))
 
     await writeFile(forestPath, [
-      '<Note #demo.resource_workflow.note.duplicate apiVersion="halfcode.resources/v1">',
-      '<Note #demo.resource_workflow.note.duplicate apiVersion="halfcode.resources/v1">',
+      '<Note #demo.resource_workflow.note.duplicate envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>',
+      '<Note #demo.resource_workflow.note.duplicate envelopeVersion="halfcode.resource-envelope/v1" specVersion=1>',
     ].join("\n"))
     expect(await validateResourceTree({ rootDir: forestRoot })).toContainEqual(expect.objectContaining({ code: "RESOURCE_IDENTITY_DUPLICATE" }))
   })

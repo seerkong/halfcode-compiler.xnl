@@ -1,0 +1,58 @@
+<Track #add-semantic-roots-and-typed-catalogs apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "让 Halfcode 以可注册语义根和具名 Catalog 加载结构资源，同时保持非 CodePackage 通用 Catalog 兼容" description = "增加 root Kind bootstrap、File/Directory/Manifest ResourceCatalog、Directory scope 与一致性诊断" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-25T07:47:45.835Z" updated_at = "2026-08-25T07:54:54.729Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #resource_core { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle #resource_docs { role = "output" name = "resource-docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+  ]>
+  <TaskSpace #space_add-semantic-roots-and-typed-catalogs { name = "add-semantic-roots-and-typed-catalogs" version = "1" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Contract characterization" status = "DONE" priority = "P0" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "添加语义根、具名 Catalog、root/children scope 与旧通用 Catalog 的行为测试" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?01M0VYDWGN59HQW0Y95MP4MNQ4>
+              测试覆盖 SkillApp 根注册、三种具名 Catalog 和旧通用 Catalog 正例。
+              </?01M0VYDWGN59HQW0Y95MP4MNQ4>
+              <Criterion #P1-T1-AC2 { checked = true } ?01M0VYDWGN59HQW0Y95MP4MNQ5>
+              测试覆盖 Kind/shape/scope 不一致和未知根 Kind 的 fail-closed 诊断。
+              </?01M0VYDWGN59HQW0Y95MP4MNQ5>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Semantic catalog loader" status = "DONE" priority = "P0" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "实现 root Kind bootstrap、具名 Catalog normalization 与 Directory scope" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?01M0VYDWGN59HQW0Y95MP4MNQ6>
+              语义根通过已加载 KindDefinition 校验并进入 registry；ResourcePackage 旧根保持兼容。
+              </?01M0VYDWGN59HQW0Y95MP4MNQ6>
+              <Criterion #P2-T1-AC2 { checked = true } ?01M0VYDWGN59HQW0Y95MP4MNQ7>
+              Catalog 自述 Kind 与 resourceKind 期望冲突时稳定失败，路径 containment 不退化。
+              </?01M0VYDWGN59HQW0Y95MP4MNQ7>
+            ]>
+          )>
+          <Task #P2-T2 { name = "更新 resource DSL 文档与 resource-core modeling delta" status = "DONE" priority = "P1" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?01M0VYDWGN59HQW0Y95MP4MNQ8>
+              文档明确 Catalog tag、兼容语法、scope 和 authority 边界。
+              </?01M0VYDWGN59HQW0Y95MP4MNQ8>
+              <Criterion #P2-T2-AC2 { checked = true } ?01M0VYDWGN59HQW0Y95MP4MNQ9>
+              modeling delta 记录 semantic catalog loader 且通过 validate。
+              </?01M0VYDWGN59HQW0Y95MP4MNQ9>
+            ]>
+          )>
+          <Task #P2-T3 { name = "运行 resource-core、typecheck 与全仓验证" status = "DONE" priority = "P0" order = 2 } (
+            <Acceptance [
+              <Criterion #P2-T3-AC1 { checked = true } ?01M0VYDWGN59HQW0Y95MP4MNQA>
+              定向测试、全仓测试、typecheck 和 workspace verify 全部通过。
+              </?01M0VYDWGN59HQW0Y95MP4MNQA>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule []>
+  <Hooks []>
+)>

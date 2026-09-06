@@ -1,0 +1,19 @@
+<component #resource_core.semantic_catalog_loader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/semantic-resource-catalogs"] } (
+  <desc ?>把语义根与 Catalogs 规范化为结构资源发现计划；先 bootstrap KindDefinitions，再校验并注册根资源，且不解释任何代码运行语言。</?>
+  <runtime ?runtime>
+  interface SemanticCatalogRuntime { readFile(path: string): Promise&lt;Uint8Array&gt;; readDirectory(path: string): Promise&lt;readonly DirectoryEntry[]&gt;; realpath(path: string): Promise&lt;string&gt; }
+  </?runtime>
+  <input ?input>
+  interface ResourceCatalogInput { rootManifest: ResourceRecord; catalogs: readonly ResourceCatalogDeclaration[] }
+  </?input>
+  <config ?config>
+  interface ResourceCatalogConfig { tags: readonly ["FileResourceCatalog", "DirectoryResourceCatalog", "ManifestResourceCatalog", "Catalog"]; directoryScope: "root" | "children" }
+  </?config>
+  <output ?output>
+  type ResourceCatalogOutput = LoadedResourceTree | readonly ResourceDiagnostic[]
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  解析根 → 规范化 Catalog declarations → 优先加载 KindDefinitions → 校验语义根并注册 → 按 tag shape 与 scope 枚举结构资源 → 校验 expected/self-described Kind → 冻结 registry
+  </?ctrl>
+  <not-owned-here ?>Bundle materialization、语言 adapter、代码执行、capability 注入和 leaf admission 均由 consumer Host 拥有。</?>
+)>

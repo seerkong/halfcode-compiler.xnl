@@ -1,4 +1,4 @@
-<BusinessObject #Demo.ResourceWorkflow.BO.MakerSpace.Reservation apiVersion="halfcode.resources/v1" version="1.0.0" {
+<BusinessObject #Demo.ResourceWorkflow.BO.MakerSpace.Reservation envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Reservation business-object resource and local capability manifest."
   parentRef = "MakerSpace.Resource"

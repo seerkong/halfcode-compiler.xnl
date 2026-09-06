@@ -1,0 +1,76 @@
+<BehaviorPatch #track.add-transactional-runtime-resource-authoring.behavior_patch.resource-authoring apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-authoring" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-authoring/requirements/transactional-runtime-authoring" } (
+      <Requirement #transactional-runtime-authoring (
+        <Statement ?01M1AP1WTAXKAGY7ZZE62EJCZ4>
+        Halfcode SHALL provide a product-neutral runtime resource authoring transaction that separates pure planning from an atomic compare-and-swap write, canonical registry refresh and immutable receipt.
+        </?01M1AP1WTAXKAGY7ZZE62EJCZ4>
+        <Suites [
+          <Suite #resource-authoring-plan { name = "Resource authoring plan" } (
+            <Cases [
+              <Case #pure-deterministic-plan (
+                <Given ?01M1AMT4T3TKK3X2RZRKTXA80E>
+                A proposal names canonical bytes, a known Kind/apiVersion, a catalog-admitted logical target and an expected authority state.
+                </?01M1AMT4T3TKK3X2RZRKTXA80E>
+                <When ?01M1AZ07DWP77S5E09HA74SHRW>
+                Runtime authoring is planned.
+                </?01M1AZ07DWP77S5E09HA74SHRW>
+                <Then ?01M1AGPZNFF2A12M1SDPCCZR4S>
+                Planning SHALL perform no write and SHALL return one deeply frozen deterministic plan binding every field and its digest.
+                </?01M1AGPZNFF2A12M1SDPCCZR4S>
+              )>
+              <Case #reject-before-write (
+                <Given ?01M1ADYVQ90ND0QV0P5PHKHKYW>
+                The proposal has an unsafe URI, unknown Kind/version, missing catalog, unsupported source shape or forged expected state.
+                </?01M1ADYVQ90ND0QV0P5PHKHKYW>
+                <When ?01M1ATREA27PKBTFYPS4MWJ3JR>
+                It is planned or applied.
+                </?01M1ATREA27PKBTFYPS4MWJ3JR>
+                <Then ?01M1A64M7Q0J0QRXFA608GDRSY>
+                The system SHALL fail with a stable typed error before mutating authority or registry state.
+                </?01M1A64M7Q0J0QRXFA608GDRSY>
+              )>
+            ]>
+          )>
+          <Suite #resource-authoring-transaction { name = "Resource authoring transaction" } (
+            <Cases [
+              <Case #cas-refresh-receipt (
+                <Given ?01M1ASKNV8ABQ38FQ74J4PEKQX>
+                A valid plan still matches the target authority state.
+                </?01M1ASKNV8ABQ38FQ74J4PEKQX>
+                <When ?01M1ACXBXR2DAHBXP5YQXXE543>
+                The injected authoring port applies it.
+                </?01M1ACXBXR2DAHBXP5YQXXE543>
+                <Then ?01M1AX5RYW4R8NWNGM9F0Q9243>
+                One CAS write and canonical refresh SHALL commit together and return an immutable receipt binding old/new authority digests and the refreshed registry identity.
+                </?01M1AX5RYW4R8NWNGM9F0Q9243>
+              )>
+              <Case #refresh-failure-rolls-back (
+                <Given ?01M1ACYYWR9DY6Z2SAS59PPH1N>
+                The candidate write succeeds but canonical reload, composition or verification fails.
+                </?01M1ACYYWR9DY6Z2SAS59PPH1N>
+                <When ?01M1A4VN7D0APC2WWRWV4QYX20>
+                The transaction reconciles the failure.
+                </?01M1A4VN7D0APC2WWRWV4QYX20>
+                <Then ?01M1A1BTRVGGSKVDWHP801Y381>
+                It SHALL restore the prior authority and retain the prior live registry without staging residue or ambiguous success.
+                </?01M1A1BTRVGGSKVDWHP801Y381>
+              )>
+              <Case #idempotent-retry (
+                <Given ?01M1AJZAQH038SEFVDGERWA882>
+                The same accepted plan is retried after an uncertain response.
+                </?01M1AJZAQH038SEFVDGERWA882>
+                <When ?01M1AMAHH5S1CAYKKKTBY0DCCF>
+                Apply observes the committed plan identity.
+                </?01M1AMAHH5S1CAYKKKTBY0DCCF>
+                <Then ?01M1A68XRRP04AWZYRH3PA9XBA>
+                It SHALL return the same receipt or a stable already-applied projection and SHALL NOT rewrite or refresh twice.
+                </?01M1A68XRRP04AWZYRH3PA9XBA>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

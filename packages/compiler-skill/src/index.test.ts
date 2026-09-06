@@ -214,7 +214,7 @@ test("plans a deterministic dependency-first Skill closure without target writes
   expect(await readFile(join(untouched, "keep.txt"), "utf8")).toBe("unchanged\n")
 })
 
-test("projects XNL apiVersion and canonical provenance for every planned Skill capsule", async () => {
+test("projects XNL envelope/writer spec identity and canonical provenance for every planned Skill capsule", async () => {
   const assembly = await loadApplicationAssembly({ resourceRootDir: xnlAssemblyRoot })
   const plan = await planSkillCapsuleDistribution({
     assembly,
@@ -222,9 +222,10 @@ test("projects XNL apiVersion and canonical provenance for every planned Skill c
     schemas: xnlSchemas(),
   })
 
-  expect(plan.roots[0]).toEqual(expect.objectContaining({ apiVersion: "halfcode.resources/v1" }))
+  expect(plan.roots[0]).toEqual(expect.objectContaining({ envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 }))
   for (const capsule of plan.capsules) {
-    expect(capsule.identity.apiVersion).toBe("halfcode.resources/v1")
+    expect(capsule.identity.envelopeVersion).toBe("halfcode.resource-envelope/v1")
+    expect(capsule.identity.specVersion).toBe(1)
     const provenancePath = `${capsule.identity.name}/references/.halfcode/provenance.json`
     const provenanceFile = capsule.files.find((file) => file.targetRelativePath === provenancePath)
     expect(provenanceFile).toBeDefined()
@@ -234,7 +235,8 @@ test("projects XNL apiVersion and canonical provenance for every planned Skill c
       generatedBy: "halfcode.skill-distribution/v1",
       source: {
         fqn: capsule.identity.fqn,
-        apiVersion: capsule.identity.apiVersion,
+        envelopeVersion: capsule.identity.envelopeVersion,
+        specVersion: capsule.identity.specVersion,
         version: capsule.identity.version,
       },
       payloadFiles: capsule.files
@@ -296,7 +298,8 @@ test("plans the canonical sys-halfcode-resource-dsl 1.0.0 consumer Skill", async
   expect(plan.roots).toEqual([{
     fqn: "Halfcode.ResourceDsl.Skill.System",
     name: "sys-halfcode-resource-dsl",
-    apiVersion: "halfcode.resources/v1",
+    envelopeVersion: "halfcode.resource-envelope/v1",
+    specVersion: 1,
     version: "1.0.0",
   }])
   expect(plan.files.map((file) => file.targetRelativePath)).toContain(
@@ -362,7 +365,7 @@ for (const invalidYamlName of [
     await cp(xnlAssemblyRoot, fixtureRoot, { recursive: true })
     await writeFile(
       join(fixtureRoot, "Skills/Demo/skill.yaml"),
-      `name: ${invalidYamlName.yaml}\ndescription: XNL assembly fixture skill\n`,
+      `name: ${invalidYamlName.yaml}\nversion: 1.0.0\ndescription: XNL assembly fixture skill\n`,
     )
     const assembly = await loadApplicationAssembly({ resourceRootDir: fixtureRoot })
     const parent = await mkdtemp(join(tmpdir(), "skill-yaml-name-output-"))
@@ -388,7 +391,7 @@ test("uses the legacy FQN fallback only when YAML Skill name is absent", async (
   await cp(xnlAssemblyRoot, fixtureRoot, { recursive: true })
   await writeFile(
     join(fixtureRoot, "Skills/Demo/skill.yaml"),
-    "description: XNL assembly fixture skill\n",
+    "version: 1.0.0\ndescription: XNL assembly fixture skill\n",
   )
   const assembly = await loadApplicationAssembly({ resourceRootDir: fixtureRoot })
   const plan = await planSkillCapsuleDistribution({
@@ -1644,7 +1647,8 @@ function withRewrittenCapsuleFiles(
 function testFileDigestProjection(file: PlannedSkillFile) {
   return {
     skillFqn: file.skillFqn,
-    skillApiVersion: file.skillApiVersion,
+    skillEnvelopeVersion: file.skillEnvelopeVersion,
+    skillSpecVersion: file.skillSpecVersion,
     skillVersion: file.skillVersion,
     capsuleRelativePath: file.capsuleRelativePath,
     targetRelativePath: file.targetRelativePath,

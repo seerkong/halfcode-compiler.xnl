@@ -15,14 +15,14 @@
 一个节点的完整形态是：
 
 ```xnl
-<Tag #id apiVersion="halfcode.resources/v1" version="1.0.0" { properties } ( unique-subdomains ) [ repeated-or-ordered-members ]>
+<Tag #id envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 { properties } ( unique-subdomains ) [ repeated-or-ordered-members ]>
 ```
 
 | 通道 | 唯一职责 | 资源 DSL 用法 |
 |---|---|---|
 | `Tag` | 节点类别 | `ResourcePackage`、`KindDefinition`、`Function`、`ResourceMappings` 等资源 kind |
 | `#id` | 节点身份 | 可跨容器引用的 FQN；不从文件名推断 |
-| metadata 位 | 系统级版本 | `apiVersion`、`version` |
+| metadata 位 | 容器协议与 Kind writer revision | `envelopeVersion`、正整数 `specVersion` |
 | `{}` | 无序业务属性 | lifecycle、description、kind、src、root 等标量或内联结构 |
 | `()` | 每父节点唯一的命名子域 | `Catalogs`、`DescriptorContract`、`Instruction`、`CodeBinding` 等 |
 | `[]` | 直接、有序或可重复事实 | catalog 条目、mapping 条目、includes 等 |
@@ -41,11 +41,11 @@
 | [migration.md](migration.md) | XML authority 如何迁移，哪些做法被明确拒绝。 |
 | [examples/](examples/) | 由当前 `xnl-core` parser 验证的规范实例。 |
 
-KindDefinition 同时拥有资源版本契约：`currentApiVersion` 指向当前 authoring 版本，`supportedApiVersions` 列出可直接加载的兼容版本。版本转换由 `halfcode-compiler.xnl/kind-definition` 的代码侧 migration registry 执行，XNL 不承载可执行转换。成功加载的规范化 contract 可从 `ResourceTree.registry.kindDefinitions` 读取，consumer 无需再次解析 Kind XNL。
+KindDefinition 同时拥有精确资源契约：每个 `SpecRevision` 声明一个正整数 writer `specVersion` 及 schema、semantic、source-contract fingerprints；`sourceShapes`、cardinality 与 required files 也绑定进该 revision 的 contract identity。Host 选择 exact reader revision 和 compatibility policy，resolution 只沿显式登记、唯一的 writer→reader 路径运行并生成 receipt。成功加载的规范化 contract 可从 `AuthoredResourceTree.registry.kindDefinitions` 读取，consumer 无需再次解析 Kind XNL。
 
-多个 package 的组合不产生新的 authoring authority。canonical loader 在同一次 raw-byte read 中产生 `LoadedResourceTree.contentIdentities`；`resolveEffectiveResourceContentIdentities()` 再从 exact effective layer 选择 authority identity 并合并 Kind owner 的显式 digest contributions。`EffectiveResourceRegistry` 和 `ResourceDependencySnapshot` 都是由已验证 XNL、显式 tombstone、typed edge 与 digest contribution 重建的只读投影；它们不得被序列化回 XNL 作为第二份事实源。完整规则见 [projections.md](projections.md)。
+多个 package 的组合不产生新的 authoring authority。canonical loader 在同一次 raw-byte read 中产生 `AuthoredResourceTree.contentIdentities`；Host 通过 exact reader profile 将 authored tree 解析为带 receipts 的 `ResolvedResourceTree`。`resolveEffectiveResourceContentIdentities()` 再从 exact effective authored layer 选择 authority identity 并合并 Kind owner 的显式 digest contributions。`EffectiveResourceRegistry` 和 `ResourceDependencySnapshot` 都是由已验证 authority、显式 tombstone、typed edge 与 digest contribution 重建的只读投影；它们不得被序列化回 XNL 作为第二份事实源。完整规则见 [projections.md](projections.md)。
 
-本目录自身也是 `Halfcode.ResourceDsl.Package@1.0.0`：XNL descriptors 只登记 canonical Markdown/XNL materials，不复制正文。`Halfcode.ResourceDsl.Skill.System` 编译为 `sys-halfcode-resource-dsl@1.0.0`，供离线消费者按需加载这些文档；每个 capsule 的 `references/.halfcode/provenance.json` 绑定 source FQN/apiVersion/version、生成协议和 payload digests。
+本目录自身也是 `Halfcode.ResourceDsl.Package@1.0.0`：XNL descriptors 只登记 canonical Markdown/XNL materials，不复制正文。`Halfcode.ResourceDsl.Skill.System` 编译为 `sys-halfcode-resource-dsl@1.0.0`，供离线消费者按需加载这些文档；每个 capsule 的 `references/.halfcode/provenance.json` 绑定 source FQN、`envelopeVersion`、writer `specVersion`、独立 Skill version、生成协议和 payload digests。
 
 ## 暂缓边界
 

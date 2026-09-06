@@ -1,4 +1,4 @@
-<SkillCapsule #example.resource_lifecycle.skill.resource_dsl apiVersion="halfcode.resources/v1" version="1.0.0" {
+<SkillCapsule #example.resource_lifecycle.skill.resource_dsl envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   name = "example-resource-lifecycle-dsl"
   lifecycle = "Stable"
   description = "Shared resource DSL reference used by authoring operations."

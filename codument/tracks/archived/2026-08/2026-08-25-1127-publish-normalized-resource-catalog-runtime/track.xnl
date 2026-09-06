@@ -1,0 +1,56 @@
+<Track #publish-normalized-resource-catalog-runtime apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "将不含旧 CodePackage、只提供语义根、具名 Catalog 与受限目录 material 的 halfcode-compiler.xnl@0.2.8 发布并验证 registry identity" description = "提升不可变版本，执行全量及 packed installed-consumer 门禁，发布 npm 包并固化精确回读证据" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-25T08:20:04.060Z" updated_at = "2026-08-25T08:27:40.979Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "release-candidate" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "publication-evidence" domain = "artifact" path = "vfs://./reports/publication.json" }>
+  ]>
+  <TaskSpace #space_publish-normalized-resource-catalog-runtime { name = "publish-normalized-resource-catalog-runtime" version = "1" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "0.2.8 normalized release candidate" status = "DONE" priority = "P0" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "提升 distribution、lockfile 与 verifier 到 0.2.8" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?01M0W0BPJANMVABAWA9V23N5EC>
+              registry 精确版本 0.2.8 在发布前不存在，metadata 与 verifier 精确一致。
+              </?01M0W0BPJANMVABAWA9V23N5EC>
+            ]>
+          )>
+          <Task #P1-T2 { name = "通过 source、tarball、installed consumer 与旧协议负例门禁" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?01M0W0BPJANMVABAWA9V23N5ED>
+              全仓测试、typecheck、workspace verify 与 package:check 全部通过。
+              </?01M0W0BPJANMVABAWA9V23N5ED>
+              <Criterion #P1-T2-AC2 { checked = true } ?01M0W0BPJANMVABAWA9V23N5EE>
+              tarball 公开 readResourceMaterial 且不导出旧 CodePackage runtime/admission 名称。
+              </?01M0W0BPJANMVABAWA9V23N5EE>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "npm publication and registry roundtrip" status = "DONE" priority = "P0" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "发布 halfcode-compiler.xnl@0.2.8" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?01M0W0BPJANMVABAWA9V23N5EF>
+              npm publish 成功且不覆盖任何既有版本。
+              </?01M0W0BPJANMVABAWA9V23N5EF>
+            ]>
+          )>
+          <Task #P2-T2 { name = "回读 registry identity 并固化 publication evidence" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?01M0W0BPJANMVABAWA9V23N5EG>
+              registry name/version/integrity/shasum 与发布前 candidate 精确一致。
+              </?01M0W0BPJANMVABAWA9V23N5EG>
+              <Criterion #P2-T2-AC2 { checked = true } ?01M0W0BPJANMVABAWA9V23N5EH>
+              机器可读 evidence、Behavior 与建模 publication fact 收敛到规范化 runtime。
+              </?01M0W0BPJANMVABAWA9V23N5EH>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule []>
+  <Hooks []>
+)>

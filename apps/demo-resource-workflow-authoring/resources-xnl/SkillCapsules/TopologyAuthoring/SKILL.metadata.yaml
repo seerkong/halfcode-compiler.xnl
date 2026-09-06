@@ -1,2 +1,3 @@
 title: Example Resource Lifecycle Authoring
+version: 1.0.0
 description: Generic authoring operations for resource creation and revision.

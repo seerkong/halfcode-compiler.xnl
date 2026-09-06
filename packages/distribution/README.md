@@ -34,7 +34,7 @@ const plan: SkillCapsuleDistributionPlan = await planSkillCapsuleDistribution({
 await applySkillCapsuleDistributionPlan(plan, { outputRoot })
 ```
 
-Each capsule identity includes the XNL `apiVersion` and `version`. The planner generates exactly one `references/.halfcode/provenance.json` per capsule with the source identity, `halfcode.skill-distribution/v1` generator and every payload file digest. The applier reconstructs and validates this manifest before any target mutation.
+Each capsule source identity includes the resource `envelopeVersion` and exact writer `specVersion`. Skill SemVer remains a separate Skill-owned business field. The planner generates exactly one `references/.halfcode/provenance.json` per capsule with those source facts, the Skill version, the `halfcode.skill-distribution/v1` generator and every payload file digest. The applier reconstructs and validates this manifest before any target mutation.
 
 The legacy `compileSkillCapsule` and `compileResourceSkillCapsule` APIs remain available from both the package root and `halfcode-compiler.xnl/skill-capsule`. The subpath also exports the new plan/apply APIs and `SkillCapsuleDependency` type.
 
@@ -65,8 +65,10 @@ import {
 } from "halfcode-compiler.xnl/resource-core"
 ```
 
-`loadResourceTree()` returns an additive `LoadedResourceTree` whose content identities come from the same raw-byte read used for fatal UTF-8 decoding and XNL parsing. `resolveEffectiveResourceContentIdentities()` accepts only the canonical registry and exact loaded layers, selects each effective authority identity, and merges only explicit Kind-owned digest contributions.
+`loadResourceTree()` returns an `AuthoredResourceTree`; its content identities come from the same raw-byte read used for fatal UTF-8 decoding and XNL/Markdown parsing. Markdown records preserve every body code unit after the closing frontmatter delimiter and exactly one separator newline as `node.text`/`authoredSpec.text`. `resolveResourceTree()` admits the authored tree against an exact reader profile and publishes a distinct `ResolvedResourceTree` with ordinary receipts for the package manifest, KindDefinition authorities and business resources.
 
-Layer order, tombstones, dependency edges, and digest contributions are explicit caller-owned facts. Resource core does not assign semantics to layer names, infer dependencies from arbitrary strings, or own host installation paths. Structural `ResourceTree` values remain valid for generic layer composition; the new identity projector requires authentic loaded trees.
+Layer order, tombstones, dependency edges, and digest contributions are explicit caller-owned facts. Resource core does not assign semantics to layer names, infer dependencies from arbitrary strings, or own host installation paths. Content-sensitive projection requires authentic `AuthoredResourceTree` inputs from the canonical loader.
+
+The immutable `RESOURCE_ENVELOPE_CONTRACT` and derived `RESOURCE_ENVELOPE_FINGERPRINT` are the sole public authority for envelope v1 decoding, authority formats, identity projection, Catalog traversal and authored-spec projection. `CORE_KIND_SUBJECT_OWNERS`, `CORE_KIND_SPEC_REVISIONS` and `CORE_KIND_READER_REGISTRATIONS` provide the compiler-owned exact ResourcePackage and KindDefinition bootstrap registrations; hosts admit them verbatim rather than recreating their fingerprints or readers.
 
 `EffectiveResourceRegistry.compositionRevision` binds ordered identity/presence/layer/shadow/tombstone, selected KindDefinition authority identity/contract, and canonical logical-origin facts, but deliberately excludes descriptor/node/metadata bytes; its `revision` field remains an exact compatibility alias. Snapshot construction accepts only the immutable registry returned by the canonical composer, copies/freeze its own origin facts, and rejects inconsistent structural projections. `ResourceDependencySnapshot.registryRevision` additionally binds the revalidated content digests of every effective resource, while `snapshotRevision` binds the selected roots, reachable closure, and participating typed edges. Duplicate contribution keys fail closed, and all canonical ordering uses fixed UTF-16 code-unit order rather than locale-dependent sorting.

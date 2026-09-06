@@ -1,0 +1,58 @@
+<Track #load-halfcode-resource-trees-from-vfs-read-port apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "让 Halfcode ResourceTree 从 storage-neutral read port 加载并保持 directory/VFS 结果等价" description = "抽取 ResourcePackage I/O 边界、保留物理目录兼容 API，并验证 provenance、diagnostics 与 content identity parity" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-31T15:27:37.165Z" updated_at = "2026-08-31T15:49:46.732Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #modeling_deltas { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle #resource_core { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+  ]>
+  <TaskSpace #space_load-halfcode-resource-trees-from-vfs-read-port { name = "load-halfcode-resource-trees-from-vfs-read-port" version = "1" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Freeze read-port parity" status = "DONE" priority = "P0" order = 0 } (
+        <Description ?01M1C7READPORT0000000000010>
+        以当前 directory loader 语义为基线，定义 read port 并建立成功/失败 parity。
+        </?01M1C7READPORT0000000000010>
+        <SubNodes [
+          <Task #P1-T1 { name = "Add directory and VFS-like parity tests" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?01M1C7READPORT0000000000011>
+              RED tests 固定 records、provenance、content identities、枚举稳定性与 diagnostics parity。
+              </?01M1C7READPORT0000000000011>
+            ]>
+          )>
+          <Task #P1-T2 { name = "Define storage-neutral read-port contract" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?01M1C7READPORT0000000000012>
+              public contract 不依赖 Node、Bun、Eidolon 或 xnl-vfs，并拒绝非 canonical source path。
+              </?01M1C7READPORT0000000000012>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Unify loader and compatibility adapter" status = "DONE" priority = "P0" order = 1 } (
+        <Description ?01M1C7READPORT0000000000013>
+        将成熟 semantic loader 切到 port，并让旧 directory API 委派到同一核心。
+        </?01M1C7READPORT0000000000013>
+        <SubNodes [
+          <Task #P2-T1 { name = "Route semantic loading through read port" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?01M1C7READPORT0000000000014>
+              manifest、Catalog、required file 与 authority bytes 全部经 port，成功和失败 parity tests 通过。
+              </?01M1C7READPORT0000000000014>
+            ]>
+          )>
+          <Task #P2-T2 { name = "Preserve directory API and verify package" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?01M1C7READPORT0000000000015>
+              现有 directory consumers、resource-core tests、全仓 typecheck/test 与 distribution verification 通过。
+              </?01M1C7READPORT0000000000015>
+              <Criterion #P2-T2-AC2 { checked = true } ?01M1C7READPORT0000000000016>
+              public declarations 不泄漏 provider root，Codument behavior/modeling strict validate 通过。
+              </?01M1C7READPORT0000000000016>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule []>
+  <Hooks []>
+)>

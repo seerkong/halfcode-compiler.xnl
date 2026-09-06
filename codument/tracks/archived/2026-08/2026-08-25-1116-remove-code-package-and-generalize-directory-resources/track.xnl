@@ -1,0 +1,56 @@
+<Track #remove-code-package-and-generalize-directory-resources apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "删除 Halfcode 旧 CodePackage 协议，并提供与语言无关的受限目录资源 material 读取与身份贡献" description = "移除 code-package source shape/runtime/admission/public API，新增 authentic directory resource material reader" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-25T07:58:52.560Z" updated_at = "2026-08-25T08:16:45.176Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle #behavior_deltas { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle #resource_core { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle #distribution { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle #docs { role = "output" name = "resource-docs" domain = "docs" path = "vfs://@/docs/resource-dsl/" }>
+  ]>
+  <TaskSpace #space_remove-code-package-and-generalize-directory-resources { name = "remove-code-package-and-generalize-directory-resources" version = "1" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Removal and material contracts" status = "DONE" priority = "P0" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "添加旧 CodePackage 负例和通用目录 material 读取安全测试" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?01M0VZ1E434G8TEKBJ134FE810>
+              旧 code-package shape 和 API 不再是有效公开协议。
+              </?01M0VZ1E434G8TEKBJ134FE810>
+              <Criterion #P1-T1-AC2 { checked = true } ?01M0VZ1E434G8TEKBJ134FE811>
+              material reader 覆盖 authentic tree、VFS confinement、symlink、digest 和目录 Kind 边界。
+              </?01M0VZ1E434G8TEKBJ134FE811>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Structural resource runtime" status = "DONE" priority = "P0" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "物理删除 CodePackage source/runtime/admission 并实现 ResourceMaterial reader" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?01M0VZ1E434G8TEKBJ134FE812>
+              SourceShape、LoadedResourceTree 和公开导出不含任何 CodePackage 专属字段。
+              </?01M0VZ1E434G8TEKBJ134FE812>
+              <Criterion #P2-T1-AC2 { checked = true } ?01M0VZ1E434G8TEKBJ134FE813>
+              ResourceMaterial reader 只读取 authentic directory resource boundary 内普通文件并返回 canonical digest contribution。
+              </?01M0VZ1E434G8TEKBJ134FE813>
+            ]>
+          )>
+          <Task #P2-T2 { name = "清理 distribution、docs、behavior 与 modeling 的旧 CodePackage 表面" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?01M0VZ1E434G8TEKBJ134FE814>
+              源码、测试、文档、modeling 和打包 verifier 不再承诺 CodePackage。
+              </?01M0VZ1E434G8TEKBJ134FE814>
+            ]>
+          )>
+          <Task #P2-T3 { name = "运行负例、全仓测试、typecheck、verify 与 package check" status = "DONE" priority = "P0" order = 2 } (
+            <Acceptance [
+              <Criterion #P2-T3-AC1 { checked = true } ?01M0VZ1E434G8TEKBJ134FE815>
+              全量检查通过且 packed public capsule 不导出旧 CodePackage 名称。
+              </?01M0VZ1E434G8TEKBJ134FE815>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule []>
+  <Hooks []>
+)>

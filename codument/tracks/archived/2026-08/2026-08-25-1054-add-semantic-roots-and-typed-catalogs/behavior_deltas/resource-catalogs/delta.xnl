@@ -1,0 +1,35 @@
+<BehaviorPatch #track.add-semantic-roots-and-typed-catalogs.behavior_patch.resource-catalogs apiVersion="codument.tech/v1alpha1" version="1" { capability = "resource-catalogs" } (
+  <Mutations [
+    <Upsert { selector = "behavior://resource-loading/requirements/semantic-resource-catalogs" } (
+      <Requirement #semantic-resource-catalogs (
+        <Statement ?>系统 SHALL 通过已注册语义根与具名 Catalog 编译结构资源，并保持非 CodePackage 通用 Catalog 输入兼容。</?>
+        <Suites [
+          <Suite #catalog-loading { name = "Semantic root and typed catalog loading" } (
+            <Cases [
+              <Case #register-semantic-root (
+                <Given ?>根 manifest 使用已由 KindDefinition 声明的 SkillApp 等语义 Kind</?>
+                <When ?>resource-core 加载资源树</?>
+                <Then ?>根 SHALL 按 manifest shape/apiVersion 校验并作为一等资源进入 registry 和 content identity</?>
+              )>
+              <Case #normalize-named-catalogs (
+                <Given ?>Catalogs 包含 FileResourceCatalog、DirectoryResourceCatalog 或 ManifestResourceCatalog</?>
+                <When ?>loader 规范化发现计划</?>
+                <Then ?>tag SHALL 决定 source shape，resourceKind SHALL 作为期望 Kind，Directory scope SHALL 决定 root 或 children 枚举</?>
+              )>
+              <Case #preserve-generic-catalog (
+                <Given ?>既有 consumer 使用非 CodePackage 的 Catalog kind/shape/root/entry 语法</?>
+                <When ?>升级后的 loader 加载该 package</?>
+                <Then ?>资源发现与 Kind 校验 SHALL 保持兼容</?>
+              )>
+              <Case #reject-catalog-conflict (
+                <Given ?>typed Catalog 的 tag/shape/scope 非法或资源自述 Kind 与 expected resourceKind 不一致</?>
+                <When ?>resource-core 验证 package</?>
+                <Then ?>系统 SHALL 返回稳定 diagnostic 并拒绝产生资源树</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

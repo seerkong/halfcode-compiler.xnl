@@ -56,7 +56,7 @@ describe("ordered named resource layers", () => {
     const mutableNode = {
       tag: "Note",
       resourceId: "demo.mutable",
-      metadata: { apiVersion: "halfcode.resources/v1" },
+      metadata: { envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 },
       properties: { value: "before", nested: { labels: ["one"] } },
       body: [{ item: "before" }],
       subdomains: {},
@@ -65,7 +65,7 @@ describe("ordered named resource layers", () => {
       kind: "Note",
       resourceId: "demo.mutable",
       fqn: "demo.mutable",
-      metadata: { apiVersion: "halfcode.resources/v1", version: "1.0.0" },
+      metadata: { envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 },
       sourceShape: "single-file" as const,
       logicalPath: "demo.mutable.xnl",
       documentUri: "vfs://@/demo.mutable.xnl",
@@ -75,10 +75,10 @@ describe("ordered named resource layers", () => {
     const mutableDefinition = {
       resourceId: "halfcode.resource_kind.Note",
       resourceKind: "Note",
+      subjectFqn: "Halfcode.ResourceKind.Note",
       sourceShapes: ["single-file" as const],
       requiredFiles: ["instruction.md"],
-      currentApiVersion: "halfcode.resources/v1",
-      supportedApiVersions: ["halfcode.resources/v1"],
+      specRevisions: [kindRevision()],
       documentCardinality: "one" as const,
       documentUri: "vfs://@/KindDefinitions/Note/manifest.xnl",
     }
@@ -88,17 +88,17 @@ describe("ordered named resource layers", () => {
     const projected = registry.byId.get("demo.mutable")!.resource!
     const projectedDefinition = registry.kindDefinitions.get("Note")!.definition
 
-    mutableRecord.metadata.version = "9.9.9"
+    mutableRecord.metadata.specVersion = 9
     ;(mutableNode.properties as Record<string, unknown>).value = "after"
     ;(((mutableNode.properties as Record<string, unknown>).nested as { labels: string[] }).labels).push("two")
     mutableDefinition.requiredFiles.push("changed.md")
-    mutableDefinition.supportedApiVersions.push("halfcode.resources/v2")
+    mutableDefinition.specRevisions.push(kindRevision(2))
 
-    expect(projected.metadata.version).toBe("1.0.0")
+    expect(projected.metadata.specVersion).toBe(1)
     expect(projected.node.properties.value).toBe("before")
     expect(((projected.node.properties.nested as { labels: readonly string[] }).labels)).toEqual(["one"])
     expect(projectedDefinition.requiredFiles).toEqual(["instruction.md"])
-    expect(projectedDefinition.supportedApiVersions).toEqual(["halfcode.resources/v1"])
+    expect(projectedDefinition.specRevisions).toHaveLength(1)
     expect(registry.compositionRevision).toBe(revision)
     expect(Object.isFrozen(projected)).toBe(true)
     expect(Object.isFrozen(projected.metadata)).toBe(true)
@@ -223,7 +223,7 @@ describe("ordered named resource layers", () => {
     expect(diagnosticCodes(() => composeLayeredResourceRegistry({
       layers: [{ id: "base", tree: note }, {
         id: "override",
-        tree: tree("demo.override", [], [kindDefinition("Note", "vfs://@/Note.xnl", "demo.notes/v2")]),
+        tree: tree("demo.override", [], [kindDefinition("Note", "vfs://@/Note.xnl", `sha256:${"9".repeat(64)}`)]),
       }],
     }))).toContain("RESOURCE_LAYER_KIND_DEFINITION_CONFLICT")
     expect(diagnosticCodes(() => composeLayeredResourceRegistry({
@@ -286,7 +286,7 @@ function record(resourceId: string, kind: string, value: string): ResourceRecord
   const node: ResourceNode = Object.freeze({
     tag: kind,
     resourceId,
-    metadata: Object.freeze({ apiVersion: "halfcode.resources/v1" }),
+    metadata: Object.freeze({ envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 }),
     properties: Object.freeze({ value }),
     body: Object.freeze([]),
     subdomains: Object.freeze({}),
@@ -295,7 +295,7 @@ function record(resourceId: string, kind: string, value: string): ResourceRecord
     kind,
     resourceId,
     fqn: resourceId,
-    metadata: Object.freeze({ apiVersion: "halfcode.resources/v1", version: "1.0.0" }),
+    metadata: Object.freeze({ envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 }),
     sourceShape: "single-file" as const,
     logicalPath: `${resourceId}.xnl`,
     documentUri: `vfs://@/${resourceId}.xnl`,
@@ -307,16 +307,31 @@ function record(resourceId: string, kind: string, value: string): ResourceRecord
 function kindDefinition(
   resourceKind: string,
   documentUri = `vfs://@/KindDefinitions/${resourceKind}/manifest.xnl`,
-  currentApiVersion = "halfcode.resources/v1",
+  contractFingerprint = `sha256:${"2".repeat(64)}`,
 ): RegisteredKindDefinition {
   return Object.freeze({
     resourceId: `halfcode.resource_kind.${resourceKind}`,
     resourceKind,
+    subjectFqn: `Halfcode.ResourceKind.${resourceKind}`,
     sourceShapes: Object.freeze(["single-file" as const]),
     requiredFiles: Object.freeze([]),
-    currentApiVersion,
-    supportedApiVersions: Object.freeze([currentApiVersion]),
+    specRevisions: Object.freeze([kindRevision(1, contractFingerprint)]),
     documentCardinality: "one" as const,
     documentUri,
+  })
+}
+
+function kindRevision(specVersion = 1, contractFingerprint = `sha256:${"2".repeat(64)}`) {
+  return Object.freeze({
+    specVersion,
+    schemaRef: `vfs://./spec-v${specVersion}.schema.json`,
+    schemaFingerprint: `sha256:${"1".repeat(64)}` as const,
+    contractFingerprint: contractFingerprint as `sha256:${string}`,
+    semanticContract: Object.freeze({
+      semanticValidatorFingerprint: `sha256:${"3".repeat(64)}` as const,
+      referenceProjectionFingerprint: `sha256:${"4".repeat(64)}` as const,
+      compilerInputFingerprint: `sha256:${"5".repeat(64)}` as const,
+    }),
+    stability: "stable" as const,
   })
 }

@@ -1,70 +1,140 @@
 <Behavior #resource-authoring apiVersion="codument.tech/v1alpha1" version="1" (
   <Requirements [
     <Requirement #xnl-resource-language (
-      <Statement ?01M0TB1VDY5F7XE6XSD81BCV44>
+      <Statement ?01M1A0DR4X1C6QV8W245XJF1DT>
       系统 SHALL 以 XNL-native DSL 表达资源 package、catalog、KindDefinition、descriptor 与 mapping，并按 tag、#id、properties、body、extension 的固定语义解释文档；通用 loader SHALL 不把 lifecycle 或 description 强制为所有 Kind 的共同字段。
-      </?01M0TB1VDY5F7XE6XSD81BCV44>
+      </?01M1A0DR4X1C6QV8W245XJF1DT>
       <Suites [
         <Suite #language-channels { name = "XNL 通道语义" } (
           <Cases [
             <Case #parse-representative-documents (
-              <Given ?01M0TB1VDY5F7XE6XSD81BCV45>
+              <Given ?01M1A0DR4X1C6QV8W245XJF1DV>
               作者提供符合规范的 package、KindDefinition、generic descriptor、BO/PO owner 与 ResourceMappings XNL 文档
-              </?01M0TB1VDY5F7XE6XSD81BCV45>
-              <When ?01M0TB1VDY5F7XE6XSD81BCV46>
+              </?01M1A0DR4X1C6QV8W245XJF1DV>
+              <When ?01M1A0DR4X1C6QV8W245XJF1DW>
               使用当前 xnl-core parser 解析文档
-              </?01M0TB1VDY5F7XE6XSD81BCV46>
-              <Then ?01M0TB1VDY5F7XE6XSD81BCV47>
+              </?01M1A0DR4X1C6QV8W245XJF1DW>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1DX>
               所有文档 SHALL 可解析，且身份、属性、重复成员和唯一子域保持可区分
-              </?01M0TB1VDY5F7XE6XSD81BCV47>
+              </?01M1A0DR4X1C6QV8W245XJF1DX>
             )>
             <Case #canonical-references (
-              <Given ?01M0TB1VDY5F7XE6XSD81BCV48>
+              <Given ?01M1A0DR4X1C6QV8W245XJF1DY>
               descriptor 引用相对物料、workspace 物料、资源或 TypeScript 导出
-              </?01M0TB1VDY5F7XE6XSD81BCV48>
-              <When ?01M0TB1VDY5F7XE6XSD81BCV49>
+              </?01M1A0DR4X1C6QV8W245XJF1DY>
+              <When ?01M1A0DR4X1C6QV8W245XJF1DZ>
               作者写入引用
-              </?01M0TB1VDY5F7XE6XSD81BCV49>
-              <Then ?01M0TB1VDY5F7XE6XSD81BCV4A>
+              </?01M1A0DR4X1C6QV8W245XJF1DZ>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1E0>
               引用 SHALL 使用 vfs://./、vfs://@/、resource:// 与 code binding properties，不得发明 XML 路径前缀
-              </?01M0TB1VDY5F7XE6XSD81BCV4A>
+              </?01M1A0DR4X1C6QV8W245XJF1E0>
             )>
             <Case #kind-owned-optional-properties (
-              <Given ?01M0TB1VDY5F7XE6XSD81BCV4B>
+              <Given ?01M1A0DR4X1C6QV8W245XJF1E1>
               已注册 Kind 的资源只声明 #id、apiVersion 及该 Kind 自己需要的字段
-              </?01M0TB1VDY5F7XE6XSD81BCV4B>
-              <When ?01M0TB1VDY5F7XE6XSD81BCV4C>
+              </?01M1A0DR4X1C6QV8W245XJF1E1>
+              <When ?01M1A0DR4X1C6QV8W245XJF1E2>
               资源不含 lifecycle 和 description
-              </?01M0TB1VDY5F7XE6XSD81BCV4C>
-              <Then ?01M0TB1VDY5F7XE6XSD81BCV4D>
+              </?01M1A0DR4X1C6QV8W245XJF1E2>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1E3>
               通用 loader SHALL 接受该资源并在 normalized record 中保持字段缺失，具体 Kind consumer MAY 另行要求它们
-              </?01M0TB1VDY5F7XE6XSD81BCV4D>
+              </?01M1A0DR4X1C6QV8W245XJF1E3>
             )>
           ]>
         )>
         <Suite #normalized-boundary { name = "规范化边界" } (
           <Cases [
             <Case #no-xml-private-shape (
-              <Given ?01M0TB1VDY5F7XE6XSD81BCV4E>
+              <Given ?01M1A0DR4X1C6QV8W245XJF1E4>
               下游 loader 将 XNL 文档规范化
-              </?01M0TB1VDY5F7XE6XSD81BCV4E>
-              <When ?01M0TB1VDY5F7XE6XSD81BCV4F>
+              </?01M1A0DR4X1C6QV8W245XJF1E4>
+              <When ?01M1A0DR4X1C6QV8W245XJF1E5>
               consumer 读取 normalized descriptor
-              </?01M0TB1VDY5F7XE6XSD81BCV4F>
-              <Then ?01M0TB1VDY5F7XE6XSD81BCV4G>
+              </?01M1A0DR4X1C6QV8W245XJF1E5>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1E6>
               consumer SHALL 不依赖 XML attribute-prefix 或 parser-private XmlObject 形状
-              </?01M0TB1VDY5F7XE6XSD81BCV4G>
+              </?01M1A0DR4X1C6QV8W245XJF1E6>
             )>
             <Case #object-operation-channels (
-              <Given ?01M0TB1VDY5F7XE6XSD81BCV4H>
+              <Given ?01M1A0DR4X1C6QV8W245XJF1E7>
               BusinessObject 或 PageObject 声明 targets 与 operations
-              </?01M0TB1VDY5F7XE6XSD81BCV4H>
-              <When ?01M0TB1VDY5F7XE6XSD81BCV4J>
+              </?01M1A0DR4X1C6QV8W245XJF1E7>
+              <When ?01M1A0DR4X1C6QV8W245XJF1E8>
               作者分配 XNL channels
-              </?01M0TB1VDY5F7XE6XSD81BCV4J>
-              <Then ?01M0TB1VDY5F7XE6XSD81BCV4K>
+              </?01M1A0DR4X1C6QV8W245XJF1E8>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1E9>
               唯一 owner/binding 使用 properties/subdomains，重复 target kinds/actions/mutations 使用 body members
-              </?01M0TB1VDY5F7XE6XSD81BCV4K>
+              </?01M1A0DR4X1C6QV8W245XJF1E9>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #transactional-runtime-authoring (
+      <Statement ?01M1A0DR4X1C6QV8W245XJF1EA>
+      Halfcode SHALL provide a product-neutral runtime resource authoring transaction that separates pure planning from an atomic compare-and-swap write, canonical registry refresh and immutable receipt.
+      </?01M1A0DR4X1C6QV8W245XJF1EA>
+      <Suites [
+        <Suite #resource-authoring-plan { name = "Resource authoring plan" } (
+          <Cases [
+            <Case #pure-deterministic-plan (
+              <Given ?01M1A0DR4X1C6QV8W245XJF1EB>
+              A proposal names canonical bytes, a known Kind/apiVersion, a catalog-admitted logical target and an expected authority state.
+              </?01M1A0DR4X1C6QV8W245XJF1EB>
+              <When ?01M1A0DR4X1C6QV8W245XJF1EC>
+              Runtime authoring is planned.
+              </?01M1A0DR4X1C6QV8W245XJF1EC>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1ED>
+              Planning SHALL perform no write and SHALL return one deeply frozen deterministic plan binding every field and its digest.
+              </?01M1A0DR4X1C6QV8W245XJF1ED>
+            )>
+            <Case #reject-before-write (
+              <Given ?01M1A0DR4X1C6QV8W245XJF1EE>
+              The proposal has an unsafe URI, unknown Kind/version, missing catalog, unsupported source shape or forged expected state.
+              </?01M1A0DR4X1C6QV8W245XJF1EE>
+              <When ?01M1A0DR4X1C6QV8W245XJF1EF>
+              It is planned or applied.
+              </?01M1A0DR4X1C6QV8W245XJF1EF>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1EG>
+              The system SHALL fail with a stable typed error before mutating authority or registry state.
+              </?01M1A0DR4X1C6QV8W245XJF1EG>
+            )>
+          ]>
+        )>
+        <Suite #resource-authoring-transaction { name = "Resource authoring transaction" } (
+          <Cases [
+            <Case #cas-refresh-receipt (
+              <Given ?01M1A0DR4X1C6QV8W245XJF1EH>
+              A valid plan still matches the target authority state.
+              </?01M1A0DR4X1C6QV8W245XJF1EH>
+              <When ?01M1A0DR4X1C6QV8W245XJF1EJ>
+              The injected authoring port applies it.
+              </?01M1A0DR4X1C6QV8W245XJF1EJ>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1EK>
+              One CAS write and canonical refresh SHALL commit together and return an immutable receipt binding old/new authority digests and the refreshed registry identity.
+              </?01M1A0DR4X1C6QV8W245XJF1EK>
+            )>
+            <Case #refresh-failure-rolls-back (
+              <Given ?01M1A0DR4X1C6QV8W245XJF1EM>
+              The candidate write succeeds but canonical reload, composition or verification fails.
+              </?01M1A0DR4X1C6QV8W245XJF1EM>
+              <When ?01M1A0DR4X1C6QV8W245XJF1EN>
+              The transaction reconciles the failure.
+              </?01M1A0DR4X1C6QV8W245XJF1EN>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1EP>
+              It SHALL restore the prior authority and retain the prior live registry without staging residue or ambiguous success.
+              </?01M1A0DR4X1C6QV8W245XJF1EP>
+            )>
+            <Case #idempotent-retry (
+              <Given ?01M1A0DR4X1C6QV8W245XJF1EQ>
+              The same accepted plan is retried after an uncertain response.
+              </?01M1A0DR4X1C6QV8W245XJF1EQ>
+              <When ?01M1A0DR4X1C6QV8W245XJF1ER>
+              Apply observes the committed plan identity.
+              </?01M1A0DR4X1C6QV8W245XJF1ER>
+              <Then ?01M1A0DR4X1C6QV8W245XJF1ES>
+              It SHALL return the same receipt or a stable already-applied projection and SHALL NOT rewrite or refresh twice.
+              </?01M1A0DR4X1C6QV8W245XJF1ES>
             )>
           ]>
         )>

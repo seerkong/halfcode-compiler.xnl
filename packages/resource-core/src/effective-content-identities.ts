@@ -9,14 +9,14 @@ import {
   effectiveRegistryLayerBindings,
   isEffectiveRegistryAuthentic,
 } from "./effective-registry-brand"
-import { isLoadedResourceTreeAuthentic } from "./loaded-resource-tree-brand"
+import { isAuthoredResourceTreeAuthentic } from "./authored-resource-tree-brand"
 import { readonlyMap } from "./readonly-map"
-import type { LoadedResourceTree, ResourceDiagnostic, ResourceRecord } from "./index"
+import type { AuthoredResourceTree, ResourceDiagnostic, ResourceRecord } from "./index"
 import type { EffectiveResourceEntry, EffectiveResourceRegistry } from "./layered-registry"
 
 export interface ResourceLayerContentIdentityInput {
   readonly id: string
-  readonly tree: LoadedResourceTree
+  readonly tree: AuthoredResourceTree
 }
 
 export interface ResolveEffectiveResourceContentIdentitiesInput {
@@ -46,17 +46,17 @@ export function resolveEffectiveResourceContentIdentities(
     ))
   }
 
-  const loadedById = new Map<string, LoadedResourceTree>()
+  const loadedById = new Map<string, AuthoredResourceTree>()
   for (let index = 0; index < input.registry.layers.length; index += 1) {
     const descriptor = input.registry.layers[index]!
     const layer = input.layers[index]
     const binding = bindings[index]
     if (!layer) continue
-    if (!isLoadedResourceTreeAuthentic(layer.tree)) {
+    if (!isAuthoredResourceTreeAuthentic(layer.tree)) {
       diagnostics.push(diagnostic(
         "RESOURCE_CONTENT_IDENTITY_LAYER_UNTRUSTED",
         layerLocation(index, layer.id),
-        `Layer '${layer.id}' must use an authentic LoadedResourceTree returned by loadResourceTree().`,
+        `Layer '${layer.id}' must use an authentic AuthoredResourceTree returned by loadResourceTree().`,
       ))
       continue
     }
@@ -92,7 +92,7 @@ export function resolveEffectiveResourceContentIdentities(
       ))
       continue
     }
-    validateLoadedIdentityCoverage(layer.tree, layer.id, diagnostics)
+    validateAuthoredIdentityCoverage(layer.tree, layer.id, diagnostics)
     loadedById.set(layer.id, layer.tree)
   }
 
@@ -135,7 +135,10 @@ export function resolveEffectiveResourceContentIdentities(
       const identity = createResourceContentIdentity({
         resourceId: entry.resourceId,
         authorityDigest: authorityIdentity.authorityDigest,
-        contributions: input.contributions?.get(entry.resourceId) ?? [],
+        contributions: [
+          ...authorityIdentity.contributions,
+          ...(input.contributions?.get(entry.resourceId) ?? []),
+        ],
       })
       output.push([entry.resourceId, identity])
     } catch (error) {
@@ -148,8 +151,8 @@ export function resolveEffectiveResourceContentIdentities(
   return readonlyMap(output.sort(([left], [right]) => compareCodeUnits(left, right)))
 }
 
-function validateLoadedIdentityCoverage(
-  tree: LoadedResourceTree,
+function validateAuthoredIdentityCoverage(
+  tree: AuthoredResourceTree,
   layerId: string,
   diagnostics: ResourceDiagnostic[],
 ): void {
@@ -163,20 +166,20 @@ function validateLoadedIdentityCoverage(
       diagnostics.push(diagnostic(
         "RESOURCE_CONTENT_IDENTITY_MISSING",
         layerLocation(undefined, layerId, resource.resourceId),
-        `Loaded resource '${resource.resourceId}' has no authority identity.`,
+        `Authored resource '${resource.resourceId}' has no authority identity.`,
       ))
       continue
     }
     const normalized = createResourceContentIdentity({
       resourceId: identity.resourceId,
       authorityDigest: identity.authorityDigest,
-      contributions: [],
+      contributions: identity.contributions,
     })
     if (identity.resourceId !== resource.resourceId || identity.contentDigest !== normalized.contentDigest) {
       diagnostics.push(diagnostic(
         "RESOURCE_CONTENT_IDENTITY_INVALID",
         layerLocation(undefined, layerId, resource.resourceId),
-        `Loaded resource '${resource.resourceId}' has an inconsistent authority identity.`,
+        `Authored resource '${resource.resourceId}' has an inconsistent authority identity.`,
       ))
     }
   }
@@ -185,7 +188,7 @@ function validateLoadedIdentityCoverage(
       diagnostics.push(diagnostic(
         "RESOURCE_CONTENT_IDENTITY_EXTRA",
         layerLocation(undefined, layerId, resourceId),
-        `Loaded tree contains an extra authority identity '${resourceId}'.`,
+        `Authored tree contains an extra authority identity '${resourceId}'.`,
       ))
     }
   }
@@ -194,7 +197,7 @@ function validateLoadedIdentityCoverage(
 function validateEffectiveOrigin(
   entry: EffectiveResourceEntry,
   registry: EffectiveResourceRegistry,
-  tree: LoadedResourceTree,
+  tree: AuthoredResourceTree,
   diagnostics: ResourceDiagnostic[],
 ): void {
   const origin = entry.effectiveOrigin!
@@ -215,7 +218,7 @@ function validateEffectiveOrigin(
   }
 }
 
-function findResource(tree: LoadedResourceTree, resourceId: string): ResourceRecord | undefined {
+function findResource(tree: AuthoredResourceTree, resourceId: string): ResourceRecord | undefined {
   for (const records of tree.registry.byKind.values()) {
     const resource = records.find((record) => record.resourceId === resourceId)
     if (resource) return resource

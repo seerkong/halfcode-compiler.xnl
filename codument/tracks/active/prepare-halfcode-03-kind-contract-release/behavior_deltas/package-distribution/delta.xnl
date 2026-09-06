@@ -1,0 +1,25 @@
+<BehaviorPatch #track.prepare-halfcode-03-kind-contract-release.behavior_patch.package-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "package-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://package-distribution/requirements/unpublished-0-3-exact-contract-candidate" } (
+      <Requirement #unpublished-0-3-exact-contract-candidate (
+        <Statement ?>系统 SHALL 构建并验证 `halfcode-compiler.xnl@0.3.0` tarball，使外部 consumer 只依赖公开包即可使用 exact envelope/Kind contract；在未取得显式发布授权前保持 registry 不变。</?>
+        <Suites [
+          <Suite #candidate { name = "0.3 release candidate" } (
+            <Cases [
+              <Case #tarball-only-consumer (
+                <Given ?>隔离 consumer 只安装本地 0.3.0 tarball</?>
+                <When ?>导入全部公开 specifier并执行 envelope、Kind contract 与 resource loader smoke</?>
+                <Then ?>runtime/types SHALL 通过，tarball MUST NOT 引用私有 workspace packages</?>
+              )>
+              <Case #prepare-without-publish (
+                <Given ?>用户仅授权联合迁移与发布准备</?>
+                <When ?>candidate build、pack、auth preflight 与报告完成</?>
+                <Then ?>系统 MUST NOT 执行 npm publish/dist-tag；后续若获授权，MUST 显式使用 `/Users/kongweixian/.npmrc_official`</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

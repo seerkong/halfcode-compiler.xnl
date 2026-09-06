@@ -1,4 +1,8 @@
 export {
+  CODE_CLOSURE_COMPILER_IDENTITY,
+  CodeClosureError,
+  captureCodeClosure,
+  validateCodeClosure,
   ObjectOperationContractError,
   applicationAssemblyPackage,
   assertExecuteObjectOperationRequest,
@@ -11,6 +15,13 @@ export {
 } from "halfcode-compiler-application-assembly"
 
 export type {
+  CaptureCodeClosureInput,
+  CodeClosureCaptureRuntime,
+  CodeExecutionEnvironment,
+  FrozenCodeAsset,
+  FrozenCodeClosure,
+  FrozenCodeDependency,
+  FrozenCodeModule,
   ApplicationAssembly,
   ApplicationScope,
   AssemblyPort,

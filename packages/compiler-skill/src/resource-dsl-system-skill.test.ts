@@ -29,7 +29,8 @@ test("compiles canonical Resource DSL documents and examples into progressive re
   expect(plan.roots).toEqual([{
     fqn: skillFqn,
     name: outputName,
-    apiVersion: "halfcode.resources/v1",
+    envelopeVersion: "halfcode.resource-envelope/v1",
+    specVersion: 1,
     version: "1.0.0",
   }])
   const skillText = fileText(plan, `${outputName}/SKILL.md`)
@@ -48,7 +49,8 @@ test("compiles canonical Resource DSL documents and examples into progressive re
   const provenance = JSON.parse(fileText(plan, `${outputName}/references/.halfcode/provenance.json`))
   expect(provenance.source).toEqual({
     fqn: skillFqn,
-    apiVersion: "halfcode.resources/v1",
+    envelopeVersion: "halfcode.resource-envelope/v1",
+    specVersion: 1,
     version: "1.0.0",
   })
   expect(provenance.generatedBy).toBe("halfcode.skill-distribution/v1")

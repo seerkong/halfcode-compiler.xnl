@@ -333,7 +333,7 @@ function record(resourceId: string, kind: string, value: string): ResourceRecord
   const node: ResourceNode = Object.freeze({
     tag: kind,
     resourceId,
-    metadata: Object.freeze({ apiVersion: "halfcode.resources/v1" }),
+    metadata: Object.freeze({ envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 }),
     properties: Object.freeze({ value }),
     body: Object.freeze([]),
     subdomains: Object.freeze({}),
@@ -342,7 +342,7 @@ function record(resourceId: string, kind: string, value: string): ResourceRecord
     kind,
     resourceId,
     fqn: resourceId,
-    metadata: Object.freeze({ apiVersion: "halfcode.resources/v1", version: "1.0.0" }),
+    metadata: Object.freeze({ envelopeVersion: "halfcode.resource-envelope/v1", specVersion: 1 }),
     sourceShape: "single-file" as const,
     logicalPath: `${resourceId}.xnl`,
     documentUri: `vfs://@/${resourceId}.xnl`,
@@ -355,10 +355,21 @@ function kindDefinition(resourceKind: string): RegisteredKindDefinition {
   return Object.freeze({
     resourceId: `halfcode.resource_kind.${resourceKind}`,
     resourceKind,
+    subjectFqn: `Halfcode.ResourceKind.${resourceKind}`,
     sourceShapes: Object.freeze(["single-file" as const]),
     requiredFiles: Object.freeze([]),
-    currentApiVersion: "halfcode.resources/v1",
-    supportedApiVersions: Object.freeze(["halfcode.resources/v1"]),
+    specRevisions: Object.freeze([Object.freeze({
+      specVersion: 1,
+      schemaRef: "vfs://./spec-v1.schema.json",
+      schemaFingerprint: `sha256:${"1".repeat(64)}` as const,
+      contractFingerprint: `sha256:${"2".repeat(64)}` as const,
+      semanticContract: Object.freeze({
+        semanticValidatorFingerprint: `sha256:${"3".repeat(64)}` as const,
+        referenceProjectionFingerprint: `sha256:${"4".repeat(64)}` as const,
+        compilerInputFingerprint: `sha256:${"5".repeat(64)}` as const,
+      }),
+      stability: "stable" as const,
+    })]),
     documentCardinality: "one" as const,
     documentUri: `vfs://@/KindDefinitions/${resourceKind}/manifest.xnl`,
   })

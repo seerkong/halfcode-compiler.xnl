@@ -412,7 +412,8 @@ export interface SkillCapsuleResource {
   kind: "SkillCapsule"
   fqn: string
   name?: string
-  apiVersion: string
+  envelopeVersion: string
+  specVersion: number
   version: string
   description: string
   metadata: Record<string, unknown>
@@ -816,24 +817,15 @@ async function readTextResource(
 async function readSkillCapsule(module: AuthoringModuleDescriptor, record: ResourceRecord): Promise<SkillCapsuleResource> {
   const metadataMaterial = await readRequiredMaterial(module, record, "SkillMetadata")
   const template = await readRequiredMaterial(module, record, "Template")
-  const version = record.metadata.version
-  const apiVersion = record.metadata.apiVersion
-  if (!apiVersion) {
-    throw new Error(`SKILL_CAPSULE_API_VERSION_MISSING: ${record.logicalPath} is missing XNL metadata apiVersion`)
-  }
-  if (!version) {
-    throw new Error(`SKILL_CAPSULE_VERSION_MISSING: ${record.logicalPath} is missing XNL metadata version`)
-  }
   const parsedMetadata = parseYaml(metadataMaterial.content)
   if (!parsedMetadata || typeof parsedMetadata !== "object" || Array.isArray(parsedMetadata)) {
     throw new Error(`SKILL_CAPSULE_METADATA_INVALID: ${record.logicalPath} Skill metadata must be a YAML object`)
   }
   const yamlVersion = (parsedMetadata as Record<string, unknown>).version
-  if (yamlVersion !== undefined && yamlVersion !== version) {
-    throw new Error(
-      `SKILL_CAPSULE_VERSION_CONFLICT: ${requiredFqn(record)} YAML version ${JSON.stringify(yamlVersion)} does not match XNL version ${version}`,
-    )
+  if (typeof yamlVersion !== "string" || !yamlVersion.trim()) {
+    throw new Error(`SKILL_CAPSULE_VERSION_MISSING: ${record.logicalPath} Skill metadata must declare a non-empty version`)
   }
+  const version = yamlVersion.trim()
   const hasXnlName = Object.prototype.hasOwnProperty.call(record.node.properties, "name")
   const xnlName = stringResourceValue(record.node.properties.name)
   if (hasXnlName && !xnlName) {
@@ -848,7 +840,8 @@ async function readSkillCapsule(module: AuthoringModuleDescriptor, record: Resou
     kind: "SkillCapsule",
     fqn: requiredFqn(record),
     ...(xnlName ? { name: xnlName } : {}),
-    apiVersion,
+    envelopeVersion: record.metadata.envelopeVersion,
+    specVersion: record.metadata.specVersion,
     version,
     description: requiredDescription(record),
     metadata: { ...(parsedMetadata as Record<string, unknown>), version },
@@ -1201,3 +1194,5 @@ export const applicationAssemblyPackage = {
   area: "application-assembly",
   owns: "resource registry facts normalized for target-neutral compiler projections",
 } as const
+
+export * from "./code-execution-closure"

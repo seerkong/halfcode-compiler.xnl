@@ -1,0 +1,86 @@
+<Track #support-large-code-package-entry-imports apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "让 Halfcode CodePackage loader 安全加载大型 JavaScript entry，并发布可供 Host 精确采用的补丁版本" description = "以 runtime-owned revision-isolated module source 替换 data URL 导入，同时维持 confinement、stale 检测、target-neutral API 与不可变发布门禁" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-24T18:40:01.963Z" updated_at = "2026-08-24T18:53:47.372Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "input" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "resource-core-runtime" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "distribution" domain = "code" path = "vfs://@/packages/distribution/" }>
+    <MaterialBundle { role = "output" name = "publication-evidence" domain = "artifact" path = "vfs://./reports/publication.json" }>
+    <MaterialBundle { role = "output" name = "modeling" domain = "modeling" path = "vfs://@/codument/modeling/" }>
+  ]>
+  <TaskSpace #space_support-large-code-package-entry-imports { name = "support-large-code-package-entry-imports" version = "1" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Large entry runtime" status = "DONE" priority = "P0" order = 0 } (
+        <Description ?01M0THNZWWNW8B9HP7ZKTNVPR5>
+        用 runtime-owned revision-isolated module source 替代内联 data URL，并以真实大型 entry 和 stale/reload 反例锁定安全语义。
+        </?01M0THNZWWNW8B9HP7ZKTNVPR5>
+        <SubNodes [
+          <Task #P1-T1 { name = "测试并实现 revision-isolated module source loader" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { checked = true } ?01M0THNZWWNW8B9HP7ZKTNVPR6>
+              大型 CodePackage entry 可在 Bun 中加载，且允许 Node builtin import。
+              </?01M0THNZWWNW8B9HP7ZKTNVPR6>
+              <Criterion #P1-T1-AC2 { checked = true } ?01M0THNZWWNW8B9HP7ZKTNVPR7>
+              runtime prepare effect 物化精确 entry bytes，import 使用独立短 file URL 并在完成后清理。
+              </?01M0THNZWWNW8B9HP7ZKTNVPR7>
+              <Criterion #P1-T1-AC3 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNK7>
+              stale tree、导入期修改、symlink 逃逸和 diagnostics 路径泄漏继续 fail closed。
+              </?01M0THNZWXBVH2VYDSFAYATNK7>
+              <Criterion #P1-T1-AC4 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNK8>
+              重新加载 tree 后，同进程可观察更新后的 exports 和新 revision。
+              </?01M0THNZWXBVH2VYDSFAYATNK8>
+            ]>
+          )>
+          <Task #P1-T2 { name = "更新模型并执行 runtime 全量验证" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNK9>
+              resource-core tests、全仓 test/typecheck/verify 与 modeling/strict validation 通过。
+              </?01M0THNZWXBVH2VYDSFAYATNK9>
+              <Criterion #P1-T2-AC2 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNKA>
+              公开 capsule 不泄漏内部 runtime，且不引入 Host 专属 Kind、effect 或 namespace。
+              </?01M0THNZWXBVH2VYDSFAYATNKA>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "0.2.5 publication" status = "DONE" priority = "P0" order = 1 } (
+        <Description ?01M0THNZWXBVH2VYDSFAYATNKB>
+        提升补丁版本，经 pack/isolated consumer 门禁后发布并回读 registry identity。
+        </?01M0THNZWXBVH2VYDSFAYATNKB>
+        <SubNodes [
+          <Task #P2-T1 { name = "构建并验证 0.2.5 release candidate" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNKC>
+              distribution、verifier 与 lockfile 精确使用 0.2.5，registry 发布前不存在该版本。
+              </?01M0THNZWXBVH2VYDSFAYATNKC>
+              <Criterion #P2-T1-AC2 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNKD>
+              npm pack 隔离 consumer 从 tarball 加载大型 CodePackage，全部 public specifiers 和 type smoke 通过。
+              </?01M0THNZWXBVH2VYDSFAYATNKD>
+            ]>
+          )>
+          <Task #P2-T2 { name = "发布 0.2.5 并回读 immutable identity" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNKE>
+              npm publish 成功且未覆盖既有版本。
+              </?01M0THNZWXBVH2VYDSFAYATNKE>
+              <Criterion #P2-T2-AC2 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNKF>
+              registry name/version/integrity/shasum 与发布前 candidate 一致并写入 publication evidence。
+              </?01M0THNZWXBVH2VYDSFAYATNKF>
+              <Criterion #P2-T2-AC3 { checked = true } ?01M0THNZWXBVH2VYDSFAYATNKG>
+              Track strict validation、全量测试和 package check 在发布事实下仍通过。
+              </?01M0THNZWXBVH2VYDSFAYATNKG>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule { max_concurrent = 1 spot_check = true } [
+    <Dag { for = "space_support-large-code-package-entry-imports" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+    ]>
+  ]>
+  <Hooks []>
+)>

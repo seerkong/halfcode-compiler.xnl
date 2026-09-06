@@ -1,4 +1,4 @@
-<ResourcePackage #demo.resource_workflow.unsafe apiVersion="halfcode.resources/v1" version="1.0.0" {
+<ResourcePackage #demo.resource_workflow.unsafe envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Unsafe containment fixture"
 } (

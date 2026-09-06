@@ -1,4 +1,4 @@
-<SkillCapsule #example.resource_lifecycle.skill.run apiVersion="halfcode.resources/v1" version="1.0.0" {
+<SkillCapsule #example.resource_lifecycle.skill.run envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   name = "example-resource-lifecycle-run"
   lifecycle = "Active"
   description = "Generic operations for running an authored resource."

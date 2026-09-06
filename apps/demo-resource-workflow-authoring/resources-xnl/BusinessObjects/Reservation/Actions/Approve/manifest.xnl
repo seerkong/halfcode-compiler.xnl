@@ -1,4 +1,4 @@
-<BusinessAction #Demo.ResourceWorkflow.BO.MakerSpace.Reservation.Action.Approve apiVersion="halfcode.resources/v1" version="1.0.0" {
+<BusinessAction #Demo.ResourceWorkflow.BO.MakerSpace.Reservation.Action.Approve envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Approve a requested reservation after its domain rules pass."
   ownerRef = "resource://Demo.ResourceWorkflow.BO.MakerSpace.Reservation"

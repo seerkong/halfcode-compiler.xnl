@@ -1,4 +1,4 @@
-<PromptFragment #Demo.ResourceWorkflow.Shared.PromptFragment.ReusableWorkflowGuidance apiVersion="halfcode.resources/v1" version="1.0.0" {
+<PromptFragment #Demo.ResourceWorkflow.Shared.PromptFragment.ReusableWorkflowGuidance envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Reusable guidance for deterministic workflow preparation."
 } (

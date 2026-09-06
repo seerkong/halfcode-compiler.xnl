@@ -1,4 +1,4 @@
-<ApplicationSOP #Demo.ResourceWorkflow.ApplicationSOP.MakerSpaceReservationApproval apiVersion="halfcode.resources/v1" version="1.0.0" {
+<ApplicationSOP #Demo.ResourceWorkflow.ApplicationSOP.MakerSpaceReservationApproval envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Application-level SOP for approving a MakerSpace reservation."
 } (

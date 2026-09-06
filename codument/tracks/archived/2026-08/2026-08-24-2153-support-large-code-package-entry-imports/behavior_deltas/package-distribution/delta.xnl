@@ -1,0 +1,25 @@
+<BehaviorPatch #track.support-large-code-package-entry-imports.behavior_patch.package-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "package-distribution" } (
+  <Mutations [
+    <Upsert { selector = "behavior://package-distribution/requirements/published-0-2-5-large-code-package-entry" } (
+      <Requirement #published-0-2-5-large-code-package-entry (
+        <Statement ?>halfcode-compiler.xnl 0.2.5 SHALL 以不可变 npm registry identity 发布 revision-isolated 大型 CodePackage entry loader，并保留全部既有公开 specifiers。</?>
+        <Suites [
+          <Suite #release-0-2-5 { name = "0.2.5 publication closure" } (
+            <Cases [
+              <Case #verify-large-entry-tarball (
+                <Given ?>0.2.5 release candidate 包含 resource-core loader 修复和十个公开 specifiers</?>
+                <When ?>隔离 consumer 从真实 tarball 安装并加载大型 CodePackage entry</?>
+                <Then ?>大型 entry、Node builtin、caller admission、runtime/type imports SHALL 全部通过，内部 effect contract MUST NOT 暴露</?>
+              )>
+              <Case #publish-immutable-0-2-5 (
+                <Given ?>registry 中精确版本 0.2.5 尚不存在且 candidate gates 全部通过</?>
+                <When ?>maintainer 发布该版本并回读 registry metadata</?>
+                <Then ?>name、version、integrity 与 shasum SHALL 与发布前 candidate 精确一致，既有版本 MUST NOT 被覆盖</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

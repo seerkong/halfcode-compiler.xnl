@@ -1,88 +1,165 @@
 <Behavior #package-distribution apiVersion="codument.tech/v1alpha1" version="1" (
   <Requirements [
     <Requirement #xnl-public-package (
-      <Statement ?01M0TB1VDWV0GMXK85MHMW59DP>
+      <Statement ?01M1A0DR88NPQNWZ5VHD1E28K5>
       系统 SHALL 只以 halfcode-compiler.xnl 作为 XNL compiler 的公开 npm identity，并保证根入口、所有声明子路径、生成 runtime import 与 tarball consumer 一致。
-      </?01M0TB1VDWV0GMXK85MHMW59DP>
+      </?01M1A0DR88NPQNWZ5VHD1E28K5>
       <Suites [
         <Suite #xnl-package (
           <Cases [
             <Case #public-imports (
-              <Given ?01M0TB1VDWV0GMXK85MHMW59DQ>
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28K6>
               消费者只安装 halfcode-compiler.xnl tarball
-              </?01M0TB1VDWV0GMXK85MHMW59DQ>
-              <When ?01M0TB1VDWV0GMXK85MHMW59DR>
+              </?01M1A0DR88NPQNWZ5VHD1E28K6>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28K7>
               导入根入口与全部公开子路径并执行 TypeScript 检查
-              </?01M0TB1VDWV0GMXK85MHMW59DR>
-              <Then ?01M0TB1VDWV0GMXK85MHMW59DS>
+              </?01M1A0DR88NPQNWZ5VHD1E28K7>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28K8>
               runtime 与 type imports SHALL 成功且制品不引用私有 workspace 包
-              </?01M0TB1VDWV0GMXK85MHMW59DS>
+              </?01M1A0DR88NPQNWZ5VHD1E28K8>
             )>
             <Case #generated-runtime (
-              <Given ?01M0TB1VDWV0GMXK85MHMW59DT>
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28K9>
               compiler 生成 callable bundle
-              </?01M0TB1VDWV0GMXK85MHMW59DT>
-              <When ?01M0TB1VDWV0GMXK85MHMW59DV>
+              </?01M1A0DR88NPQNWZ5VHD1E28K9>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28KA>
               检查其 runtime import
-              </?01M0TB1VDWV0GMXK85MHMW59DV>
-              <Then ?01M0TB1VDWV0GMXK85MHMW59DW>
+              </?01M1A0DR88NPQNWZ5VHD1E28KA>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28KB>
               specifier SHALL 为 halfcode-compiler.xnl/authoring-runtime
-              </?01M0TB1VDWV0GMXK85MHMW59DW>
+              </?01M1A0DR88NPQNWZ5VHD1E28KB>
             )>
             <Case #no-xml-public-identity (
-              <Given ?01M0TB1VDWV0GMXK85MHMW59DX>
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28KC>
               公开源码、文档与 package metadata
-              </?01M0TB1VDWV0GMXK85MHMW59DX>
-              <When ?01M0TB1VDWV0GMXK85MHMW59DY>
+              </?01M1A0DR88NPQNWZ5VHD1E28KC>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28KD>
               扫描产品 identity
-              </?01M0TB1VDWV0GMXK85MHMW59DY>
-              <Then ?01M0TB1VDWV0GMXK85MHMW59DZ>
+              </?01M1A0DR88NPQNWZ5VHD1E28KD>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28KE>
               不得残留 halfcode-compiler.xml；历史 Codument provenance 除外
-              </?01M0TB1VDWV0GMXK85MHMW59DZ>
+              </?01M1A0DR88NPQNWZ5VHD1E28KE>
             )>
           ]>
         )>
       ]>
     )>
     <Requirement #immutable-0-2-2-candidate (
-      <Statement ?01M0TB1VDWV0GMXK85MHMW59E0>
+      <Statement ?01M1A0DR88NPQNWZ5VHD1E28KF>
       系统 SHALL 把 additive layered registry、loader content identities、effective identity projector 与 typed dependency snapshot 准备为新的 halfcode-compiler.xnl@0.2.2 candidate，并保持已发布 0.2.1 与既有 public specifiers 不变。
-      </?01M0TB1VDWV0GMXK85MHMW59E0>
+      </?01M1A0DR88NPQNWZ5VHD1E28KF>
       <Suites [
         <Suite #patch-candidate { name = "0.2.2 release candidate" } (
           <Cases [
             <Case #packed-runtime-types (
-              <Given ?01M0TB1VDX5BNSFR0SX3A9ERCS>
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28KG>
               consumer 只安装本地 0.2.2 tarball
-              </?01M0TB1VDX5BNSFR0SX3A9ERCS>
-              <When ?01M0TB1VDX5BNSFR0SX3A9ERCT>
+              </?01M1A0DR88NPQNWZ5VHD1E28KG>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28KH>
               导入全部十个 public specifiers，并从 resource-core 执行真实 loader、layers、identity projector 与 snapshot
-              </?01M0TB1VDX5BNSFR0SX3A9ERCT>
-              <Then ?01M0TB1VDX5BNSFR0SX3A9ERCV>
+              </?01M1A0DR88NPQNWZ5VHD1E28KH>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28KJ>
               runtime 与 TypeScript consumer SHALL 通过且制品不得引用 private workspace packages
-              </?01M0TB1VDX5BNSFR0SX3A9ERCV>
+              </?01M1A0DR88NPQNWZ5VHD1E28KJ>
             )>
             <Case #preserve-public-compatibility (
-              <Given ?01M0TB1VDX5BNSFR0SX3A9ERCW>
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28KK>
               0.2.1 consumer 使用旧 root/subpath API 和 structural ResourceTree
-              </?01M0TB1VDX5BNSFR0SX3A9ERCW>
-              <When ?01M0TB1VDX5BNSFR0SX3A9ERCX>
+              </?01M1A0DR88NPQNWZ5VHD1E28KK>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28KM>
               切换到 0.2.2 candidate
-              </?01M0TB1VDX5BNSFR0SX3A9ERCX>
-              <Then ?01M0TB1VDX5BNSFR0SX3A9ERCY>
+              </?01M1A0DR88NPQNWZ5VHD1E28KM>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28KN>
               旧行为 SHALL 保持，新增 API 仅为 additive
-              </?01M0TB1VDX5BNSFR0SX3A9ERCY>
+              </?01M1A0DR88NPQNWZ5VHD1E28KN>
             )>
             <Case #prepare-without-publication (
-              <Given ?01M0TB1VDX5BNSFR0SX3A9ERCZ>
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28KP>
               尚未取得外部 registry 发布授权
-              </?01M0TB1VDX5BNSFR0SX3A9ERCZ>
-              <When ?01M0TB1VDX5BNSFR0SX3A9ERD0>
+              </?01M1A0DR88NPQNWZ5VHD1E28KP>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28KQ>
               本 track 完成 candidate build、pack 与校验
-              </?01M0TB1VDX5BNSFR0SX3A9ERD0>
-              <Then ?01M0TB1VDX5BNSFR0SX3A9ERD1>
+              </?01M1A0DR88NPQNWZ5VHD1E28KQ>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28KR>
               系统 SHALL 记录 candidate evidence 但不得执行 npm publish 或替换任何已发布版本
-              </?01M0TB1VDX5BNSFR0SX3A9ERD1>
+              </?01M1A0DR88NPQNWZ5VHD1E28KR>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #published-0-2-8-normalized-resource-runtime (
+      <Statement ?01M1A0DR88NPQNWZ5VHD1E28KS>
+      系统 SHALL 将语义根、具名 Catalog 与通用受限目录 material runtime 以不可变 halfcode-compiler.xnl@0.2.8 发布，并物理排除旧 CodePackage 协议。
+      </?01M1A0DR88NPQNWZ5VHD1E28KS>
+      <Suites [
+        <Suite #release-gates { name = "0.2.8 publication closure" } (
+          <Cases [
+            <Case #installed-normalized-runtime (
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28KT>
+              consumer 只安装发布前生成的 0.2.8 tarball
+              </?01M1A0DR88NPQNWZ5VHD1E28KT>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28KV>
+              导入全部公开 specifiers、加载 typed catalogs 并读取 authentic directory material
+              </?01M1A0DR88NPQNWZ5VHD1E28KV>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28KW>
+              runtime 与类型检查 SHALL 通过，旧 CodePackage source/runtime/admission 名称 SHALL 不可用
+              </?01M1A0DR88NPQNWZ5VHD1E28KW>
+            )>
+            <Case #registry-identity-roundtrip (
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28KX>
+              本地 candidate 已取得 integrity 与 shasum 且精确版本尚不存在
+              </?01M1A0DR88NPQNWZ5VHD1E28KX>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28KY>
+              发布并回读 halfcode-compiler.xnl@0.2.8
+              </?01M1A0DR88NPQNWZ5VHD1E28KY>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28KZ>
+              registry name/version/integrity/shasum SHALL 与 candidate 精确一致并形成机器可读 evidence
+              </?01M1A0DR88NPQNWZ5VHD1E28KZ>
+            )>
+            <Case #target-neutral-boundary (
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28M0>
+              检查正式 tarball 的 resource-core API
+              </?01M1A0DR88NPQNWZ5VHD1E28M0>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28M1>
+              识别目录 material 的执行 ownership
+              </?01M1A0DR88NPQNWZ5VHD1E28M1>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28M2>
+              Halfcode SHALL 不含 BundleMaterializer、语言 runtime、代码执行或叶子 resource admission
+              </?01M1A0DR88NPQNWZ5VHD1E28M2>
+            )>
+          ]>
+        )>
+      ]>
+    )>
+    <Requirement #unpublished-0-2-9-authoring-runtime-candidate (
+      <Statement ?01M1A0DR88NPQNWZ5VHD1E28M3>
+      The system SHALL prepare an immutable halfcode-compiler.xnl@0.2.9 local candidate that publicly exports transactional resource authoring through authoring-runtime, verifies it as a tarball-only consumer, and leaves npm registry state unchanged.
+      </?01M1A0DR88NPQNWZ5VHD1E28M3>
+      <Suites [
+        <Suite #candidate-gates { name = "0.2.9 authoring runtime candidate gates" } (
+          <Cases [
+            <Case #public-runtime-and-types (
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28M4>
+              a consumer installs only the locally packed 0.2.9 tarball
+              </?01M1A0DR88NPQNWZ5VHD1E28M4>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28M5>
+              it imports the authoring-runtime public subpath at runtime and in TypeScript
+              </?01M1A0DR88NPQNWZ5VHD1E28M5>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28M6>
+              the transactional authoring functions, schema constant, proposal, receipt and runtime types SHALL be available without private workspace imports
+              </?01M1A0DR88NPQNWZ5VHD1E28M6>
+            )>
+            <Case #unpublished-candidate (
+              <Given ?01M1A0DR88NPQNWZ5VHD1E28M7>
+              all candidate gates pass
+              </?01M1A0DR88NPQNWZ5VHD1E28M7>
+              <When ?01M1A0DR88NPQNWZ5VHD1E28M8>
+              the Track completes
+              </?01M1A0DR88NPQNWZ5VHD1E28M8>
+              <Then ?01M1A0DR88NPQNWZ5VHD1E28M9>
+              no npm publish or dist-tag mutation SHALL have occurred
+              </?01M1A0DR88NPQNWZ5VHD1E28M9>
             )>
           ]>
         )>

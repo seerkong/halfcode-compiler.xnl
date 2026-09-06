@@ -6,5 +6,9 @@
   "packageKind": "framework",
   "exports": {
     ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "halfcode-compiler-application-assembly": "workspace:*",
+    "halfcode-compiler-resource-core": "workspace:*"
   }
 }

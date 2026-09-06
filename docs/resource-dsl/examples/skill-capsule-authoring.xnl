@@ -1,4 +1,4 @@
-<SkillCapsule #example.resource_lifecycle.skill.authoring apiVersion="halfcode.resources/v1" version="1.0.0" {
+<SkillCapsule #example.resource_lifecycle.skill.authoring envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   name = "example-resource-lifecycle-authoring"
   lifecycle = "Active"
   description = "Generic operations for resource creation and revision."

@@ -1,12 +1,12 @@
-<module #publication_xnl.halfcode_compiler_xnl apiVersion="codument.tech/v1alpha1" { kind = "module" visibility = "public" depends_on = ["modeling://domain/resource_core/loader" "modeling://domain/resource_core/layered_registry" "modeling://domain/resource_core/effective_content_identity_projector" "modeling://domain/resource_core/dependency_snapshot"] behaviors = ["behavior://package-distribution/requirements/xnl-public-package" "behavior://package-distribution/requirements/immutable-0-2-2-candidate" "behavior://resource-loading/requirements/layered-effective-registry" "behavior://resource-loading/requirements/resource-dependency-snapshot"] } [
-  <desc ?01KZVGC9Q1DKJBQA6CYVV3NCM6>
-  halfcode-compiler.xnl 的唯一公开 npm capsule；0.2.2 candidate 保留十个既有 specifiers，并从 resource-core additive 暴露 loaded identities、effective identity projector、layered registry 与 dependency snapshot。
-  </?01KZVGC9Q1DKJBQA6CYVV3NCM6>
-  <capsule-tree ?01KZVGC9Q1DKJBQA6CYVV3NCM7>
-  packages/distribution/package.json # public identity/version authority: 0.2.2 candidate
-  packages/distribution/src/resource-core.ts # additive resource-core re-export
-  packages/distribution/tools/verify-package.ts # packed real-loader/layer/identity/snapshot runtime and type consumer
-  packages/resource-core/src/index.ts # legacy ResourceTree plus LoadedResourceTree and projector contracts
-  packages/resource-core/src/xnl-loader.ts # one-read raw-byte identity authority
-  </?01KZVGC9Q1DKJBQA6CYVV3NCM7>
+<module #publication_xnl.halfcode_compiler_xnl apiVersion="codument.tech/v1alpha1" { kind = "module" visibility = "public" depends_on = ["modeling://domain/resource_core/resource_material_reader"] behaviors = ["behavior://package-distribution/requirements/xnl-public-package" "behavior://package-distribution/requirements/immutable-0-2-2-candidate" "behavior://package-distribution/requirements/published-0-2-8-normalized-resource-runtime" "behavior://resource-loading/requirements/layered-effective-registry" "behavior://resource-loading/requirements/resource-dependency-snapshot" "behavior://resource-loading/requirements/directory-resource-materials"] } [
+  <desc ?01M0THZ5N6KXJ94MJQ7X77TTDP>
+  halfcode-compiler.xnl@0.2.8 是规范化资源 Catalog runtime 的不可变公开 capsule；resource-core 只发布结构资源加载、authentic directory material 读取和 target-neutral digest contribution，不拥有任意语言执行或叶子资源 admission。
+  </?01M0THZ5N6KXJ94MJQ7X77TTDP>
+  <capsule-tree ?capsule-tree>
+  packages/distribution/package.json # public identity/version authority: 0.2.8
+  packages/distribution/src/resource-core.ts # target-neutral resource-core public projection
+  packages/distribution/tools/verify-package.ts # packed runtime/type/installed-consumer and release identity gate
+  packages/resource-core/src/resource-material.ts # bounded material reader and content identity contribution
+  npm registry halfcode-compiler.xnl@0.2.8 # immutable identity: sha512-Pbb+TKsfrLHY3L3D9ighNvAffCAxn4LESvJ7Es9IcvQkRe/X1HWioBmW6jj0nmodUjHuT8mvMWQQ9q4JB12Cig==
+  </?capsule-tree>
 ]>

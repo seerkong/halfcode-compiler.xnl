@@ -1,4 +1,4 @@
-<PageObject #Demo.ResourceWorkflow.PageObject.ReservationDetail apiVersion="halfcode.resources/v1" version="1.0.0" {
+<PageObject #Demo.ResourceWorkflow.PageObject.ReservationDetail envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Experimental"
   description = "Reservation detail interactive surface."
   localId = "reservation-detail"

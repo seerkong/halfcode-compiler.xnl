@@ -1,4 +1,4 @@
-<Function #demo.resource_workflow.prepare_data apiVersion="halfcode.resources/v1" version="1.0.0" {
+<Function #demo.resource_workflow.prepare_data envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   title = "Prepare workflow data"
 } (

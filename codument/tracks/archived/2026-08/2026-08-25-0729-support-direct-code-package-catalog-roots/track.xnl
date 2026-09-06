@@ -1,0 +1,48 @@
+<Track #support-direct-code-package-catalog-roots apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "让 code-package catalog 同时支持直接 descriptor root 与既有 collection root，并发布正式补丁" description = "root 自身存在 entry 时加载唯一 CodePackage，否则稳定扫描子目录；两种模式共享完整校验" question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-25T04:20:17.276Z" updated_at = "2026-08-25T04:29:57.444Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "behavior-deltas" domain = "behavior" path = "vfs://./behavior_deltas/" }>
+    <MaterialBundle { role = "input" name = "modeling-deltas" domain = "modeling" path = "vfs://./modeling_deltas/" }>
+    <MaterialBundle { role = "output" name = "resource-core" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "distribution" domain = "artifact" path = "vfs://@/packages/distribution/" }>
+  ]>
+  <TaskSpace #space_support-direct-code-package-catalog-roots { name = "support-direct-code-package-catalog-roots" version = "1" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Direct root protocol" status = "DONE" priority = "P0" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "新增 direct root 与 collection 兼容红测" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P1-T1-AC1 { text = "覆盖 direct 成功、collection 保持和 unsafe direct entry fail closed。" checked = true }>
+            ]>
+          )>
+          <Task #P1-T2 { name = "实现 catalog root 模式选择与统一校验" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { text = "root/entry 为普通文件时只加载它；缺失时扫描子目录。" checked = true }>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Release closure" status = "DONE" priority = "P0" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "更新文档版本并执行全量 package 验证" status = "DONE" priority = "P0" order = 0 } (
+            <Acceptance [
+              <Criterion #P2-T1-AC1 { text = "全量 tests/typecheck/workspace verify/package check 和 isolated consumer 通过。" checked = true }>
+            ]>
+          )>
+          <Task #P2-T2 { name = "发布补丁并回读 registry identity" status = "DONE" priority = "P0" order = 1 } (
+            <Acceptance [
+              <Criterion #P2-T2-AC1 { text = "新版本不可变发布，registry 安装态可加载 direct 与 collection root。" checked = true }>
+            ]>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule { max_concurrent = 1 spot_check = true } [
+    <Dag { for = "space_support-direct-code-package-catalog-roots" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+    ]>
+  ]>
+  <Hooks []>
+)>

@@ -1,0 +1,19 @@
+<component #resource_core.resource_material_reader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/directory-resource-materials"] } (
+  <desc ?>从 authentic directory ResourceRecord 的 owner boundary 读取显式 VFS material，并输出 target-neutral digest contribution；不拥有执行或 admission。</?>
+  <runtime ?runtime>
+  interface ResourceMaterialRuntime { lstat(path: string): Promise&lt;FileStat&gt;; realpath(path: string): Promise&lt;string&gt;; readFile(path: string): Promise&lt;Uint8Array&gt; }
+  </?runtime>
+  <input ?input>
+  interface ReadResourceMaterialInput { tree: LoadedResourceTree; rootDir: string; resourceId: string; uri: `vfs://./${string}` }
+  </?input>
+  <config ?config>
+  interface ResourceMaterialConfig { sourceShape: "directory"; symlink: "reject"; digest: "sha256" }
+  </?config>
+  <output ?output>
+  type ReadResourceMaterialOutput = Promise&lt;ResourceMaterial&gt;; type Failure = throws ResourceMaterialError
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  验证 authentic tree/resource → 从 logicalPath 派生 owner directory → 校验 lexical URI → lstat/realpath containment → 读取 bytes → 摘要并冻结 material/contribution
+  </?ctrl>
+  <not-owned-here ?>Bundle runtime、Bun/Python/Java adapter、module import、capability 与 leaf admission 属于 Host。</?>
+)>

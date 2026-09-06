@@ -57,7 +57,8 @@ export interface CompileResourceSkillCapsuleInput {
 export interface SkillCapsuleIdentity {
   readonly fqn: string
   readonly name: string
-  readonly apiVersion: string
+  readonly envelopeVersion: string
+  readonly specVersion: number
   readonly version: string
 }
 
@@ -68,7 +69,8 @@ export interface SkillCapsuleProvenanceManifest {
   readonly generatedBy: "halfcode.skill-distribution/v1"
   readonly source: {
     readonly fqn: string
-    readonly apiVersion: string
+    readonly envelopeVersion: string
+    readonly specVersion: number
     readonly version: string
   }
   readonly payloadFiles: readonly {
@@ -79,7 +81,8 @@ export interface SkillCapsuleProvenanceManifest {
 
 export interface PlannedSkillFile {
   readonly skillFqn: string
-  readonly skillApiVersion: string
+  readonly skillEnvelopeVersion: string
+  readonly skillSpecVersion: number
   readonly skillVersion: string
   readonly capsuleRelativePath: string
   readonly targetRelativePath: string
@@ -242,7 +245,8 @@ export async function planSkillCapsuleDistribution(
       const targetRelativePath = posix.join(identity.name, file.targetRelativePath)
       return plannedSkillFile({
         skillFqn: identity.fqn,
-        skillApiVersion: identity.apiVersion,
+        skillEnvelopeVersion: identity.envelopeVersion,
+        skillSpecVersion: identity.specVersion,
         skillVersion: identity.version,
         capsuleRelativePath: file.targetRelativePath,
         targetRelativePath,
@@ -515,7 +519,8 @@ function skillIdentity(skill: SkillCapsuleResource): SkillCapsuleIdentity {
   return Object.freeze({
     fqn: skill.fqn,
     name: skillOutputName(skill),
-    apiVersion: skill.apiVersion,
+    envelopeVersion: skill.envelopeVersion,
+    specVersion: skill.specVersion,
     version: skill.version,
   })
 }
@@ -603,8 +608,10 @@ function assertValidDistributionPlan(plan: SkillCapsuleDistributionPlan): void {
   const capsuleByFqn = new Map<string, PlannedSkillCapsule>()
   for (const capsule of plan.capsules) {
     validateSkillOutputName(capsule.identity.name)
-    if (!capsule.identity.fqn.trim() || !capsule.identity.apiVersion.trim() || !capsule.identity.version.trim()) {
-      failDistribution("SKILL_PLAN_IDENTITY_INVALID", "planned Skill identity requires non-empty FQN, apiVersion and version")
+    if (!capsule.identity.fqn.trim() || !capsule.identity.envelopeVersion.trim()
+      || !Number.isSafeInteger(capsule.identity.specVersion) || capsule.identity.specVersion <= 0
+      || !capsule.identity.version.trim()) {
+      failDistribution("SKILL_PLAN_IDENTITY_INVALID", "planned Skill identity requires non-empty FQN/envelopeVersion/version and a positive specVersion")
     }
     if (capsuleByFqn.has(capsule.identity.fqn)) {
       failDistribution("SKILL_PLAN_CAPSULE_DUPLICATE", `duplicate planned capsule ${capsule.identity.fqn}`)
@@ -618,7 +625,8 @@ function assertValidDistributionPlan(plan: SkillCapsuleDistributionPlan): void {
     for (const file of capsule.files) {
       assertValidPlannedFile(file)
       if (file.skillFqn !== capsule.identity.fqn
-        || file.skillApiVersion !== capsule.identity.apiVersion
+        || file.skillEnvelopeVersion !== capsule.identity.envelopeVersion
+        || file.skillSpecVersion !== capsule.identity.specVersion
         || file.skillVersion !== capsule.identity.version) {
         failDistribution("SKILL_PLAN_FILE_OWNER_INVALID", `file ${file.targetRelativePath} has the wrong Skill owner`)
       }
@@ -735,7 +743,7 @@ function assertValidPlannedFile(file: PlannedSkillFile): void {
 }
 
 function plannedSkillFile(
-  identity: Pick<PlannedSkillFile, "skillFqn" | "skillApiVersion" | "skillVersion" | "capsuleRelativePath" | "targetRelativePath">,
+  identity: Pick<PlannedSkillFile, "skillFqn" | "skillEnvelopeVersion" | "skillSpecVersion" | "skillVersion" | "capsuleRelativePath" | "targetRelativePath">,
   file: AtomicFile,
 ): PlannedSkillFile {
   const contentBase64 = Buffer.from(file.content).toString("base64")
@@ -772,7 +780,8 @@ function bytesEqual(left: Uint8Array, right: Uint8Array): boolean {
 function fileDigestProjection(file: PlannedSkillFile) {
   return {
     skillFqn: file.skillFqn,
-    skillApiVersion: file.skillApiVersion,
+    skillEnvelopeVersion: file.skillEnvelopeVersion,
+    skillSpecVersion: file.skillSpecVersion,
     skillVersion: file.skillVersion,
     capsuleRelativePath: file.capsuleRelativePath,
     targetRelativePath: file.targetRelativePath,
@@ -798,7 +807,8 @@ function canonicalSkillProvenanceBytes(
     generatedBy: "halfcode.skill-distribution/v1",
     source: {
       fqn: identity.fqn,
-      apiVersion: identity.apiVersion,
+      envelopeVersion: identity.envelopeVersion,
+      specVersion: identity.specVersion,
       version: identity.version,
     },
     payloadFiles: payloadFiles

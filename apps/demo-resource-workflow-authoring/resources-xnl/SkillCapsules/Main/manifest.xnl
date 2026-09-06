@@ -1,4 +1,4 @@
-<SkillCapsule #Demo.ResourceWorkflow.Skill.Main apiVersion="halfcode.resources/v1" version="1.0.0" {
+<SkillCapsule #Demo.ResourceWorkflow.Skill.Main envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Active"
   description = "Main demo resource workflow Skill capsule."
 } (

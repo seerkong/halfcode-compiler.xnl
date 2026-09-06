@@ -63,3 +63,6 @@ export const runtimeAuthoringPackage = {
   area: "runtime-authoring",
   owns: "target-neutral deterministic-code runtime and effect boundary",
 } as const
+
+export * from "./resource-authoring"
+export * from "./code-execution"

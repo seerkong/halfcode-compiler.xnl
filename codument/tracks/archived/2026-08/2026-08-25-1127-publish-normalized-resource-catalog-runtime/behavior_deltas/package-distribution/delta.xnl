@@ -1,0 +1,32 @@
+<BehaviorPatch #track.publish-normalized-resource-catalog-runtime.behavior_patch.package-distribution apiVersion="codument.tech/v1alpha1" version="1" { capability = "package-distribution" } (
+  <Mutations [
+    <Delete { selector = "behavior://package-distribution/requirements/published-0-2-4-code-package" }>
+    <Delete { selector = "behavior://package-distribution/requirements/published-0-2-5-large-code-package-entry" }>
+    <Upsert { selector = "behavior://package-distribution/requirements/published-0-2-8-normalized-resource-runtime" } (
+      <Requirement #published-0-2-8-normalized-resource-runtime (
+        <Statement ?>系统 SHALL 将语义根、具名 Catalog 与通用受限目录 material runtime 以不可变 halfcode-compiler.xnl@0.2.8 发布，并物理排除旧 CodePackage 协议。</?>
+        <Suites [
+          <Suite #release-gates { name = "0.2.8 publication closure" } (
+            <Cases [
+              <Case #installed-normalized-runtime (
+                <Given ?>consumer 只安装发布前生成的 0.2.8 tarball</?>
+                <When ?>导入全部公开 specifiers、加载 typed catalogs 并读取 authentic directory material</?>
+                <Then ?>runtime 与类型检查 SHALL 通过，旧 CodePackage source/runtime/admission 名称 SHALL 不可用</?>
+              )>
+              <Case #registry-identity-roundtrip (
+                <Given ?>本地 candidate 已取得 integrity 与 shasum 且精确版本尚不存在</?>
+                <When ?>发布并回读 halfcode-compiler.xnl@0.2.8</?>
+                <Then ?>registry name/version/integrity/shasum SHALL 与 candidate 精确一致并形成机器可读 evidence</?>
+              )>
+              <Case #target-neutral-boundary (
+                <Given ?>检查正式 tarball 的 resource-core API</?>
+                <When ?>识别目录 material 的执行 ownership</?>
+                <Then ?>Halfcode SHALL 不含 BundleMaterializer、语言 runtime、代码执行或叶子 resource admission</?>
+              )>
+            ]>
+          )>
+        ]>
+      )>
+    )>
+  ]>
+)>

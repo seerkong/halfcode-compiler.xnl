@@ -1,8 +1,20 @@
-<KindDefinition #Demo.ResourceWorkflow.KindDefinition.PageObject apiVersion="halfcode.resources/v1" version="1.0.0" {
+<KindDefinition #Demo.ResourceWorkflow.KindDefinition.PageObject envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 {
   lifecycle = "Experimental"
   description = "Kind definition for target-neutral interactive object owners with shared target and operation catalogs."
   resourceKind = "PageObject"
+  subjectFqn = "Halfcode.ResourceKind.PageObject"
   sourceShapes = ["directory"]
-  currentApiVersion = "halfcode.resources/v1"
-  supportedApiVersions = ["halfcode.resources/v1"]
-}>
+} (
+  <SpecRevisions [
+    <SpecRevision #v1 {
+      specVersion = 1
+      schemaRef = "vfs://./spec-v1.schema.json"
+      schemaFingerprint = "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      contractFingerprint = "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      semanticValidatorFingerprint = "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      referenceProjectionFingerprint = "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      compilerInputFingerprint = "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      stability = "stable"
+    }>
+  ]>
+)>

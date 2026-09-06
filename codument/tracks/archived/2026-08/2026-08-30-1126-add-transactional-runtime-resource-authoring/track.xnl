@@ -1,0 +1,63 @@
+<Track #add-transactional-runtime-resource-authoring apiVersion="codument.tech/v1alpha1" version="1" { status = "completed" goal = "Provide a generic transactional Halfcode boundary for runtime-authored resources with exact CAS, canonical refresh and durable receipts." description = "Add deterministic proposal/plan/apply contracts and a recoverable write-refresh transaction without embedding AI, Workflow or Capability Catalog semantics." question_mode = "decision-tree" question_severity = "auto" commit_mode = "manual" created_at = "2026-08-30T05:54:42.792Z" updated_at = "2026-08-30T08:26:31.790Z" modeling_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" engineering_base_commit = "7b08da0c024c6bb204778ccc9d7547648ab1a8fd" } (
+  <Ports { scope = "track" } [
+    <MaterialBundle { role = "input" name = "resource-authority" domain = "code" path = "vfs://@/packages/resource-core/" }>
+    <MaterialBundle { role = "output" name = "runtime-authoring" domain = "code" path = "vfs://@/packages/runtime-authoring/" }>
+  ]>
+  <TaskSpace #space_add-transactional-runtime-resource-authoring { name = "add-transactional-runtime-resource-authoring" version = "1" child_mode = "dag" } (
+    <SubNodes [
+      <TaskGroup #P1 { name = "Pure authoring contract and plan" status = "DONE" order = 0 } (
+        <SubNodes [
+          <Task #P1-T1 { name = "define proposal plan receipt and typed errors" status = "DONE" order = 0 }>
+          <Task #P1-T2 { name = "validate Kind catalog target shape expected state and plan digest" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P1-T2-AC1 { checked = true } ?01M1ATC2VB9G2F42ANZFHYVJVZ>
+              Planning is deterministic and performs zero writes; forged or unsupported inputs fail before an effect is invoked.
+              </?01M1ATC2VB9G2F42ANZFHYVJVZ>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P2 { name = "Atomic write refresh transaction" status = "DONE" order = 1 } (
+        <SubNodes [
+          <Task #P2-T1 { name = "add explicit prepare CAS commit rollback and canonical refresh ports" status = "DONE" order = 0 }>
+          <Task #P2-T2 { name = "verify authentic refreshed registry and return immutable receipt" status = "DONE" order = 1 }>
+          <Task #P2-T3 { name = "make retries conflicts and refresh failures recover deterministically" status = "DONE" order = 2 } (
+            <Acceptance [
+              <Criterion #P2-T3-AC1 { checked = true } ?01M1AWWHH2EJDZ94ZRABG0XAA0>
+              A refresh failure restores old authority and registry; concurrent create/update and uncertain retries never produce two accepted writes.
+              </?01M1AWWHH2EJDZ94ZRABG0XAA0>
+            ]>
+          )>
+        ]>
+      )>
+      <TaskGroup #P3 { name = "Adversarial and package verification" status = "DONE" order = 2 } (
+        <SubNodes [
+          <Task #P3-T1 { name = "test content CAS forest units forged plans and failure injection" status = "DONE" order = 0 }>
+          <Task #P3-T2 { name = "run focused full workspace type and isolated consumer checks" status = "DONE" order = 1 } (
+            <Acceptance [
+              <Criterion #P3-T2-AC1 { checked = true } ?01M1ACVM41KNS4QQ872S8JC4JY>
+              Production API and fixtures contain no AIAgentDefinition AIData Workflow CapabilityCatalog or Eidolon semantics.
+              </?01M1ACVM41KNS4QQ872S8JC4JY>
+            ]>
+          )>
+        ]>
+        <Hooks [
+          <Hook { on = "phase:after" } (
+            <AttractorCheck { use = "coding" }>
+          )>
+        ]>
+      )>
+    ]>
+  )>
+  <Schedule [
+    <Dag { for = "space_add-transactional-runtime-resource-authoring" } [
+      <Node #P2 [
+        <After { ref = "P1" }>
+      ]>
+      <Node #P3 [
+        <After { ref = "P2" }>
+      ]>
+    ]>
+  ]>
+  <Hooks []>
+)>

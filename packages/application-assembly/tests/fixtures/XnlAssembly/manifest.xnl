@@ -1,4 +1,4 @@
-<ResourcePackage #demo.xnl_assembly.package apiVersion="halfcode.resources/v1" version="1.0.0" { lifecycle = "Active" description = "XNL assembly fixture" } (
+<ResourcePackage #demo.xnl_assembly.package envelopeVersion="halfcode.resource-envelope/v1" specVersion=1 { lifecycle = "Active" description = "XNL assembly fixture" } (
   <Catalogs [
     <Catalog #kind_definitions { kind = "KindDefinition" shape = "directory" root = "vfs://./KindDefinitions/" entry = "manifest.xnl" }>
     <Catalog #functions { kind = "Function" shape = "directory" root = "vfs://./Functions/" entry = "manifest.xnl" }>

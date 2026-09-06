@@ -1,0 +1,41 @@
+<component #resource_core.code_package_loader apiVersion="codument.tech/v1alpha1" { kind = "component" behaviors = ["behavior://resource-loading/requirements/code-package-source-shape" "behavior://resource-loading/requirements/code-package-module-loading"] } (
+  <desc ?>验证 code-package shape 与 binding、摘要 entry bytes、通过 runtime-owned revision-isolated module source 加载 namespace，并通过 caller contract 做 target-neutral export admission。</?>
+  <runtime ?runtime>
+  interface CodePackageRuntime {
+    realpath(path: string): Promise&lt;string&gt;
+    readFile(path: string): Promise&lt;Uint8Array&gt;
+    stat(path: string): Promise&lt;{ isFile(): boolean }&gt;
+    prepareModuleSource(input: { bytes: Uint8Array; revision: string }): Promise&lt;PreparedCodePackageModuleSource&gt;
+    importModule(url: string): Promise&lt;Readonly&lt;Record&lt;string, unknown&gt;&gt;&gt;
+  }
+  </?runtime>
+  <input ?input>
+  interface LoadCodePackageModuleInput {
+    readonly tree: LoadedResourceTree
+    readonly resourceId: string
+    readonly rootDir: string
+  }
+  interface ExportAdmissionContract&lt;T&gt; {
+    isDefinition(value: unknown): value is T
+    identityOf(value: T): string
+  }
+  </?input>
+  <config ?config>
+  interface CodePackageConfig {
+    sourceShape: "code-package"
+    moduleSchemes: readonly ["vfs://./"]
+    extensions: readonly [".js", ".mjs"]
+    importSource: "runtime-owned-short-file-url"
+    revision: "isolated-source-per-load"
+  }
+  </?config>
+  <output ?output>
+  type LoadCodePackageModuleOutput = Promise&lt;LoadedCodePackageModule&gt;
+  type LoadCodePackageModuleFailure = throws CodePackageLoadError
+  type AdmitCodePackageExportsOutput&lt;T&gt; = readonly T[]
+  </?output>
+  <pseudo { kind = "ctrl" } ?ctrl>
+  验证 authentic tree 与 shape → 解析 singleton CodeBinding → lexical/realpath containment → 摘要 entry 并核对 loader contribution → runtime 以精确 bytes/contentDigest 准备独立短 module source → import并清理 → 重读 entry 并拒绝导入期漂移 → caller predicate 接纳顶层 exports/一层数组 → identity 去重与稳定冻结
+  </?ctrl>
+  <not-owned-here ?>host Kind brand、JSON Schema、AJV、capability/effect、TypeScript 编译、任意依赖图摘要与消费方模块语义不属于 Halfcode resource-core。</?>
+)>
