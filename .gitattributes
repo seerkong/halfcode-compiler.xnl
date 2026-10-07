@@ -1,0 +1,4 @@
+
+# Published resource identities and generated schemas use canonical LF.
+docs/resource-dsl/** text eol=lf
+apps/demo-resource-workflow-contracts/src/** text eol=lf

@@ -1,6 +1,6 @@
 {
   "name": "halfcode-compiler.xnl",
-  "version": "0.3.2-eidolon-trusted-kinds.0",
+  "version": "0.3.2",
   "description": "Compile XNL-described applications into runtime-ready skill capsules.",
   "type": "module",
   "private": false,
