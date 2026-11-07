@@ -292,7 +292,7 @@ describe("versioned Kind contracts", () => {
     const contractRegistry = contracts()
     expect(() => contractRegistry.registerOwner(createKindSubjectOwner({
       kind: "Demo",
-      subjectFqn: "Other.Demo",
+      subjectFqn: "Halfcode.ResourceKind.Demo",
       ownerPackageId: "@other/demo-kind",
       ownerPackageFingerprint: digest("other-owner"),
       sourceShapes: ["single-file"],

@@ -1,5 +1,6 @@
 import {
   compareCodeUnits,
+  createKindIdentityMap,
   type AuthoredResourceRecord,
   type AuthoredResourceTree,
   type JsonSchemaValidator,
@@ -32,7 +33,7 @@ export function resolveResourceTree(input: ResolveResourceTreeInput): ResolvedRe
   const authored = uniqueAuthoredRecords(input.tree)
   const resolvedById = new Map<string, ResolvedResourceRecord>()
   for (const source of authored) {
-    const owner = input.contracts.subject(source.kind)
+    const owner = input.contracts.subject(source.kind, source.subjectFqn)
     if (source.subjectFqn !== owner.subjectFqn) {
       fail(
         "AUTHORED_RESOURCE_SUBJECT_MISMATCH",
@@ -42,6 +43,7 @@ export function resolveResourceTree(input: ResolveResourceTreeInput): ResolvedRe
     const result = resolveSpec({
       resourceId: source.resourceId,
       kind: source.kind,
+      subjectFqn: source.subjectFqn,
       writerSpecVersion: source.metadata.specVersion,
       authoredSpec: source.authoredSpec as unknown as PortableSpec,
       sourceContentDigest: source.sourceContentDigest,
@@ -99,7 +101,9 @@ export function resolveResourceTree(input: ResolveResourceTreeInput): ResolvedRe
     source: input.tree,
     manifest,
     registry: Object.freeze({
-      byKind: readonlyMap([...byKind.entries()].sort(([left], [right]) => compareCodeUnits(left, right))),
+      byKind: createKindIdentityMap([...byKind.values()].map(records => ({
+        kind: records[0]!.kind, subjectFqn: records[0]!.subjectFqn, value: records,
+      }))),
       kindDefinitions: input.tree.registry.kindDefinitions,
     }),
     diagnostics: Object.freeze([]),
@@ -111,7 +115,7 @@ export function resolveResourceTree(input: ResolveResourceTreeInput): ResolvedRe
 
 function admitKindDefinitionDescriptions(input: ResolveResourceTreeInput): void {
   for (const definition of input.tree.registry.kindDefinitions.values()) {
-    const owner = input.contracts.subject(definition.resourceKind)
+    const owner = input.contracts.subject(definition.resourceKind, definition.subjectFqn)
     if (owner.subjectFqn !== definition.subjectFqn) {
       fail(
         "KIND_DEFINITION_SUBJECT_MISMATCH",

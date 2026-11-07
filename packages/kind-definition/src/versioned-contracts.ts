@@ -21,7 +21,7 @@ import {
   type Sha256Digest,
   type SpecResolutionDefinition,
   type SpecVersion,
-} from "halfcode-compiler-resource-core"
+} from "halfcode-compiler-resource-core/contracts"
 
 export type {
   CompatibilityPolicy,
@@ -45,21 +45,18 @@ export type {
   Sha256Digest,
   SpecResolutionDefinition,
   SpecVersion,
-} from "halfcode-compiler-resource-core"
+} from "halfcode-compiler-resource-core/contracts"
 
 export class KindContractRegistry {
-  private readonly ownersByKind = new Map<string, KindSubjectOwner>()
   private readonly ownersBySubject = new Map<string, KindSubjectOwner>()
   private readonly revisionsBySubject = new Map<string, Map<SpecVersion, KindSpecRevision>>()
 
   registerOwner(input: KindSubjectOwner): this {
     const owner = freezeOwner(input)
-    const byKind = this.ownersByKind.get(owner.kind)
     const bySubject = this.ownersBySubject.get(owner.subjectFqn)
-    if ((byKind && !sameOwner(byKind, owner)) || (bySubject && !sameOwner(bySubject, owner))) {
+    if (bySubject && !sameOwner(bySubject, owner)) {
       fail("KIND_SUBJECT_OWNER_CONFLICT", `Kind '${owner.kind}' or subject '${owner.subjectFqn}' already has a different owner.`)
     }
-    this.ownersByKind.set(owner.kind, owner)
     this.ownersBySubject.set(owner.subjectFqn, owner)
     return this
   }
@@ -91,10 +88,21 @@ export class KindContractRegistry {
     return this
   }
 
-  subject(kind: string): KindSubjectOwner {
-    const value = this.ownersByKind.get(nonEmpty(kind, "kind"))
-    if (!value) fail("KIND_SUBJECT_MISSING", `No admitted subject owns Kind '${kind}'.`)
-    return value
+  subject(kind: string, subjectFqn?: string): KindSubjectOwner {
+    nonEmpty(kind, "kind")
+    if (subjectFqn !== undefined) {
+      const owner = this.owner(subjectFqn)
+      if (owner.kind !== kind && owner.subjectFqn !== kind) {
+        fail("KIND_SUBJECT_MISMATCH", `Kind '${kind}' does not identify subject '${subjectFqn}'.`)
+      }
+      return owner
+    }
+    const exact = this.ownersBySubject.get(kind)
+    if (exact) return exact
+    const candidates = this.owners().filter(owner => owner.kind === kind)
+    if (candidates.length > 1) fail("KIND_SUBJECT_AMBIGUOUS", `Kind '${kind}' requires an explicit subject: ${candidates.map(owner => owner.subjectFqn).join(', ')}.`)
+    if (candidates.length === 0) fail("KIND_SUBJECT_MISSING", `No admitted subject owns Kind '${kind}'.`)
+    return candidates[0]!
   }
 
   owner(subjectFqn: string): KindSubjectOwner {
@@ -322,6 +330,7 @@ export class SpecResolutionRegistry {
 export function resolveSpec<Output = unknown>(input: Readonly<{
   resourceId: string
   kind: string
+  subjectFqn?: string
   writerSpecVersion: SpecVersion
   authoredSpec: PortableSpec
   sourceContentDigest: Sha256Digest
@@ -332,7 +341,7 @@ export function resolveSpec<Output = unknown>(input: Readonly<{
   validator: JsonSchemaValidator
 }>): ResolvedSpec<Output> {
   const resourceId = nonEmpty(input.resourceId, "resourceId")
-  const owner = input.contracts.subject(input.kind)
+  const owner = input.contracts.subject(input.kind, input.subjectFqn)
   const writer = input.contracts.revision(owner.subjectFqn, input.writerSpecVersion)
   validateFingerprint(input.sourceContentDigest, "sourceContentDigest")
   let resolvedSpec = clonePortableSpec(input.authoredSpec)

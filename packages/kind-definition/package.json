@@ -5,7 +5,8 @@
   "private": true,
   "packageKind": "framework",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./contracts": "./src/versioned-contracts.ts"
   },
   "dependencies": {
     "halfcode-compiler-resource-core": "workspace:*"

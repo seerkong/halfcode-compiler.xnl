@@ -18,6 +18,7 @@ const publicSpecifiers = [
   "halfcode-compiler.xnl/resource-projection",
   "halfcode-compiler.xnl/kind-definition",
   "halfcode-compiler.xnl/testing",
+  "halfcode-compiler.xnl/resource-contracts",
 ] as const
 
 const internalPackagePattern = /\bhalfcode-compiler-[a-z0-9._-]+/i

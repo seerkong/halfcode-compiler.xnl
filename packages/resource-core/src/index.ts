@@ -37,6 +37,7 @@ export interface ResourceNode {
 }
 
 export interface ResourceRecord extends ResourceDescriptor {
+  readonly subjectFqn?: string
   resourceId: string
   metadata: ResourceMetadata
   sourceShape: SourceShape
@@ -258,4 +259,6 @@ export * from "./directory-resource-package-read-port"
 export * from "./resource-version-contracts"
 export * from "./versioned-contract-types"
 export * from "./resource-envelope"
+export * from "./kind-identity-map"
+export { projectXnlResourceSpec } from "./xnl-resource-projection"
 export { canonicalJson, compareCodeUnits, digestCanonical } from "./canonical"

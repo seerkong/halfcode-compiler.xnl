@@ -20,6 +20,7 @@ export default defineConfig({
     "contract-schema": "src/contract-schema.ts",
     "authoring-runtime": "src/authoring-runtime.ts",
     "resource-core": "src/resource-core.ts",
+    "resource-contracts": "src/resource-contracts.ts",
     "resource-mapping": "src/resource-mapping.ts",
     "resource-projection": "src/resource-projection.ts",
     "kind-definition": "src/kind-definition.ts",

@@ -25,6 +25,7 @@ describe("halfcode-compiler.xnl distribution contract", () => {
       "./resource-projection",
       "./kind-definition",
       "./testing",
+      "./resource-contracts",
     ])
   })
 

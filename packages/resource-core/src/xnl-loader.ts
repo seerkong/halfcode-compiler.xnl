@@ -1,10 +1,9 @@
 import { parse as parseYaml } from "yaml"
+import { authoredSpecFromNode, normalizeNode } from "./xnl-resource-projection"
 import {
   parseXnl,
   wordToString,
-  type AttributeMap,
   type DataElementNode,
-  type TextElementNode,
   type XnlNode,
 } from "xnl-core"
 import { compareCodeUnits, digestCanonical } from "./canonical"
@@ -17,6 +16,7 @@ import {
 } from "./dependency-snapshot"
 import { isAuthoredResourceTreeAuthentic, markAuthoredResourceTreeAuthentic } from "./authored-resource-tree-brand"
 import { readonlyMap } from "./readonly-map"
+import { createKindIdentityMap } from "./kind-identity-map"
 import {
   canonicalResourcePackageSourcePath,
   dirnameResourcePackageSourcePath,
@@ -85,11 +85,11 @@ function admitKindDefinitionImports(imports: readonly AuthoredResourceTree[]): {
     const entries = [...tree.registry.kindDefinitions.entries()].sort(([left], [right]) => compareCodeUnits(left, right))
     if (entries.length === 0) throw new TypeError("KIND_DEFINITION_IMPORT_EMPTY")
     for (const [kind, definition] of entries) {
-      if (definitions.has(kind)) throw new TypeError("KIND_DEFINITION_IMPORT_COLLISION")
+      if (definitions.has(definition.subjectFqn)) throw new TypeError("KIND_DEFINITION_IMPORT_COLLISION")
       const record = tree.registry.byKind.get("KindDefinition")?.find(candidate => candidate.resourceId === definition.resourceId)
       if (!record) throw new TypeError("KIND_DEFINITION_IMPORT_CLOSURE_MISSING")
-      definitions.set(kind, definition)
-      provenance.set(kind, Object.freeze({ definitionDigest: kindDefinitionContractDigest(definition), sourceContentDigest: record.sourceContentDigest }))
+      definitions.set(definition.subjectFqn, definition)
+      provenance.set(definition.subjectFqn, Object.freeze({ definitionDigest: kindDefinitionContractDigest(definition), sourceContentDigest: record.sourceContentDigest }))
     }
     receipts.push(Object.freeze({
       treeDigest: digestCanonical([...tree.contentIdentities.entries()].sort(([left], [right]) => compareCodeUnits(left, right))),
@@ -167,18 +167,19 @@ export async function buildXnlResourceTree(
     return { diagnostics: context.diagnostics }
   }
 
-  const byKind = new Map<string, AuthoredResourceRecord[]>()
+  const bySubject = new Map<string, AuthoredResourceRecord[]>()
   for (const resource of context.resources) {
-    const records = byKind.get(resource.kind) ?? []
+    const records = bySubject.get(resource.subjectFqn) ?? []
     records.push(resource)
-    byKind.set(resource.kind, records)
+    bySubject.set(resource.subjectFqn, records)
   }
-  const frozenByKind = readonlyMap([...byKind.entries()]
-    .sort(([left], [right]) => compareCodeUnits(left, right))
-    .map(([kind, records]) => [kind, Object.freeze([...records]
-      .sort((left, right) => compareCodeUnits(left.resourceId, right.resourceId)))] as const))
-  const frozenKindDefinitions = readonlyMap([...context.kindDefinitions.entries()]
-    .sort(([left], [right]) => compareCodeUnits(left, right)))
+  const frozenByKind = createKindIdentityMap([...bySubject.entries()].map(([subjectFqn, records]) => ({
+    subjectFqn, kind: records[0]!.kind,
+    value: Object.freeze([...records].sort((left, right) => compareCodeUnits(left.resourceId, right.resourceId))),
+  })))
+  const frozenKindDefinitions = createKindIdentityMap([...context.kindDefinitions.values()].map(definition => ({
+    subjectFqn: definition.subjectFqn, kind: definition.resourceKind, value: definition,
+  })))
   const contentIdentities = readonlyMap(context.resources
     .map((resource) => [resource.resourceId, loadedContentIdentity(resource, context)] as const)
     .sort(([left], [right]) => compareCodeUnits(left, right)))
@@ -218,7 +219,7 @@ async function loadManifest(
   }
 
   if (isRoot && record.kind !== "ResourcePackage") {
-    const definition = context.kindDefinitions.get(record.kind)
+    const definition = resolveKindDefinition(context, record.kind, record.documentUri)
     if (!definition) {
       context.diagnostics.push({
         code: "KIND_DEFINITION_MISSING",
@@ -269,12 +270,12 @@ async function loadKindDefinitions(
     }
     const definition = normalizeKindDefinition(record, context.diagnostics)
     if (!definition) continue
-    const imported = context.importedKindDefinitions.get(definition.resourceKind)
+    const imported = context.importedKindDefinitions.get(definition.subjectFqn)
     if (imported && kindDefinitionContractDigest(definition) === imported.definitionDigest) {
       // A legacy package may carry an exact copy of a host-installed standard
       // definition. Keep the imported authority while retaining local bytes as
       // an authored record and content-identity contribution.
-    } else if (context.kindDefinitions.has(definition.resourceKind)) {
+    } else if (context.kindDefinitions.has(definition.subjectFqn)) {
       context.diagnostics.push({
         code: "KIND_DEFINITION_IMPORT_COLLISION",
         location: record.documentUri,
@@ -282,7 +283,7 @@ async function loadKindDefinitions(
       })
       continue
     }
-    context.kindDefinitions.set(definition.resourceKind, definition)
+    context.kindDefinitions.set(definition.subjectFqn, definition)
     const authoredDefinition = bindSubject(record, "Halfcode.ResourceKind.KindDefinition", context)
     validateIdentity(authoredDefinition, context)
     context.resources.push(authoredDefinition)
@@ -300,12 +301,26 @@ function kindDefinitionContractDigest(definition: RegisteredKindDefinition): Sha
   })
 }
 
+function resolveKindDefinition(context: LoaderContext, reference: string, location: string): RegisteredKindDefinition | undefined {
+  const exact = context.kindDefinitions.get(reference)
+  if (exact) return exact
+  const matches = [...context.kindDefinitions.values()].filter(definition => definition.resourceKind === reference)
+  if (matches.length > 1) {
+    context.diagnostics.push({
+      code: "KIND_SUBJECT_AMBIGUOUS", location,
+      message: `Kind '${reference}' requires an explicit subject: ${matches.map(value => value.subjectFqn).sort(compareCodeUnits).join(', ')}.`,
+    })
+    return undefined
+  }
+  return matches[0]
+}
+
 async function loadCatalog(
   catalog: XnlCatalog,
   manifestDir: string,
   context: LoaderContext,
 ): Promise<void> {
-  const definition = context.kindDefinitions.get(catalog.kind)
+  const definition = resolveKindDefinition(context, catalog.kind, catalog.location)
   if (!definition) {
     context.diagnostics.push({
       code: "KIND_DEFINITION_MISSING",
@@ -328,8 +343,8 @@ async function loadCatalog(
     if (catalog.shape === "manifest") {
       let record = await loadXnlRecord(file, "manifest", context)
       if (!record) continue
-      if (record.kind !== catalog.kind) {
-        context.diagnostics.push(kindMismatch(record.kind, catalog.kind, record.documentUri))
+      if (record.kind !== definition.resourceKind) {
+        context.diagnostics.push(kindMismatch(record.kind, definition.resourceKind, record.documentUri))
         continue
       }
       record = bindSubject(record, definition.subjectFqn, context)
@@ -353,8 +368,8 @@ async function loadCatalog(
     }
     const records = await loadResourceRecords(file, catalog.shape, context, definition.documentCardinality)
     for (let record of records) {
-      if (record.kind !== catalog.kind) {
-        context.diagnostics.push(kindMismatch(record.kind, catalog.kind, record.documentUri))
+      if (record.kind !== definition.resourceKind) {
+        context.diagnostics.push(kindMismatch(record.kind, definition.resourceKind, record.documentUri))
         continue
       }
       record = bindSubject(record, definition.subjectFqn, context)
@@ -738,48 +753,6 @@ function resourceRecordFromRoot(
   })
 }
 
-function authoredSpecFromNode(node: ResourceNode) {
-  return Object.freeze({
-    properties: node.properties,
-    body: node.body,
-    subdomains: node.subdomains,
-    ...(node.text === undefined ? {} : { text: node.text }),
-  })
-}
-
-function normalizeNode(node: DataElementNode | TextElementNode): ResourceNode {
-  const subdomains: Record<string, ResourceNode> = {}
-  if (node.kind === "DataElement" && node.extend) {
-    for (const name of node.extend.order) {
-      const child = node.extend.children[name]
-      if (child) subdomains[name] = normalizeNode(child)
-    }
-  }
-  const resourceId = wordToString(node.id)
-  return Object.freeze({
-    tag: node.tag,
-    ...(resourceId === undefined ? {} : { resourceId }),
-    metadata: Object.freeze(normalizeMap(node.metadata)),
-    properties: Object.freeze(normalizeMap(node.attributes)),
-    body: Object.freeze(node.kind === "DataElement" ? (node.body ?? []).map(normalizeValue) : []),
-    subdomains: Object.freeze(subdomains),
-    ...(node.kind === "TextElement" ? { text: node.text ?? "" } : {}),
-  })
-}
-
-function normalizeMap(map: AttributeMap | undefined): Record<string, ResourceValue> {
-  return Object.fromEntries(Object.entries(map ?? {}).map(([key, value]) => [key, normalizeValue(value)]))
-}
-
-function normalizeValue(value: XnlNode): ResourceValue {
-  if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") return value
-  if (Array.isArray(value)) return Object.freeze(value.map(normalizeValue))
-  if (isElement(value)) return normalizeNode(value)
-  if (isWord(value)) return wordToString(value) ?? ""
-  if (isComment(value)) return value.value
-  return Object.freeze(Object.fromEntries(Object.entries(value).map(([key, child]) => [key, normalizeValue(child)])))
-}
-
 function readCatalogs(record: ResourceRecord, diagnostics: ResourceDiagnostic[]): XnlCatalog[] {
   const catalogs = record.node.subdomains.Catalogs
   if (!catalogs) return []
@@ -1109,16 +1082,4 @@ function isResourceNode(value: ResourceValue): value is ResourceNode {
 
 function isDataElement(value: XnlNode | undefined): value is DataElementNode {
   return typeof value === "object" && value !== null && !Array.isArray(value) && "kind" in value && value.kind === "DataElement"
-}
-
-function isElement(value: XnlNode): value is DataElementNode | TextElementNode {
-  return typeof value === "object" && value !== null && !Array.isArray(value) && "kind" in value && (value.kind === "DataElement" || value.kind === "TextElement")
-}
-
-function isWord(value: XnlNode): value is { kind: "Word"; namespace: string[]; name: string } {
-  return typeof value === "object" && value !== null && !Array.isArray(value) && "kind" in value && value.kind === "Word"
-}
-
-function isComment(value: XnlNode): value is { kind: "Comment"; value: string } {
-  return typeof value === "object" && value !== null && !Array.isArray(value) && "kind" in value && value.kind === "Comment"
 }

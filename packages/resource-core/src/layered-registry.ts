@@ -2,6 +2,7 @@ import { compareCodeUnits, digestCanonical } from "./canonical"
 import { ResourceCompositionError } from "./composition-error"
 import { markEffectiveRegistryAuthentic } from "./effective-registry-brand"
 import { readonlyMap } from "./readonly-map"
+import { createKindIdentityMap } from "./kind-identity-map"
 import type {
   RegisteredKindDefinition,
   ResourceDiagnostic,
@@ -136,18 +137,15 @@ export function composeLayeredResourceRegistry(
   const byKindValues = new Map<string, ResourceRecord[]>()
   for (const entry of frozenEntries) {
     if (!entry.resource) continue
-    const records = byKindValues.get(entry.kind) ?? []
+    const subject = entry.resource.subjectFqn ?? entry.kind
+    const records = byKindValues.get(subject) ?? []
     records.push(entry.resource)
-    byKindValues.set(entry.kind, records)
+    byKindValues.set(subject, records)
   }
-  const byKind = readonlyMap(
-    [...byKindValues.entries()]
-      .sort(([left], [right]) => compareCodeUnits(left, right))
-      .map(([kind, records]) => [
-        kind,
-        Object.freeze([...records].sort((left, right) => compareCodeUnits(left.resourceId, right.resourceId))),
-      ] as const),
-  )
+  const byKind = createKindIdentityMap([...byKindValues.entries()].map(([subjectFqn, records]) => ({
+    subjectFqn, kind: records[0]!.kind,
+    value: Object.freeze([...records].sort((left, right) => compareCodeUnits(left.resourceId, right.resourceId))),
+  })))
 
   const frozenDefinitions = [...kindDefinitions.entries()]
     .sort(([left], [right]) => compareCodeUnits(left, right))
@@ -155,7 +153,9 @@ export function composeLayeredResourceRegistry(
       definition: value.definition,
       origins: Object.freeze([...value.origins].sort(compareOrigins)),
     })] as const)
-  const publicKindDefinitions = readonlyMap(frozenDefinitions)
+  const publicKindDefinitions = createKindIdentityMap(frozenDefinitions.map(([, value]) => ({
+    kind: value.definition.resourceKind, subjectFqn: value.definition.subjectFqn, value,
+  })))
   const frozenLayers = Object.freeze([...layers])
   const compositionRevision = digestCanonical({
     layers: frozenLayers.map((layer) => ({
@@ -205,9 +205,10 @@ function mergeKindDefinitions(
     }
     const definition = cloneRegisteredKindDefinition(inputDefinition)
     const origin = kindDefinitionOrigin(layerId, layerIndex, packageId, definition)
-    const current = definitions.get(kind)
+    const subject = definition.subjectFqn
+    const current = definitions.get(subject)
     if (!current) {
-      definitions.set(kind, { definition, origins: [origin] })
+      definitions.set(subject, { definition, origins: [origin] })
       continue
     }
     if (JSON.stringify(normalizedKindContract(current.definition)) !== JSON.stringify(normalizedKindContract(definition))) {
@@ -269,7 +270,7 @@ function mergeResources(
       })
       continue
     }
-    if (current.kind !== resource.kind) {
+    if (current.kind !== resource.kind || (current.resource?.subjectFqn ?? current.kind) !== (resource.subjectFqn ?? resource.kind)) {
       diagnostics.push(diagnostic(
         "RESOURCE_LAYER_IDENTITY_KIND_CONFLICT",
         layerLocation(layerIndex, layerId, resource.resourceId),
@@ -398,6 +399,7 @@ function entryRevisionFact(entry: EffectiveResourceEntry): unknown {
   return {
     resourceId: entry.resourceId,
     kind: entry.kind,
+    ...(entry.resource?.subjectFqn ? { subjectFqn: entry.resource.subjectFqn } : {}),
     resourcePresent: entry.resource !== undefined,
     effectiveLayerId: entry.effectiveLayerId,
     effectiveOrigin: entry.effectiveOrigin === undefined ? undefined : stableOriginFact(entry.effectiveOrigin),
@@ -414,6 +416,7 @@ function cloneResourceRecord(resource: ResourceRecord): ResourceRecord {
     ...(resource.name === undefined ? {} : { name: resource.name }),
     ...(resource.description === undefined ? {} : { description: resource.description }),
     resourceId: resource.resourceId,
+    ...(resource.subjectFqn ? { subjectFqn: resource.subjectFqn } : {}),
     metadata: cloneResourceMetadata(resource.metadata),
     sourceShape: resource.sourceShape,
     logicalPath: resource.logicalPath,

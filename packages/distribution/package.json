@@ -1,6 +1,6 @@
 {
   "name": "halfcode-compiler.xnl",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "description": "Compile XNL-described applications into runtime-ready skill capsules.",
   "type": "module",
   "private": false,
@@ -49,6 +49,10 @@
     "./testing": {
       "types": "./dist/testing.d.ts",
       "import": "./dist/testing.js"
+    },
+    "./resource-contracts": {
+      "types": "./dist/resource-contracts.d.ts",
+      "import": "./dist/resource-contracts.js"
     }
   },
   "scripts": {
@@ -71,8 +75,12 @@
     "halfcode-compiler-skill-capsule": "workspace:*",
     "tsdown": "0.22.14"
   },
-  "main": "index.js",
+  "main": "./dist/index.js",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.com"
+  }
 }
